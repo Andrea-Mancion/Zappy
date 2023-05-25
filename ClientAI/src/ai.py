@@ -1,9 +1,4 @@
-##
-## EPITECH PROJECT, 2023
-## ai.py
-## File description:
-## ai
-##
+#!/usr/bin/env python3
 
 import sys
 import socket
