@@ -16,25 +16,25 @@ GUI_NAME = zappy_gui
 # Rules
 
 # $(SERVER_NAME):
-#	@make -C server
+#	@make -C src/server
 
 # $(CLIENT_NAME):
-#	@make -C client
+#	@make -C src/ClientAI
 
 # $(GUI_NAME):
-#	@make -C gui
+#	@make -C src/gui
 
 all: # $(SERVER_NAME) $(CLIENT_NAME) $(GUI_NAME)
 
 clean:
-#	@make clean -C server
-#	@make clean -C client
-#	@make clean -C gui
+#	@make clean -C src/server
+#	@make clean -C src/ClientAI
+#	@make clean -C src/gui
 
 fclean: clean
-#	@make fclean -C server
-#	@make fclean -C client
-#	@make fclean -C gui
+#	@make fclean -C src/server
+#	@make fclean -C src/ClientAI
+#	@make fclean -C src/gui
 
 re: fclean all
 
