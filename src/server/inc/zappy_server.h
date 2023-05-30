@@ -49,11 +49,13 @@
         "Bad arguments were given", \
         "Invalid socket", \
         "Couldn't bind given port", \
-        "Invalid command transmitted", \
+        "Invalid command", \
     })
 
     #define ERROR(c) (c >= SUCCESS && c < NB_ERR ? ERROR_TABLE[c] : \
 "Invalid error code")
     #define GET_ERRNO() (errno ? strerror(errno) : "No internal error")
+    #define HANDLE_ERROR(s, m) (s ? fprintf(stderr, "%s: %s - %s\n", m, \
+ERROR(s), GET_ERRNO()) && false : true)
 
 #endif

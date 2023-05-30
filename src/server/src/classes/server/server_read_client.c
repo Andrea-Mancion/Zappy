@@ -9,7 +9,7 @@
 #include "zappy_server.h"
 #include "classes/server_class.h"
 
-static const char *error_command = "Couldn't execute command: %s - %s\n";
+static const char *error_command = "Couldn't execute command";
 
 // Finds the command in the table and executes it, returns false if not found
 static bool server_execute_command(server_t *server, client_t *client,
@@ -36,7 +36,7 @@ static int server_parse_command(server_t *server, client_t *client,
     for (char *sub = strtok(command, " "); sub; sub = strtok(NULL, " "))
         args[j++] = sub;
     args[j] = NULL;
-    if (args[0] && !server_execute_command(server, client, *args, args + 1)) {
+    if (!args[0] || !server_execute_command(server, client, *args, args + 1)) {
         free(args);
         return ERR_COMMAND;
     }
@@ -49,13 +49,11 @@ static void server_parse_client(server_t *server, client_t *client)
 {
     char *token = strtok(client->buffer, "\n");
     char *next_token;
-    int parse_return;
 
     for (int i = 0; i < MAX_CLIENT_COMMANDS && token; i++) {
         next_token = strtok(token + strlen(token) + 1, "\n");
-        parse_return = server_parse_command(server, client, token);
-        if (parse_return != 0)
-            fprintf(stderr, error_command, ERROR(parse_return), GET_ERRNO());
+        HANDLE_ERROR(server_parse_command(server, client, token),
+            error_command);
         token = next_token;
     }
 }

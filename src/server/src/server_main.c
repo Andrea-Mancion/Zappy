@@ -9,31 +9,29 @@
 #include "classes/params_class.h"
 #include "classes/server_class.h"
 
+const char *error_params = "Params init failed";
+const char *error_server = "Server init failed";
 const char *invalid_parameters = "Invalid parameters. Run with -help for more "
-    "info.\n";
-const char *error_server_init = "Server_init() failed: %s - %s\n";
+    "info.";
 
 // Main function
 int main(const int argc, const char *argv[])
 {
     CLEANUP(params_destroy) params_t params;
     CLEANUP(server_destroy) server_t server;
-    int server_return;
 
-    params_init(&params, argc - 1, argv + 1);
+    if (!HANDLE_ERROR(params_init(&params, argc - 1, argv + 1), error_params))
+        return PROGRAM_EXIT_FAILURE;
     if (!params.is_valid(&params)) {
-        fprintf(stderr, invalid_parameters);
+        fprintf(stderr, "%s\n", invalid_parameters);
         return PROGRAM_EXIT_FAILURE;
     }
     if (params.mode == HELP) {
-        fprintf(stdout, USAGE);
+        fprintf(stdout, "%s\n", USAGE);
         return PROGRAM_EXIT_SUCCESS;
     }
-    server_return = server_init(&server, &params);
-    if (server_return != 0) {
-        fprintf(stderr, error_server_init, ERROR(server_return), GET_ERRNO());
+    if (!HANDLE_ERROR(server_init(&server, &params), error_server))
         return PROGRAM_EXIT_FAILURE;
-    }
     while (server.run(&server));
     return PROGRAM_EXIT_SUCCESS;
 }
