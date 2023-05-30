@@ -3,6 +3,11 @@
 import sys
 import socket
 import time
+import pygame
+
+pygame.init()
+
+clock = pygame.time.Clock()
 
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
@@ -22,6 +27,12 @@ def checkString(string):
         return False
     return True
 
+def createClock(ai_socket, name):
+    while not False:
+        clock.tick(60)
+        break
+
+
 def beginning(port, name, machine):
     print("Port: " + port)
     print("Name: " + name)
@@ -29,7 +40,7 @@ def beginning(port, name, machine):
     ai_socket = socket.socket()
     ai_socket.connect((machine, int(port)))
     print("Connected to server")
-    time.sleep(2)
+    createClock(ai_socket, name)
     ai_socket.close()
     print("Disconnected from server")
 
@@ -50,3 +61,5 @@ def main(ac, av):
 
 if __name__ == "__main__":
    main(len(sys.argv), sys.argv)
+
+pygame.quit()
