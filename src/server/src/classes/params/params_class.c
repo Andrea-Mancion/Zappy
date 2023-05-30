@@ -5,11 +5,9 @@
 ** Server side - params class
 */
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include "classes/params_class.h"
 
+// Initial structure of params
 static const params_t default_params = {
     .mode = RUN,
     .port = 0,
@@ -21,6 +19,7 @@ static const params_t default_params = {
     .destroy = &params_destroy,
 };
 
+// Returns arguments as an array of strings for multi-args options
 static char **get_variadic_args(const int argc, const char *argv[])
 {
     char **args;
@@ -28,13 +27,16 @@ static char **get_variadic_args(const int argc, const char *argv[])
 
     for (i = 0; i < argc && argv[i][0] != '-'; i++);
     args = malloc(sizeof(char *) * (i + 1));
+    if (!args)
+        return NULL;
     args[i] = NULL;
     for (i -= 1; i >= 0; i--)
         args[i] = strdup(argv[i]);
     return args;
 }
 
-void params_init(params_t *params, const int argc, const char *argv[])
+// Params constructor
+int params_init(params_t *params, const int argc, const char *argv[])
 {
     *params = default_params;
     for (int i = 0; i < argc; i++) {
@@ -49,23 +51,12 @@ void params_init(params_t *params, const int argc, const char *argv[])
         if (strcmp(argv[i], "-help") == 0)
             params->mode = HELP;
         if (strcmp(argv[i], "-n") == 0)
-            params->team_names = get_variadic_args(argc - i, argv + i);
+            params->team_names = get_variadic_args(argc - i - 1, argv + i + 1);
     }
+    return SUCCESS;
 }
 
-bool params_is_valid(params_t *params)
-{
-    if (params->port <= 0 || params->port > 40000)
-        return false;
-    if (params->width <= 0 || params->width > 1000)
-        return false;
-    if (params->height <= 0 || params->height > 1000)
-        return false;
-    if (params->max_clients <= 0 || params->max_clients > 1000)
-        return false;
-    return true;
-}
-
+// Params destructor
 void params_destroy(params_t *params)
 {
     if (!params->team_names)
