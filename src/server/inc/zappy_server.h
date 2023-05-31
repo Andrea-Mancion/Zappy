@@ -9,12 +9,16 @@
 
     #define ZAPPY_SERVER_H
 
+// Includes
+
     #include <errno.h>
     #include <stdarg.h>
     #include <stdbool.h>
     #include <stdio.h>
     #include <stdlib.h>
     #include <string.h>
+
+// Macros
 
     #define PROGRAM_EXIT_SUCCESS 0
     #define PROGRAM_EXIT_FAILURE 84
@@ -35,6 +39,8 @@
         "\tclientsNb\tis the number of authorized clients per team\n" \
         "\tfreq\t\tis the reciprocal of time unit for execution of actions\n"
 
+// Error codes
+
     #define SUCCESS 0
     #define ERR_ALLOC 1
     #define ERR_ARGS 2
@@ -42,6 +48,8 @@
     #define ERR_BIND 4
     #define ERR_COMMAND 5
     #define NB_ERR 6
+
+// Error messages
 
     #define ERROR_TABLE ((const char*[]) { \
         "Success", \
@@ -51,6 +59,8 @@
         "Couldn't bind given port", \
         "Invalid command", \
     })
+
+// Error handling functions
 
     #define ERROR(c) (c >= SUCCESS && c < NB_ERR ? ERROR_TABLE[c] : \
 "Invalid error code")
