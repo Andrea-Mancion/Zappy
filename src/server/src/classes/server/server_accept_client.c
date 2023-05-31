@@ -10,7 +10,7 @@
 #include "classes/list_class.h"
 #include "classes/server_class.h"
 
-static const char *error_client = "Couldn't accept client: %s - %s\n";
+static const char *error_client = "Couldn't accept client";
 
 // Initializes the readfds and returns the max fd found
 static int readfds_init(fd_set *readfds, server_t *server)
@@ -22,7 +22,7 @@ static int readfds_init(fd_set *readfds, server_t *server)
     FD_SET(server->socket, readfds);
     for (int i = 0; i < server->client_list.size; i++) {
         client = server->client_list.get(&server->client_list, i);
-        if (client->socket > 0) {
+        if (client->socket >= 0) {
             FD_SET(client->socket, readfds);}
         if (client->socket > max_fd)
             max_fd = client->socket;
@@ -43,12 +43,13 @@ static int server_accept_client(server_t *server)
         free(client);
         return ERR_SOCKET;
     }
-    if ((init_return = client_init(client, socket)) != 0) {
+    if ((init_return = client_init(client, socket)) != SUCCESS) {
         client->destroy(client);
+        free(client);
         return init_return;
-    }
-    if (!server->client_list.add(&server->client_list, client)) {
+    } else if (!server->client_list.add(&server->client_list, client)) {
         client->destroy(client);
+        free(client);
         return ERR_ALLOC;
     }
     return SUCCESS;
@@ -69,15 +70,12 @@ bool server_run(server_t *server)
     fd_set readfds;
     int max_fd = readfds_init(&readfds, server);
     client_t *client;
-    int client_return;
 
     if (select(max_fd + 1, &readfds, NULL, NULL, NULL) <= 0)
         return false;
     if (FD_ISSET(server->socket, &readfds)
-        && server->client_list.size < MAX_CLIENTS) {
-        if ((client_return = server_accept_client(server)) != 0)
-            fprintf(stderr, error_client, ERROR(client_return), GET_ERRNO());
-    }
+        && server->client_list.size < MAX_CLIENTS)
+        HANDLE_ERROR(server_accept_client(server), error_client);
     for (int i = 0; i < server->client_list.size; i++) {
         client = server->client_list.get(&server->client_list, i);
         if (!FD_ISSET(client->socket, &readfds))

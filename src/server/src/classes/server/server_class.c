@@ -33,12 +33,15 @@ static const server_t default_server = {
 // Server constructor
 int server_init(server_t *server, params_t *params)
 {
+    int status;
+
     *server = default_server;
     server->socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (server->socket == -1)
+    if (server->socket < 0)
         return ERR_SOCKET;
     server->address.sin_port = htons(params->port);
-    list_init(&server->client_list);
+    if ((status = list_init(&server->client_list)) != SUCCESS)
+        return status;
     if (bind(server->socket, (struct sockaddr *)&server->address, sizeof(
         server->address)) < 0 || listen(server->socket, MAX_CLIENTS) < 0)
         return ERR_BIND;

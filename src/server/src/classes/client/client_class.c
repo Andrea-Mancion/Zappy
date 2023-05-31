@@ -19,6 +19,8 @@ static const client_t default_client = {
 // Client constructor
 int client_init(client_t *client, int socket)
 {
+    if (socket < 0)
+        return ERR_SOCKET;
     *client = default_client;
     client->socket = socket;
     if (!(client->buffer = malloc(sizeof(char) * BUF_SIZE)))
@@ -30,7 +32,7 @@ int client_init(client_t *client, int socket)
 // Client destructor
 void client_destroy(client_t *client)
 {
-    if (client->socket > 0)
+    if (client->socket >= 0)
         close(client->socket);
     if (client->team_name)
         free(client->team_name);
