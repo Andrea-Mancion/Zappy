@@ -12,16 +12,14 @@
 static const char *error_command = "Couldn't execute command";
 
 // Finds the command in the table and executes it, returns false if not found
-static bool server_execute_command(server_t *server, client_t *client,
+static int server_execute_command(server_t *server, client_t *client,
     char *command, char **args)
 {
     for (int i = 0; server->command_table[i].command; i++) {
-        if (strcmp(server->command_table[i].command, command) == 0) {
-            server->command_table[i].function(server, client, args);
-            return true;
-        }
+        if (strcmp(server->command_table[i].command, command) == 0)
+            return server->command_table[i].function(server, client, args);
     }
-    return false;
+    return ERR_COMMAND;
 }
 
 // Parses a client-given command and executes it
@@ -30,15 +28,17 @@ static int server_parse_command(server_t *server, client_t *client,
 {
     char **args = malloc(sizeof(char *) * (strlen(command) + 1));
     int j = 0;
+    int status = ERR_COMMAND;
 
     if (!args)
         return ERR_ALLOC;
     for (char *sub = strtok(command, " "); sub; sub = strtok(NULL, " "))
         args[j++] = sub;
     args[j] = NULL;
-    if (!args[0] || !server_execute_command(server, client, *args, args + 1)) {
+    if (!args[0] || (status = server_execute_command(
+        server, client, *args, args + 1) != SUCCESS)) {
         free(args);
-        return ERR_COMMAND;
+        return status;
     }
     free(args);
     return SUCCESS;

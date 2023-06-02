@@ -23,7 +23,7 @@ typedef struct server_s server_t;
 // Pair structure of the command table
 typedef struct command_pair_s {
     char *command;
-    void (*function)(server_t *server, client_t *client, char **args);
+    int (*function)(server_t *server, client_t *client, char **args);
 } command_pair_t;
 
 // Server class
