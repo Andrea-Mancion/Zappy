@@ -11,10 +11,15 @@ SRC_DIR	=	./src/
 
 SRC	=	\
 	$(SRC_DIR)server_main.c	\
+	$(SRC_DIR)classes/server/commands_table.c	\
 	$(SRC_DIR)classes/server/server_class.c	\
-	$(SRC_DIR)classes/server/server_execution.c	\
-	$(SRC_DIR)classes/server/server_interaction.c	\
+	$(SRC_DIR)classes/server/server_accept_client.c	\
+	$(SRC_DIR)classes/server/server_read_client.c	\
 	$(SRC_DIR)classes/params/params_class.c	\
+	$(SRC_DIR)classes/params/params_methods.c	\
+	$(SRC_DIR)classes/client/client_class.c	\
+	$(SRC_DIR)classes/list/list_class.c	\
+	$(SRC_DIR)classes/list/list_methods.c	\
 
 OBJ	=	$(SRC:.c=.o)
 

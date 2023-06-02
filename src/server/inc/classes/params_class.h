@@ -11,13 +11,15 @@
 
     #include "zappy_server.h"
 
-enum mode {
+// Enum for the different modes for the program to run in
+typedef enum program_mode_e {
     HELP,
     RUN,
-};
+} program_mode_t;
 
+// Params class
 typedef struct params_s {
-    enum mode mode;
+    program_mode_t mode;
     int port;
     int width;
     int height;
@@ -27,7 +29,8 @@ typedef struct params_s {
     void (*destroy)(struct params_s *params);
 } params_t;
 
-void params_init(params_t *params, const int argc, const char *argv[]);
+// Params ctor, dtor and methods
+int params_init(params_t *params, const int argc, const char *argv[]);
 bool params_is_valid(params_t *params);
 void params_destroy(params_t *params);
 

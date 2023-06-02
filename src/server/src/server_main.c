@@ -5,50 +5,33 @@
 ** Server side - main
 */
 
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
 #include "zappy_server.h"
 #include "classes/params_class.h"
 #include "classes/server_class.h"
 
-static const char *usage = ""
-    "USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ... -c cl"
-    "ientsNb -f freq\n"
-    "\tport\t\tis the port number\n"
-    "\twidth\t\tis the width of the world\n"
-    "\theight\t\tis the height of the world\n"
-    "\tnameX\t\tis the name of the team X\n"
-    "\tclientsNb\tis the number of authorized clients per team\n"
-    "\tfreq\t\tis the reciprocal of time unit for execution of actions\n";
+const char *error_params = "Params init failed";
+const char *error_server = "Server init failed";
+const char *invalid_parameters = "Invalid parameters. Run with -help for more "
+    "info.";
 
-int breakout(int status, params_t *params, server_t *server)
-{
-    if (server)
-        server->destroy(server);
-    if (params)
-        params->destroy(params);
-    return status;
-}
-
+// Main function
 int main(const int argc, const char *argv[])
 {
-    params_t params;
-    server_t server;
+    CLEANUP(params_destroy) params_t params;
+    CLEANUP(server_destroy) server_t server;
 
-    params_init(&params, argc - 1, argv + 1);
+    if (!HANDLE_ERROR(params_init(&params, argc - 1, argv + 1), error_params))
+        return PROGRAM_EXIT_FAILURE;
+    if (!params.is_valid(&params)) {
+        fprintf(stderr, "%s\n", invalid_parameters);
+        return PROGRAM_EXIT_FAILURE;
+    }
     if (params.mode == HELP) {
-        printf("%s", usage);
-        return breakout(0, &params, NULL);
-    } else if (!params.is_valid(&params)) {
-        printf("Invalid parameters.\n%s", usage);
-        return breakout(84, &params, NULL);
+        fprintf(stdout, "%s\n", USAGE);
+        return PROGRAM_EXIT_SUCCESS;
     }
-    server_init(&server, &params);
-    if (server.socket == -1) {
-        printf("Socket creation failed. Port may already be in use.\n");
-        return breakout(84, &params, &server);
-    }
+    if (!HANDLE_ERROR(server_init(&server, &params), error_server))
+        return PROGRAM_EXIT_FAILURE;
     while (server.run(&server));
-    return breakout(0, &params, &server);
+    return PROGRAM_EXIT_SUCCESS;
 }
