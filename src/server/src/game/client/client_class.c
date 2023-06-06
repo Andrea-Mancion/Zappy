@@ -6,10 +6,12 @@
 */
 
 #include <unistd.h>
-#include "classes/client_class.h"
+#include "zappy_misc.h"
+#include "zappy_game.h"
+#include "game/client_class.h"
 
 // Initial structure of client
-static const client_t default_client = {
+static const game_client_t default_client = {
     .socket = -1,
     .team_name = NULL,
     .buffer = NULL,
@@ -17,7 +19,7 @@ static const client_t default_client = {
 };
 
 // Client constructor
-int client_init(client_t *client, int socket)
+int client_init(game_client_t *client, int socket)
 {
     if (socket < 0)
         return ERR_SOCKET;
@@ -30,7 +32,7 @@ int client_init(client_t *client, int socket)
 }
 
 // Client destructor
-void client_destroy(client_t *client)
+void client_destroy(game_client_t *client)
 {
     if (client->socket >= 0)
         close(client->socket);

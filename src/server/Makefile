@@ -7,19 +7,26 @@
 
 # Variables
 
+INC_DIR	=	./inc/
+
 SRC_DIR	=	./src/
 
 SRC	=	\
-	$(SRC_DIR)server_main.c	\
-	$(SRC_DIR)classes/server/commands_table.c	\
-	$(SRC_DIR)classes/server/server_class.c	\
-	$(SRC_DIR)classes/server/server_accept_client.c	\
-	$(SRC_DIR)classes/server/server_read_client.c	\
-	$(SRC_DIR)classes/params/params_class.c	\
-	$(SRC_DIR)classes/params/params_methods.c	\
-	$(SRC_DIR)classes/client/client_class.c	\
-	$(SRC_DIR)classes/list/list_class.c	\
-	$(SRC_DIR)classes/list/list_methods.c	\
+	$(SRC_DIR)zappy_main.c	\
+	$(SRC_DIR)game/server/commands_table.c	\
+	$(SRC_DIR)game/server/server_class.c	\
+	$(SRC_DIR)game/server/server_accept_client.c	\
+	$(SRC_DIR)game/server/server_read_client.c	\
+	$(SRC_DIR)game/client/client_class.c	\
+	$(SRC_DIR)game/map/map_class.c	\
+	$(SRC_DIR)game/map/map_methods.c	\
+	$(SRC_DIR)game/tile/tile_class.c	\
+	$(SRC_DIR)program/params/params_class.c	\
+	$(SRC_DIR)program/params/params_methods.c	\
+	$(SRC_DIR)misc/list/list_class.c	\
+	$(SRC_DIR)misc/list/list_methods.c	\
+	$(SRC_DIR)misc/timer/timer_class.c	\
+	$(SRC_DIR)misc/timer/timer_methods.c	\
 
 OBJ	=	$(SRC:.c=.o)
 
@@ -30,7 +37,7 @@ CFLAGS	=	\
 	-Wall	\
 	-Wextra	\
 	-Werror	\
-	-I./inc/	\
+	-I$(INC_DIR)	\
 
 CC	=	gcc
 

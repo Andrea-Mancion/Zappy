@@ -6,11 +6,11 @@
 */
 
 #include <unistd.h>
-#include "zappy_server.h"
-#include "classes/server_class.h"
+#include "zappy_misc.h"
+#include "game/server_class.h"
 
 // Initial structure of server
-static const server_t default_server = {
+static const game_server_t default_server = {
     .socket = -1,
     .address = {
         .sin_family = AF_INET,
@@ -20,9 +20,11 @@ static const server_t default_server = {
         .sin_port = 0,
     },
     .timeout = {
-        .tv_sec = 20,
+        .tv_sec = 10,
         .tv_usec = 0,
     },
+    .timer = {0},
+    .map = {0},
     .client_list = {0},
     .command_table = command_table,
     .destroy = &server_destroy,
@@ -31,7 +33,7 @@ static const server_t default_server = {
 };
 
 // Server constructor
-int server_init(server_t *server, params_t *params)
+int server_init(game_server_t *server, program_params_t *params)
 {
     int status;
 
@@ -45,13 +47,18 @@ int server_init(server_t *server, params_t *params)
     if (bind(server->socket, (struct sockaddr *)&server->address, sizeof(
         server->address)) < 0 || listen(server->socket, MAX_CLIENTS) < 0)
         return ERR_BIND;
+    if ((status = map_init(&server->map, params->width, params->height)))
+        return status;
+    if ((status = timer_init(&server->timer, params->frequency)))
+        return status;
+    server->timer.start(&server->timer);
     return SUCCESS;
 }
 
 // Server destructor
-void server_destroy(server_t *server)
+void server_destroy(game_server_t *server)
 {
-    client_t *client;
+    game_client_t *client;
 
     for (int i = 0; i < server->client_list.size; i++) {
         client = server->client_list.get(&server->client_list, i);
@@ -59,6 +66,7 @@ void server_destroy(server_t *server)
         free(client);
     }
     server->client_list.destroy(&server->client_list);
+    map_destroy(&server->map);
     if (server->socket >= 0)
         close(server->socket);
 }

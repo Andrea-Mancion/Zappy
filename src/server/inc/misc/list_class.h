@@ -5,11 +5,11 @@
 ** list
 */
 
-#ifndef LINKED_LIST_CLASS_H
+#ifndef ZAPPY_LIST_H_
 
-    #define LINKED_LIST_CLASS_H
+    #define ZAPPY_LIST_H_
 
-    #include "zappy_server.h"
+    #include "zappy_misc.h"
 
 // Node structure for the linked list
 typedef struct node_s {
