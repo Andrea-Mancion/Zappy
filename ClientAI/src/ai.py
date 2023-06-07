@@ -5,10 +5,6 @@ import socket
 import time
 import pygame
 
-pygame.init()
-
-clock = pygame.time.Clock()
-
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
     print("\tport\tis the port number")
@@ -27,9 +23,14 @@ def checkString(string):
         return False
     return True
 
+def forkPlayer(ai_socket, name):
+    ai_socket.send("fork\n").decode()
+    if (0):
+        print("Forking")
+
 def createClock(ai_socket, name):
     while not False:
-        clock.tick(60)
+        forkPlayer(ai_socket, name)
         break
 
 
@@ -61,5 +62,3 @@ def main(ac, av):
 
 if __name__ == "__main__":
    main(len(sys.argv), sys.argv)
-
-pygame.quit()
