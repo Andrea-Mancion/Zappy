@@ -28,6 +28,19 @@ def checkString(string):
     return True
 
 def createClock(ai_socket, name):
+    serverString = ai_socket.recv(1024).decode()
+    if (serverString == "WELCOME\n"):
+        ai_socket.send(("TEAMNAME " + name + "\n").encode())
+        serverString = ai_socket.recv(1024).decode()
+        serverSplit = serverString.split(" ")
+        if (serverSplit[0] == "CLIENT_NUM"):
+            nbValue = serverSplit[1]
+        serverString = ai_socket.recv(1024).decode()
+        serverSplit = serverString.split(" ")
+        if (serverSplit[0] == "X"):
+            mapWidth = serverSplit[1]
+        if (serverSplit[2] == "Y"):
+            mapHeight = serverSplit[3]
     while not False:
         clock.tick(60)
         break
