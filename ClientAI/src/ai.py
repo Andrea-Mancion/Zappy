@@ -27,9 +27,15 @@ def checkString(string):
         return False
     return True
 
+def nbTeams(ai_socket, name):
+    ai_socket.send(f"Connect_nbr {name}\n".encode())
+    nbValue = ai_socket.recv(1024).decode()
+    print(nbValue)
+
 def createClock(ai_socket, name):
     while not False:
         clock.tick(60)
+        nbTeams(ai_socket, name)
         break
 
 
