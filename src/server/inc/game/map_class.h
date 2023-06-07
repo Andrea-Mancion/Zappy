@@ -44,6 +44,6 @@ typedef struct game_map_s {
 // Map ctor, dtor and methods
 int map_init(game_map_t *map, int width, int height);
 void map_destroy(game_map_t *map);
-void map_refill(game_map_t *map, timer_millis_t *timer);
+void map_refill(game_map_t *map, timer_millis_t *timer, int time_unit);
 
 #endif

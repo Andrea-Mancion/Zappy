@@ -26,13 +26,15 @@ static void map_spawn_resource(game_map_t *map, game_resource_t resource)
 }
 
 // Function that refills the map with the correct amount of resources
-void map_refill(game_map_t *map, timer_millis_t *timer)
+void map_refill(game_map_t *map, timer_millis_t *timer, int time_unit)
 {
     int total_tiles = map->width * map->height;
     int *total_resources[] = {&map->total_food, &map->total_linemate,
     &map->total_deraumere, &map->total_sibur, &map->total_mendiane,
     &map->total_phiras, &map->total_thystame};
 
+    if (map->last_refill + 20 * (time_unit * 1000) < timer->tick(timer))
+        return;
     for (int i = 0; i < RESOURCE_COUNT; i++) {
         for (int j = *total_resources[i];
             j < total_tiles * RESOURCE_DENSITIES[i]; j++)
