@@ -5,18 +5,23 @@
 ** Server side - server class
 */
 
-#include "zappy_server.h"
-#include "classes/client_class.h"
-#include "classes/list_class.h"
-#include "classes/server_class.h"
+#include "zappy_misc.h"
+#include "game/client_class.h"
+#include "game/map_class.h"
+#include "misc/list_class.h"
+#include "game/server_class.h"
 
 static const char *error_client = "Couldn't accept client";
+const timeval_t select_timeout = {
+    .tv_sec = 10,
+    .tv_usec = 0,
+};
 
 // Initializes the readfds and returns the max fd found
-static int readfds_init(fd_set *readfds, server_t *server)
+static int readfds_init(fd_set *readfds, game_server_t *server)
 {
     int max_fd = server->socket;
-    client_t *client;
+    game_client_t *client;
 
     FD_ZERO(readfds);
     FD_SET(server->socket, readfds);
@@ -31,11 +36,11 @@ static int readfds_init(fd_set *readfds, server_t *server)
 }
 
 // Creates a new client and adds it to the client list
-static int server_accept_client(server_t *server)
+static int server_accept_client(game_server_t *server)
 {
-    client_t *client = malloc(sizeof(client_t));
+    game_client_t *client = malloc(sizeof(game_client_t));
     int socket;
-    int init_return;
+    int status;
 
     if (!client)
         return ERR_ALLOC;
@@ -43,10 +48,10 @@ static int server_accept_client(server_t *server)
         free(client);
         return ERR_SOCKET;
     }
-    if ((init_return = client_init(client, socket)) != SUCCESS) {
+    if ((status = client_init(client, socket, &server->map)) != SUCCESS) {
         client->destroy(client);
         free(client);
-        return init_return;
+        return status;
     } else if (!server->client_list.add(&server->client_list, client)) {
         client->destroy(client);
         free(client);
@@ -56,23 +61,24 @@ static int server_accept_client(server_t *server)
 }
 
 // Disconnects a client, removes it from the list and destroys it
-static void server_disconnect_client(server_t *server, client_t *client,
-    int index)
+static void server_disconnect_client(game_server_t *server,
+    game_client_t *client, int index)
 {
     server->client_list.remove(&server->client_list, index);
     client->destroy(client);
     free(client);
 }
 
-// Scans all client sockets with select, returns false if there is no activity
-bool server_run(server_t *server)
+// Scans all client sockets with select, returns false if an error occured
+int server_run(game_server_t *server)
 {
     fd_set readfds;
-    int max_fd = readfds_init(&readfds, server);
-    client_t *client;
+    int max_readfd = readfds_init(&readfds, server);
+    timeval_t timeout = select_timeout;
+    game_client_t *client;
 
-    if (select(max_fd + 1, &readfds, NULL, NULL, NULL) <= 0)
-        return false;
+    if (select(max_readfd + 1, &readfds, NULL, NULL, &timeout) < 0)
+        return ERR_NETWORK;
     if (FD_ISSET(server->socket, &readfds)
         && server->client_list.size < MAX_CLIENTS)
         HANDLE_ERROR(server_accept_client(server), error_client);
@@ -80,8 +86,8 @@ bool server_run(server_t *server)
         client = server->client_list.get(&server->client_list, i);
         if (!FD_ISSET(client->socket, &readfds))
             continue;
-        if (!server_read_from_client(server, client))
+        if (server_read_from_client(server, client) == false)
             server_disconnect_client(server, client, i);
     }
-    return true;
+    return SUCCESS;
 }

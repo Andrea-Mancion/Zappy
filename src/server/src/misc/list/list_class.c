@@ -5,7 +5,8 @@
 ** list
 */
 
-#include "classes/list_class.h"
+#include "zappy_misc.h"
+#include "misc/list_class.h"
 
 // Initial structure of list
 static const list_t default_list = {

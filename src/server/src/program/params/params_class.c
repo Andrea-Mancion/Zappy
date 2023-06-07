@@ -5,16 +5,18 @@
 ** Server side - params class
 */
 
-#include "classes/params_class.h"
+#include "zappy_misc.h"
+#include "zappy_program.h"
 
 // Initial structure of params
-static const params_t default_params = {
+static const program_params_t default_params = {
     .mode = RUN,
     .port = 0,
     .width = 0,
     .height = 0,
     .team_names = NULL,
     .max_clients = 0,
+    .frequency = 100,
     .is_valid = &params_is_valid,
     .destroy = &params_destroy,
 };
@@ -36,7 +38,7 @@ static char **get_variadic_args(const int argc, const char *argv[])
 }
 
 // Params constructor
-int params_init(params_t *params, const int argc, const char *argv[])
+int params_init(program_params_t *params, const int argc, const char *argv[])
 {
     *params = default_params;
     for (int i = 0; i < argc; i++) {
@@ -52,12 +54,14 @@ int params_init(params_t *params, const int argc, const char *argv[])
             params->mode = HELP;
         if (strcmp(argv[i], "-n") == 0)
             params->team_names = get_variadic_args(argc - i - 1, argv + i + 1);
+        if (strcmp(argv[i], "-f") == 0)
+            params->frequency = atoi(argv[++i]);
     }
     return SUCCESS;
 }
 
 // Params destructor
-void params_destroy(params_t *params)
+void params_destroy(program_params_t *params)
 {
     if (!params->team_names)
         return;

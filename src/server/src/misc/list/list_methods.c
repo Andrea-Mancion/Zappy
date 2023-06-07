@@ -5,7 +5,8 @@
 ** list
 */
 
-#include "classes/list_class.h"
+#include "zappy_misc.h"
+#include "misc/list_class.h"
 
 // Adds a node to the list, returns false if it fails
 bool list_add(list_t *list, void *data)
