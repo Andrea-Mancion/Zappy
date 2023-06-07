@@ -13,13 +13,14 @@
     #include "game/server_class.h"
 
 // Pair structure of the command table
-typedef struct command_pair_s {
+typedef struct game_command_s {
     const char *command;
     int (*function)(game_server_t *server, game_client_t *client, char **);
-} command_pair_t;
+    int time;
+} game_command_t;
 
 // Const variables
-extern const command_pair_t command_table[];
+extern const game_command_t command_table[];
 
 // Command functions
 int command_forward(game_server_t *server, game_client_t *client, char **args);
