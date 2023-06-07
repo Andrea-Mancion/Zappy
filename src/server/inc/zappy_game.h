@@ -5,9 +5,9 @@
 ** Server side - game namespace
 */
 
-#ifndef ZAPPY_GAME_H
+#ifndef ZAPPY_GAME_H_
 
-    #define ZAPPY_GAME_H
+    #define ZAPPY_GAME_H_
 
     #include <arpa/inet.h>
     #include <sys/select.h>
@@ -37,5 +37,14 @@ typedef enum game_resource_e {
     THYSTAME,
     RESOURCE_COUNT
 } game_resource_t;
+
+// Direction enum
+typedef enum game_direction_e {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST,
+    DIRECTION_COUNT
+} game_direction_t;
 
 #endif

@@ -5,9 +5,9 @@
 ** Server side - timer class
 */
 
-#ifndef ZAPPY_TIMER_H
+#ifndef ZAPPY_TIMER_H_
 
-    #define ZAPPY_TIMER_H
+    #define ZAPPY_TIMER_H_
 
     #include <sys/time.h>
 

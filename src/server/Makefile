@@ -13,7 +13,8 @@ SRC_DIR	=	./src/
 
 SRC	=	\
 	$(SRC_DIR)zappy_main.c	\
-	$(SRC_DIR)game/server/commands_table.c	\
+	$(SRC_DIR)game/commands/commands_table.c	\
+	$(SRC_DIR)game/commands/commands_movement.c	\
 	$(SRC_DIR)game/server/server_class.c	\
 	$(SRC_DIR)game/server/server_accept_client.c	\
 	$(SRC_DIR)game/server/server_read_client.c	\

@@ -5,9 +5,9 @@
 ** Server side - program namespace
 */
 
-#ifndef ZAPPY_PROGRAM_H
+#ifndef ZAPPY_PROGRAM_H_
 
-    #define ZAPPY_PROGRAM_H
+    #define ZAPPY_PROGRAM_H_
 
     #include "zappy_misc.h"
 

@@ -28,7 +28,6 @@ int timer_init(timer_millis_t *timer, int frequency)
 }
 
 // Timer destructor
-void timer_destroy(timer_millis_t *_)
+void timer_destroy(ATTR_UNUSED timer_millis_t *timer)
 {
-    (void)_;
 }

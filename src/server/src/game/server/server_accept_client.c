@@ -7,6 +7,7 @@
 
 #include "zappy_misc.h"
 #include "game/client_class.h"
+#include "game/map_class.h"
 #include "misc/list_class.h"
 #include "game/server_class.h"
 
@@ -47,7 +48,7 @@ static int server_accept_client(game_server_t *server)
         free(client);
         return ERR_SOCKET;
     }
-    if ((status = client_init(client, socket)) != SUCCESS) {
+    if ((status = client_init(client, socket, &server->map)) != SUCCESS) {
         client->destroy(client);
         free(client);
         return status;

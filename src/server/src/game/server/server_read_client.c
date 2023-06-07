@@ -7,7 +7,7 @@
 
 #include <unistd.h>
 #include "zappy_misc.h"
-#include "game/server_class.h"
+#include "game/commands_list.h"
 
 static const char *error_command = "Couldn't execute command";
 static const char *ko_message = "ko";
@@ -17,8 +17,9 @@ static int server_execute_command(game_server_t *server, game_client_t *client,
     char *command, char **args)
 {
     for (int i = 0; command_table[i].command; i++) {
-        if (strcmp(command_table[i].command, command) == 0)
+        if (strcmp(command_table[i].command, command) == 0) {
             return command_table[i].function(server, client, args);
+        }
     }
     return ERR_COMMAND;
 }
@@ -53,8 +54,8 @@ static void server_parse_client(game_server_t *server, game_client_t *client)
 
     for (int i = 0; i < MAX_CLIENT_COMMANDS && token; i++) {
         next_token = strtok(token + strlen(token) + 1, "\n");
-        if (HANDLE_ERROR(server_parse_command(server, client, token),
-            error_command) != SUCCESS)
+        if (!HANDLE_ERROR(server_parse_command(server, client, token),
+            error_command))
             dprintf(client->socket, "%s\n", ko_message);
         token = next_token;
     }

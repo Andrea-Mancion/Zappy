@@ -18,15 +18,8 @@
     #include "game/map_class.h"
     #include "game/client_class.h"
 
-// Forward declarations and definitions
-typedef struct game_server_s game_server_t;
+// Definitions
 typedef struct timeval timeval_t;
-
-// Pair structure of the command table
-typedef struct command_pair_s {
-    char *command;
-    int (*function)(game_server_t *server, game_client_t *client, char **args);
-} command_pair_t;
 
 // Server class
 typedef struct game_server_s {
@@ -35,14 +28,12 @@ typedef struct game_server_s {
     list_t client_list;
     game_map_t map;
     timer_millis_t timer;
-    bool (*read_from_client)(struct game_server_s *server, game_client_t *
-        client);
+    bool (*read_from_client)(struct game_server_s *server, game_client_t *cli);
     int (*run)(struct game_server_s *server);
     void (*destroy)(struct game_server_s *server);
 } game_server_t;
 
 // Const variables
-extern const command_pair_t command_table[];
 extern const timeval_t select_timeout;
 
 // Server ctor, dtor and methods

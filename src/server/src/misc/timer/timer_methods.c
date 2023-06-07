@@ -9,11 +9,10 @@
 #include "misc/timer_class.h"
 
 // Returns the current timestamp in microseconds
-long long int timer_millis_tick(timer_millis_t *_)
+long long int timer_millis_tick(ATTR_UNUSED timer_millis_t *timer)
 {
     struct timeval tv;
 
-    (void)_;
     gettimeofday(&tv, NULL);
     return tv.tv_sec * 1e6 + tv.tv_usec;
 }

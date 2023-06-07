@@ -5,9 +5,9 @@
 ** Server side - miscellaneous namespace, like std in C++
 */
 
-#ifndef ZAPPY_MISC_H
+#ifndef ZAPPY_MISC_H_
 
-    #define ZAPPY_MISC_H
+    #define ZAPPY_MISC_H_
 
 // Includes
     #include <stdarg.h>
