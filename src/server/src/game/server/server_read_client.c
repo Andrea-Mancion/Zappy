@@ -16,9 +16,9 @@ static const char *ko_message = "ko";
 static int server_execute_command(game_server_t *server, game_client_t *client,
     char *command, char **args)
 {
-    for (int i = 0; server->command_table[i].command; i++) {
-        if (strcmp(server->command_table[i].command, command) == 0)
-            return server->command_table[i].function(server, client, args);
+    for (int i = 0; command_table[i].command; i++) {
+        if (strcmp(command_table[i].command, command) == 0)
+            return command_table[i].function(server, client, args);
     }
     return ERR_COMMAND;
 }

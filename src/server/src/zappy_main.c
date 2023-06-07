@@ -21,7 +21,7 @@ ATTR_CONSTRUCTOR void premain(void)
     srand(time(NULL));
 }
 
-// Main function
+// Main function - server disconnects as soon as all clients disconnected
 int main(const int argc, const char *argv[])
 {
     ATTR_CLEANUP(params_destroy) program_params_t params;
