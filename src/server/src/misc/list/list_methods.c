@@ -12,11 +12,18 @@
 bool list_add(list_t *list, void *data)
 {
     node_t *node = malloc(sizeof(node_t));
+    node_t *tmp = list->head;
 
     if (!node)
         return false;
     *node = (node_t){data, list->head};
-    list->head = node;
+    if (!tmp) {
+        list->head = node;
+        list->size++;
+        return true;
+    }
+    for (; tmp->next; tmp = tmp->next);
+    tmp->next = node;
     list->size++;
     return true;
 }
