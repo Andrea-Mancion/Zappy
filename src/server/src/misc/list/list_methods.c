@@ -16,7 +16,7 @@ bool list_add(list_t *list, void *data)
 
     if (!node)
         return false;
-    *node = (node_t){data, list->head};
+    *node = (node_t){data, NULL};
     if (!tmp) {
         list->head = node;
         list->size++;
