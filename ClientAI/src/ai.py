@@ -3,7 +3,7 @@
 import sys
 import socket
 import time
-import pygame
+import os
 
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
@@ -24,12 +24,14 @@ def checkString(string):
     return True
 
 def forkPlayer(ai_socket, name):
-    ai_socket.send("fork\n").decode()
-    if (0):
-        print("Forking")
+    nbValue = 0
+    if (nbValue > 0):
+        ai_socket.send("Fork\n".encode())
+
 
 def createClock(ai_socket, name):
     while not False:
+        # add a condition of if there is a new character
         forkPlayer(ai_socket, name)
         break
 
