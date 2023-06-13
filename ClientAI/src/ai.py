@@ -3,11 +3,6 @@
 import sys
 import socket
 import time
-import pygame
-
-pygame.init()
-
-clock = pygame.time.Clock()
 
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
@@ -27,9 +22,23 @@ def checkString(string):
         return False
     return True
 
+def setObjectDown(ai_socket):
+    # NE PAS OUBLIER DE VERIFIER SI ON POSSEDE BIEN L'OBJET QU'ON VEUT POSER
+    # REFLECHIR A COMMENT SAVOIR QUELLE OBJET DEPOSER
+    # Utiliser la function look pour recuperer les informations des case et split sur les virgules
+    # Voici la variable qui va contenir les données du look
+    itemsLook = []
+    # Check si on est bien seul et sans object sur la case (grace au split)
+    if (1):
+        ai_socket.send(b"Set Object\n").encode()
+        serverString = ai_socket.recv(2046).decode()
+        if (serverString == "ok"):
+            print("Object set down")
+            ai_socket.send(b"drop this object (change it)\n").encode()
+
 def createClock(ai_socket, name):
     while not False:
-        clock.tick(60)
+        setObjectDown(ai_socket)
         break
 
 
@@ -61,5 +70,3 @@ def main(ac, av):
 
 if __name__ == "__main__":
    main(len(sys.argv), sys.argv)
-
-pygame.quit()
