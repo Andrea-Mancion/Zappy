@@ -3,11 +3,6 @@
 import sys
 import socket
 import time
-import pygame
-
-pygame.init()
-
-clock = pygame.time.Clock()
 
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
@@ -27,16 +22,26 @@ def checkString(string):
         return False
     return True
 
+def canTakeObject(ai_socket):
+    # Faire la condition pour check si quand on look on est sur un objet (n'importe lequel, et n'importe quelle nombre), si c'est le cas on peut prendre un objet qui est sur cette case
+    # Voici la variable objectArray, celui va contenir les objects que nous renvoi la fonction look. (a split)
+    objectArray = []
+    if (1):
+        ai_socket.send(b"Take object\n").encode()
+        serverString = ai_socket.recv(2046).decode()
+        if (serverString == "ok\n"):
+            print("I take the object")
+            ai_socket.send(b"The object at position 1 (Change it)\n").encode()
+    else:
+        print("Can't take object, i'm not in a object case")
+
 def createClock(ai_socket, name):
     while not False:
-        clock.tick(60)
+        canTakeObject(ai_socket)
         break
 
 
 def beginning(port, name, machine):
-    print("Port: " + port)
-    print("Name: " + name)
-    print("Machine: " + machine)
     ai_socket = socket.socket()
     ai_socket.connect((machine, int(port)))
     print("Connected to server")
@@ -61,5 +66,3 @@ def main(ac, av):
 
 if __name__ == "__main__":
    main(len(sys.argv), sys.argv)
-
-pygame.quit()
