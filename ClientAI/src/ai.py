@@ -93,16 +93,29 @@ def checkString(string):
         return False
     return True
 
-def createClock(ai_socket, name):
+def firstCommunication(ai_socket, name):
+    serverString = ai_socket.recv(2048).decode()
+    print(serverString)
+    ai_socket.send(str.encode(name + "\n"))
+    serverString = ai_socket.recv(2048).decode()
+    if (serverString == "ko\n"):
+        print("Bad team name")
+        exit(84)
+    nbValue = serverString.split("\n")[0]
+    print("number of slots unused: " + nbValue)
+    serverSplit = serverString.split("\n")[1].split(" ")
+    mapWidth = serverSplit[0]
+    mapHeight = serverSplit[1]
+    print(mapWidth + " " + mapHeight)
+    return nbValue, mapWidth, mapHeight
+
+def createClock(ai_socket, name)
+    nbValue, mapWidth, mapHeight = firstCommunication(ai_socket, name)
     while not False:
         print("Waiting for server response")
         break
 
-
 def beginning(port, name, machine):
-    print("Port: " + port)
-    print("Name: " + name)
-    print("Machine: " + machine)
     ai_socket = socket.socket()
     ai_socket.connect((machine, int(port)))
     print("Connected to server")
