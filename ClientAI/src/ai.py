@@ -3,11 +3,77 @@
 import sys
 import socket
 import time
-import pygame
 
-pygame.init()
+Ressources = [
+    "food",
+    "linemate",
+    "deraumere",
+    "sibur",
+    "mendiane",
+    "phiras",
+    "thystame"
+]
 
-clock = pygame.time.Clock()
+max_ressources = {"linemate": 9, "deraumere": 8, "sibur": 10, "mendiane": 5, "phiras": 6, "thystame": 1}
+
+need_ressources = [
+    {
+        "linemate": 1,
+        "deraumere": 0,
+        "sibur": 0,
+        "mendiane": 0,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 1,
+        "sibur": 1,
+        "mendiane": 0,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 2,
+        "deraumere": 0,
+        "sibur": 1,
+        "mendiane": 0,
+        "phiras": 2,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 1,
+        "sibur": 2,
+        "mendiane": 0,
+        "phiras": 1,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 2,
+        "sibur": 1,
+        "mendiane": 3,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 2,
+        "sibur": 3,
+        "mendiane": 0,
+        "phiras": 1,
+        "thystame": 0
+    },
+    {
+        "linemate": 2,
+        "deraumere": 2,
+        "sibur": 2,
+        "mendiane": 2,
+        "phiras": 2,
+        "thystame": 1
+    }
+]
 
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
@@ -29,7 +95,7 @@ def checkString(string):
 
 def createClock(ai_socket, name):
     while not False:
-        clock.tick(60)
+        print("Waiting for server response")
         break
 
 
@@ -61,5 +127,3 @@ def main(ac, av):
 
 if __name__ == "__main__":
    main(len(sys.argv), sys.argv)
-
-pygame.quit()
