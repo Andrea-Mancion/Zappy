@@ -4,6 +4,77 @@ import sys
 import socket
 import time
 
+Ressources = [
+    "food",
+    "linemate",
+    "deraumere",
+    "sibur",
+    "mendiane",
+    "phiras",
+    "thystame"
+]
+
+max_ressources = {"linemate": 9, "deraumere": 8, "sibur": 10, "mendiane": 5, "phiras": 6, "thystame": 1}
+
+need_ressources = [
+    {
+        "linemate": 1,
+        "deraumere": 0,
+        "sibur": 0,
+        "mendiane": 0,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 1,
+        "sibur": 1,
+        "mendiane": 0,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 2,
+        "deraumere": 0,
+        "sibur": 1,
+        "mendiane": 0,
+        "phiras": 2,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 1,
+        "sibur": 2,
+        "mendiane": 0,
+        "phiras": 1,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 2,
+        "sibur": 1,
+        "mendiane": 3,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 2,
+        "sibur": 3,
+        "mendiane": 0,
+        "phiras": 1,
+        "thystame": 0
+    },
+    {
+        "linemate": 2,
+        "deraumere": 2,
+        "sibur": 2,
+        "mendiane": 2,
+        "phiras": 2,
+        "thystame": 1
+    }
+]
+
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
     print("\tport\tis the port number")
@@ -38,9 +109,11 @@ def firstCommunication(ai_socket, name):
     print(mapWidth + " " + mapHeight)
     return nbValue, mapWidth, mapHeight
 
-def createClock(ai_socket, name):
+def createClock(ai_socket, name)
     nbValue, mapWidth, mapHeight = firstCommunication(ai_socket, name)
-
+    while not False:
+        print("Waiting for server response")
+        break
 
 def beginning(port, name, machine):
     ai_socket = socket.socket()
