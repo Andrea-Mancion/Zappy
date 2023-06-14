@@ -3,11 +3,6 @@
 import sys
 import socket
 import time
-import pygame
-
-pygame.init()
-
-clock = pygame.time.Clock()
 
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
@@ -27,9 +22,20 @@ def checkString(string):
         return False
     return True
 
+def StartElevation(ai_socket):
+    #Check if dans l'inventaire on possède bien les ressources nécessaires pour l'incantation
+    #Si oui, on drop les objets (dans une case vide de préférence), puis start l'incantation
+    if (1):
+        ai_socket.send(b"Icantation\n").encode()
+        serverString = ai_socket.recv(2046).decode()
+        if (serverString != "ko\n"):
+            #Recuperer le lvl que le serveur envoie
+            lvl += 1
+            print("Here my new lvl: " + lvl)
+
 def createClock(ai_socket, name):
     while not False:
-        clock.tick(60)
+        StartElevation(ai_socket)
         break
 
 
@@ -61,5 +67,3 @@ def main(ac, av):
 
 if __name__ == "__main__":
    main(len(sys.argv), sys.argv)
-
-pygame.quit()
