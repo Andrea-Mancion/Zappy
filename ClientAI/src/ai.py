@@ -24,9 +24,16 @@ def checkString(string):
     return True
 
 def forkPlayer(ai_socket, name):
+    # Si je ne m'abuse the nbValue est le resultat de combien de place il reste dans la team
     nbValue = 0
     if (nbValue > 0):
-        ai_socket.send("Fork\n".encode())
+        ai_socket.send("Fork\n").encode()
+        serverSting = ai_socket.recv(1024).decode()
+        if (serverSting == "ok\n"):
+            print("Forking")
+            pip = os.fork()
+            if (pip == 0):
+                print("I'm the child")
 
 
 def createClock(ai_socket, name):
