@@ -26,7 +26,7 @@ def StartElevation(ai_socket):
     #Check if dans l'inventaire on possède bien les ressources nécessaires pour l'incantation
     #Si oui, on drop les objets (dans une case vide de préférence), puis start l'incantation
     if (1):
-        ai_socket.send(b"Icantation\n").encode()
+        ai_socket.send(b"Incantation\n").encode()
         serverString = ai_socket.recv(2046).decode()
         if (serverString != "ko\n"):
             #Recuperer le lvl que le serveur envoie
