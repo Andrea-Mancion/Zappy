@@ -25,10 +25,12 @@ def checkString(string):
 
 def forkPlayer(ai_socket, name):
     # Si je ne m'abuse the nbValue est le resultat de combien de place il reste dans la team
+
     nbValue = 0
     if (nbValue > 0):
-        ai_socket.send("Fork\n").encode()
+        ai_socket.send(str.encode("Fork\n"))
         serverSting = ai_socket.recv(1024).decode()
+        print("Server2: " + serverSting)
         if (serverSting == "ok\n"):
             print("Forking")
             pip = os.fork()
@@ -44,9 +46,6 @@ def createClock(ai_socket, name):
 
 
 def beginning(port, name, machine):
-    print("Port: " + port)
-    print("Name: " + name)
-    print("Machine: " + machine)
     ai_socket = socket.socket()
     ai_socket.connect((machine, int(port)))
     print("Connected to server")
