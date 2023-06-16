@@ -3,11 +3,6 @@
 import sys
 import socket
 import time
-import pygame
-
-pygame.init()
-
-clock = pygame.time.Clock()
 
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
@@ -27,9 +22,18 @@ def checkString(string):
         return False
     return True
 
+def ifDeathPlayer(ai_socket):
+    serverString = ai_socket.recv(2046).decode()
+    if (serverString == "dead"):
+        return True
+    return False
+
 def createClock(ai_socket, name):
     while not False:
-        clock.tick(60)
+        if (ifDeathPlayer(ai_socket) == True):
+            print("Player is dead")
+            # Use either os.kill with the getpid as parameter or sys.exit(0) to kill the child process
+            return
         break
 
 
@@ -61,5 +65,3 @@ def main(ac, av):
 
 if __name__ == "__main__":
    main(len(sys.argv), sys.argv)
-
-pygame.quit()
