@@ -23,7 +23,7 @@ def checkString(string):
     return True
 
 def nbTeams(ai_socket, name):
-    ai_socket.send(f"Connect_nbr {name}\n".encode())
+    ai_socket.send(str.encode("Connect_nbr\n"))
     nbValue = ai_socket.recv(1024).decode()
     print(nbValue)
     return nbValue
@@ -32,7 +32,6 @@ def createClock(ai_socket, name):
     while not False:
         nbValue = nbTeams(ai_socket, name)
         break
-
 
 def beginning(port, name, machine):
     print("Port: " + port)
