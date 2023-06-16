@@ -5,6 +5,7 @@ import socket
 import time
 import os
 
+
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
     print("\tport\tis the port number")
@@ -23,10 +24,11 @@ def checkString(string):
         return False
     return True
 
+
 def forkPlayer(ai_socket, name):
     # Si je ne m'abuse the nbValue est le resultat de combien de place il reste dans la team
 
-    nbValue = 0
+    nbValue = nbTeams(ai_socket, name)
     if (nbValue > 0):
         ai_socket.send(str.encode("Fork\n"))
         serverSting = ai_socket.recv(1024).decode()
@@ -42,7 +44,13 @@ def createClock(ai_socket, name):
     while not False:
         # add a condition of if there is a new character
         forkPlayer(ai_socket, name)
-        break
+
+        
+def nbTeams(ai_socket, name):
+    ai_socket.send(str.encode("Connect_nbr\n"))
+    nbValue = ai_socket.recv(1024).decode()
+    print(nbValue)
+    return nbValue
 
 
 def beginning(port, name, machine):
