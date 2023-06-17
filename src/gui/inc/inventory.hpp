@@ -6,9 +6,12 @@
 */
 
 #pragma once
+
 #include <utility>
 #include <vector>
 #include <string>
+
+#include "libs.hpp"
 
 typedef enum {
     FOOD,
@@ -24,6 +27,11 @@ class Inventory {
     private:
     unsigned int _food;
     unsigned int _linemate;
+    unsigned int _deraumere;
+    unsigned int _sibur;
+    unsigned int _mendiane;
+    unsigned int _phiras;
+    unsigned int _thystame;
     std::size_t _typeQuantity = 7;
 
     public:
