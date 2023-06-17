@@ -27,13 +27,16 @@ def canTakeObject(ai_socket):
     # Voici la variable objectArray, celui va contenir les objects que nous renvoi la fonction look. (a split)
     objectArray = []
     element_split = objectArray[0].split(" ")
-    if (element_split > 1):
-        ai_socket.send(str.encode("Take object\n"))
-        serverString = ai_socket.recv(2046).decode()
-        if (serverString == "ok\n"):
-            print("I take the object")
-        else:
-            print("I can't take the object")
+    if (len(element_split) > 1):
+        for item in Ressources:
+            for element in element_split:
+                if (item == element):
+                    ai_socket.send(str.encode("Take " + element + "\n"))
+                    serverString = ai_socket.recv(2046).decode()
+                    if (serverString == "ok\n"):
+                        print("I take the object")
+                    else:
+                        print("I can't take the object")
     else:
         print("Can't take object, i'm not in a object case")
 
