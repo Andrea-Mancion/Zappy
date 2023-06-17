@@ -26,12 +26,14 @@ def canTakeObject(ai_socket):
     # Faire la condition pour check si quand on look on est sur un objet (n'importe lequel, et n'importe quelle nombre), si c'est le cas on peut prendre un objet qui est sur cette case
     # Voici la variable objectArray, celui va contenir les objects que nous renvoi la fonction look. (a split)
     objectArray = []
-    if (1):
-        ai_socket.send(b"Take object\n").encode()
+    element_split = objectArray[0].split(" ")
+    if (element_split > 1):
+        ai_socket.send(str.encode("Take object\n"))
         serverString = ai_socket.recv(2046).decode()
         if (serverString == "ok\n"):
             print("I take the object")
-            ai_socket.send(b"The object at position 1 (Change it)\n").encode()
+        else:
+            print("I can't take the object")
     else:
         print("Can't take object, i'm not in a object case")
 
