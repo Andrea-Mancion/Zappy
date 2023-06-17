@@ -5,14 +5,17 @@
 ## Makefile
 ##
 
-SRC	=	map.cpp
+INC_DIR	=	./inc/
+SRC_DIR	=	./src/
+
+SRC	=	$(SRC_DIR)map.cpp	\
+		$(SRC_DIR)gui.cpp	\
 
 OBJ	=	$(SRC:.cpp=.o)
 
-NAME	=	sfml_window
+NAME	=	gui
 
-CFLAGS	+=	-Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system -Iinc/
-
+CFLAGS	+=	-Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system
 
 all:	$(NAME)
 
