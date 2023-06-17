@@ -22,30 +22,83 @@ def checkString(string):
         return False
     return True
 
-def setObjectDown(ai_socket):
+def setObjectDown(ai_socket, item):
     # NE PAS OUBLIER DE VERIFIER SI ON POSSEDE BIEN L'OBJET QU'ON VEUT POSER
-    # REFLECHIR A COMMENT SAVOIR QUELLE OBJET DEPOSER
+    # REFLECHIR A COMMENT SAVOIR QUELLE OBJET DEPOSER (PS: Grace au lvl et au 2ème paramètre)
     # Utiliser la function look pour recuperer les informations des case et split sur les virgules
     # Voici la variable qui va contenir les données du look
     itemsLook = []
+    # Voici la variable qui va contenir les données du inventory
+    itemsGet = []
     # Check si on est bien seul et sans object sur la case (grace au split)
-    if (1):
-        ai_socket.send(b"Set Object\n").encode()
-        serverString = ai_socket.recv(2046).decode()
-        if (serverString == "ok"):
-            print("Object set down")
-            ai_socket.send(b"drop this object (change it)\n").encode()
+    if (len(itemsLook) == 1):
+        for element in itemsGet:
+            if (element == item):
+                print("item " + item)
+                ai_socket.send(str.encode("Set object " + item + "\n"))
+                serverString = ai_socket.recv(2046).decode()
+                print("1 " + serverString)
+                if (serverString == "ok"):
+                    print("Object set down")
+                else:
+                    print("Object not set down")
+                break
 
 def createClock(ai_socket, name):
+    # Avoir le lvl du joueur (recuperer soit au tout debut (base 1) soit a chaque elevation)
+    # D'ailleur ne pas oublier de faire ceci que dans le cas ou on veut faire un level up
+    lvl = 1
     while not False:
-        setObjectDown(ai_socket)
+        if (lvl == 1):
+            setObjectDown(ai_socket, "linemate")
+        elif (lvl == 2):
+            setObjectDown(ai_socket, "linemate")
+            setObjectDown(ai_socket, "deraumere")
+            setObjectDown(ai_socket, "sibur")
+        elif (lvl == 3):
+            setObjectDown(ai_socket, "linemate")
+            setObjectDown(ai_socket, "linemate")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "phiras")
+            setObjectDown(ai_socket, "phiras")
+        elif (lvl == 4):
+            setObjectDown(ai_socket, "linemate")
+            setObjectDown(ai_socket, "deraumere")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "phiras")
+        elif (lvl == 5):
+            setObjectDown(ai_socket, "linemate")
+            setObjectDown(ai_socket, "deraumere")
+            setObjectDown(ai_socket, "deraumere")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "mendiane")
+            setObjectDown(ai_socket, "mendiane")
+            setObjectDown(ai_socket, "menidane")
+        elif (lvl == 6):
+            setObjectDown(ai_socket, "linemate")
+            setObjectDown(ai_socket, "deraumere")
+            setObjectDown(ai_socket, "deraumere")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "phiras")
+        elif (lvl == 7):
+            setObjectDown(ai_socket, "linemate")
+            setObjectDown(ai_socket, "linemate")
+            setObjectDown(ai_socket, "deraumere")
+            setObjectDown(ai_socket, "deraumere")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "sibur")
+            setObjectDown(ai_socket, "mendiane")
+            setObjectDown(ai_socket, "mendiane")
+            setObjectDown(ai_socket, "phiras")
+            setObjectDown(ai_socket, "phiras")
+            setObjectDown(ai_socket, "thystame")
         break
 
 
 def beginning(port, name, machine):
-    print("Port: " + port)
-    print("Name: " + name)
-    print("Machine: " + machine)
     ai_socket = socket.socket()
     ai_socket.connect((machine, int(port)))
     print("Connected to server")
