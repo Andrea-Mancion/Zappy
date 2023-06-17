@@ -22,27 +22,30 @@ def checkString(string):
         return False
     return True
 
-def StartElevation(ai_socket):
-    #Check if dans l'inventaire on possède bien les ressources nécessaires pour l'incantation
-    #Si oui, on drop les objets (dans une case vide de préférence), puis start l'incantation
-    if (1):
-        ai_socket.send(b"Incantation\n").encode()
+def StartElevation(ai_socket, lvl):
+    # Recuperer les élements de la fonction look pour check si on est sur une case vide
+    # Voici la variable qui va recuperer le tableau
+    object_look = []
+    object_split = object_look[0].split(" ")
+    if (len(object_split) == 1):
+        # Appeler la fonction qui va permettre de faire le set Object down avec en paramettre la socket et le lvl
+        ai_socket.send(str.encode("Incantation\n"))
         serverString = ai_socket.recv(2046).decode()
         if (serverString != "ko\n"):
             #Recuperer le lvl que le serveur envoie
+            print(serverString)
             lvl += 1
             print("Here my new lvl: " + lvl)
+    return lvl
 
 def createClock(ai_socket, name):
+    lvl = 1
     while not False:
-        StartElevation(ai_socket)
+        lvl = StartElevation(ai_socket, lvl)
         break
 
 
 def beginning(port, name, machine):
-    print("Port: " + port)
-    print("Name: " + name)
-    print("Machine: " + machine)
     ai_socket = socket.socket()
     ai_socket.connect((machine, int(port)))
     print("Connected to server")
