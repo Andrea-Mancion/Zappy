@@ -28,7 +28,8 @@ class Map {
         void addPlayer(Player player);
         std::vector<std::vector<Inventory>> *getTiles();
         Inventory *getTile(size_t x, size_t y);
-        void setTiles(std::vector<std::vector<Inventory)
+        void setTiles(std::vector<std::vector<Inventory>>);
+        void setTile(size_t x, size_t y, Inventory tile);
 };
 
 void draw_map(sf::RenderWindow& window, sf::Sprite& sprite, sf::Sprite& playerSprite);
