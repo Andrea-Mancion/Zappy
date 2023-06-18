@@ -7,83 +7,26 @@
 
 #include "../inc/gui.hpp"
 
-void clearWindow(sf::RenderWindow& window, const sf::Color& backgroundColor)
-{
-    window.clear(backgroundColor);
-}
-
-void displayWindow(sf::RenderWindow& window)
-{
-    window.display();
-}
-
-void drawSprite(sf::RenderWindow& window, const sf::Sprite& sprite)
-{
-    window.draw(sprite);
-}
-
-sf::Sprite createSprite(const std::string& filename, float scale)
-{
-    sf::Texture texture;
-    if (!texture.loadFromFile(filename)) {
-        throw std::runtime_error("Failed to load texture: " + filename);
-    }
-    sf::Sprite sprite;
-    sprite.setTexture(texture);
-    sprite.setScale(scale, scale);
-
-    return sprite;
-}
-
-void draw_map(sf::RenderWindow& window, sf::Sprite& sprite, sf::Sprite& playerSprite)
-{
-    sf::Vector2u size = window.getSize();
-    sf::FloatRect bounds = sprite.getGlobalBounds();
-    float isoX = 0.0f;
-    float isoY = 0.0f;
-
-    sf::Color backgroundColor(176, 224, 230);
-    clearWindow(window, backgroundColor);
-
-    for (size_t i = 0; i < MAP_RANGE; i++)
-    {
-        for (size_t j = 0; j < MAP_RANGE; j++)
-        {
-            isoX = (i - j) * 0.5f * (bounds.width / 2) + size.x / 2;
-            isoY = (i + j) * 0.4f * (bounds.height / 2) + size.y / 4;
-
-            sprite.setPosition((int)isoX, (int)isoY);
-            drawSprite(window, sprite);
-
-            isoX = (i - j) * 0.5f * -(bounds.width / 2) + size.x / 2;
-            sprite.setPosition((int)isoX, (int)isoY);
-            drawSprite(window, sprite);
-        }
-    }
-    drawSprite(window, playerSprite);
-    displayWindow(window);
-}
-
-// sf::Sprite createSprite(std::string path, float scale)
-// {
-//     sf::Texture texture;
-//     if (!texture.loadFromFile((std::string)path)) {
-//         std::cerr << "Error: could not load texture: " << path << std::endl;
-//         exit(84);
-//     }
-//     sf::Sprite sprite;
-//     sprite.setTexture(texture);
-//     sprite.setScale(scale, scale);
-//     return sprite;
-// }
-
-////////////////////////////////////////////
-
 Map::Map()
 {
     _dimension = std::pair<unsigned int, unsigned int>(0, 0);
     _tiles = std::vector<std::vector<Inventory>>();
     _players = std::vector<Player>();
+}
+
+Map::Map(unsigned int width, unsigned int height, std::string path, float scale)
+{
+    _dimension = std::pair<unsigned int, unsigned int>(width, height);
+    _tiles = std::vector<std::vector<Inventory>>();
+    _players = std::vector<Player>();
+    _texture = sf::Texture();
+    _sprite = sf::Sprite();
+    if (!_texture.loadFromFile(path)) {
+        std::cerr << "Cannot load file " << path << std::endl;
+        exit(84);
+    }
+    _sprite.setTexture(_texture);
+    _sprite.setScale(scale, scale);
 }
 
 Map::Map(unsigned int width, unsigned int heigth, std::vector<std::vector<Inventory>> tiles)
@@ -138,7 +81,30 @@ void Map::setTiles(std::vector<std::vector<Inventory>> tiles)
     this->_tiles = tiles;
 }
 
-void Map::setTile(size_t x, size_t y, Inventory tile)
+void Map::draw_map(sf::RenderWindow &window)
 {
-    this->_tiles[x][y] = tile;
+    sf::Vector2u size = window.getSize();
+    sf::FloatRect bounds = this->_sprite.getGlobalBounds();
+    float isoX = 0.0f;
+    float isoY = 0.0f;
+
+    sf::Color backgroundColor(176, 224, 230);
+    window.clear(backgroundColor);
+
+    for (size_t i = 0; i < this->_dimension.second; i++)
+    {
+        for (size_t j = 0; j < this->_dimension.first; j++)
+        {
+            isoX = (i - j) * 0.5f * (bounds.width / 2) + size.x / 2;
+            isoY = (i + j) * 0.4f * (bounds.height / 2) + size.y / 4;
+
+            this->_sprite.setPosition((int)isoX, (int)isoY);
+            window.draw(this->_sprite);
+
+            isoX = (i - j) * 0.5f * -(bounds.width / 2) + size.x / 2;
+            this->_sprite.setPosition((int)isoX, (int)isoY);
+            window.draw(this->_sprite);
+        }
+    }
+    window.display();
 }

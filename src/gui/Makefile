@@ -8,14 +8,19 @@
 INC_DIR	=	./inc/
 SRC_DIR	=	./src/
 
-SRC	=	$(SRC_DIR)map.cpp	\
-		$(SRC_DIR)gui.cpp	\
+SRC	=	$(SRC_DIR)map.cpp		\
+		$(SRC_DIR)gui.cpp		\
+		$(SRC_DIR)inventory.cpp	\
+		$(SRC_DIR)player.cpp	\
+		$(SRC_DIR)server.cpp	\
 
 OBJ	=	$(SRC:.cpp=.o)
 
 NAME	=	gui
 
 CFLAGS	+=	-Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system
+
+MAKEFLAGS += -j$(shell grep -c 'processor' /proc/cpuinfo)
 
 all:	$(NAME)
 

@@ -11,10 +11,9 @@ int main(int ac, char **av)
 {
     sf::RenderWindow window(sf::VideoMode(1580, 920), "SFML works!");
 
-    sf::Sprite sprite = createSprite("assets/grass1.png", 0.5f);
-    sf::Sprite playerSprite = createSprite("assets/player/dino.png", 0.3f);
+    //sf::Sprite playerSprite = createSprite("assets/player/dino.png", 0.3f);
     Server *server;
-    Map map;
+    Map map(15, 15, "assets/grass1.png", 0.5f);
 
     try {
         server = new Server(ac, av);
@@ -27,17 +26,14 @@ int main(int ac, char **av)
         if (server->isReceivingTransmission())
             server->getTransmission();
         while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Resized)
-            {
+            if (event.type == sf::Event::Resized) {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                 window.setView(sf::View(visibleArea));
             }
-
-            draw_map(window, sprite, playerSprite);
-
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        map.draw_map(window);
     }
     return 0;
 }
