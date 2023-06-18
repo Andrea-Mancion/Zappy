@@ -18,6 +18,15 @@
     #include <errno.h>
     #include <time.h>
 
+// Tick function - returns current time in microseconds
+static inline long long int tick(void)
+{
+    struct timespec ts;
+
+    clock_gettime(0, &ts);
+    return (ts.tv_sec * 1e6 + ts.tv_nsec / 1e3);
+}
+
 // Attributes
     #define ATTR_UNUSED __attribute__((unused))
     #define ATTR_CLEANUP(callback) __attribute__((cleanup(callback)))
@@ -31,7 +40,8 @@
     #define ERR_BIND 4
     #define ERR_COMMAND 5
     #define ERR_NETWORK 6
-    #define NB_ERR 7
+    #define ERR_TEAM 7
+    #define NB_ERR 8
 
 // Error messages
     #define ERROR_TABLE ((const char*[]) { \
@@ -42,13 +52,21 @@
         "Couldn't bind given port", \
         "Invalid command", \
         "Network error occured", \
+        "Invalid team name or team full", \
     })
 
 // Error handling functions
     #define ERROR(c) (c >= SUCCESS && c < NB_ERR ? ERROR_TABLE[c] : \
 "Invalid error code")
     #define GET_ERRNO() (errno ? strerror(errno) : "No internal error")
-    #define HANDLE_ERROR(s, m) (s ? fprintf(stderr, \
-"\033[31m%s: %s - %s\n\033[0m", m, ERROR(s), GET_ERRNO()) && false : true)
+
+// Prints error if status isn't SUCCESS
+static inline bool handle_error(int status, const char *message) {
+    if (status == SUCCESS)
+        return true;
+    fprintf(stderr, "\033[1;31m%s\033[0m: %s - %s\n", message, ERROR(status),
+        GET_ERRNO());
+    return false;
+}
 
 #endif

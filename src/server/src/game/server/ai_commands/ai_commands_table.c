@@ -6,13 +6,13 @@
 */
 
 #include "zappy_misc.h"
-#include "game/commands_list.h"
+#include "game/command_class.h"
 
-// Table containing all of the commands and their respective functions
-const game_command_t command_table[] = {
-    {"Forward", &command_forward, 7},
-    {"Right", &command_right, 7},
-    {"Left", &command_left, 7},
+// Table containing all of the AI commands and their respective functions
+const game_command_t ai_commands_table[] = {
+    {"Forward", &ai_command_forward, 7},
+    {"Right", &ai_command_right, 7},
+    {"Left", &ai_command_left, 7},
     /*
     {"Look", &command_look, 7},
     {"Inventory", &command_inventory, 1},
@@ -24,5 +24,5 @@ const game_command_t command_table[] = {
     {"Set", &command_set, 7},
     {"Incantation", &command_incantation, 300},
     */
-    {NULL, NULL}
+    {NULL, NULL, 0}
 };

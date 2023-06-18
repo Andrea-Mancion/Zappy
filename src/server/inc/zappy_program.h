@@ -22,8 +22,8 @@
         "\tport\t\tis the port number\n" \
         "\twidth\t\tis the width of the world\n" \
         "\theight\t\tis the height of the world\n" \
-        "\tnameX\t\tis the name of the team X\n" \
-        "\tclientsNb\tis the number of authorized clients per team\n" \
+        "\tnameX\t\tis the name of the team X (name \"GRAPHIC\" is reserved)" \
+        "\n\tclientsNb\tis the number of authorized clients per team\n" \
         "\tfreq\t\tis the reciprocal of time unit for execution of actions\n"
 
 // Enum for the different modes for the program to run in

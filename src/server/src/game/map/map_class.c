@@ -20,13 +20,12 @@ static const game_map_t default_map = {
     .total_mendiane = 0,
     .total_phiras = 0,
     .total_thystame = 0,
-    .last_refill = 0,
     .refill = &map_refill,
-    .destroy = &map_destroy,
+    .destroy = &game_map_destroy,
 };
 
 // Map constructor
-int map_init(game_map_t *map, int width, int height)
+int game_map_init(game_map_t *map, int width, int height)
 {
     *map = default_map;
     map->width = width;
@@ -43,7 +42,7 @@ int map_init(game_map_t *map, int width, int height)
 }
 
 // Map destructor
-void map_destroy(game_map_t *map)
+void game_map_destroy(game_map_t *map)
 {
     for (int i = 0; i < map->height; i++) {
         for (int j = 0; j < map->width; j++)

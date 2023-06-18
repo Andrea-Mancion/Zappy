@@ -13,24 +13,33 @@ static const list_t default_list = {
     .head = NULL,
     .size = 0,
     .add = &list_add,
+    .insert = &list_insert,
+    .index = &list_index,
     .remove = &list_remove,
     .get = &list_get,
     .destroy = &list_destroy,
+    .item_dtor = NULL,
 };
 
 // List constructor
-int list_init(list_t *list)
+int list_init(list_t *list, void (*item_dtor)(void *), int (*item_cmp)(void *,
+    void *))
 {
     *list = default_list;
+    list->item_dtor = item_dtor;
+    list->item_cmp = item_cmp;
     return SUCCESS;
 }
 
 // Destroys the list
 void list_destroy(list_t *list)
 {
-    node_t *next = NULL;
+    list_node_t *next = NULL;
 
-    for (node_t *tmp = list->head; tmp; tmp = next) {
+    for (list_node_t *tmp = list->head; tmp; tmp = next) {
+        if (list->item_dtor)
+            list->item_dtor(tmp->data);
+        free(tmp->data);
         next = tmp->next;
         free(tmp);
     }

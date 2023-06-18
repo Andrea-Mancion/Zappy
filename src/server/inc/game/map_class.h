@@ -10,7 +10,6 @@
     #define ZAPPY_GAME_MAP_H_
 
     #include "zappy_game.h"
-    #include "misc/timer_class.h"
     #include "game/tile_class.h"
 
 // Resource densities array
@@ -36,14 +35,13 @@ typedef struct game_map_s {
     int total_mendiane;
     int total_phiras;
     int total_thystame;
-    long long int last_refill;
-    void (*refill)(struct game_map_s *map, timer_millis_t *timer);
+    void (*refill)(struct game_map_s *map);
     void (*destroy)(struct game_map_s *map);
 } game_map_t;
 
 // Map ctor, dtor and methods
-int map_init(game_map_t *map, int width, int height);
-void map_destroy(game_map_t *map);
-void map_refill(game_map_t *map, timer_millis_t *timer);
+int game_map_init(game_map_t *map, int width, int height);
+void game_map_destroy(game_map_t *map);
+void map_refill(game_map_t *map);
 
 #endif
