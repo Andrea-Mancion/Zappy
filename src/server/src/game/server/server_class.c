@@ -41,6 +41,7 @@ static const game_server_t default_server = {
     .disconnect_client = &server_disconnect_client,
     .set_timeout = &server_set_timeout,
     .get_timeout = &server_get_timeout,
+    .init_client = &server_init_client,
 };
 
 // Initialize the teams of the server

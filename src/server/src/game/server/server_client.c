@@ -12,32 +12,6 @@
 
 static const char *welcome_message = "WELCOME";
 
-// Give a team name to the client
-static int give_team_name(game_server_t *server, game_client_t *client,
-    char *command)
-{
-    list_t *team = server->teams.get(&server->teams, command);
-    game_client_t **id;
-    event_params_t params = {0, FOOD_TIME * 1e6, PLAYER_REMOVE_HEALTH, client};
-    if (strcmp(command, "GRAPHIC") == 0) {
-        client->team_name = strdup(command);
-        return SUCCESS;
-    } else if (!team) {
-        dprintf(client->socket, "ko\n");
-        return ERR_TEAM;
-    }
-    client_init_as_ai(client, &server->map);
-    id = malloc(sizeof(game_client_t *));
-    *id = client;
-    team->add(team, id);
-    client->team_name = strdup(command);
-    params.start_time = tick();
-    server->add_event(server, &params);
-    dprintf(client->socket, "%d\n", server->max_team_capacity - team->size);
-    dprintf(client->socket, "%d %d\n", server->map.width, server->map.height);
-    return SUCCESS;
-}
-
 // Adds the given command from the client's buffer to the client's command list
 static int add_command(game_server_t *server, game_client_t *client,
     char *command)
@@ -46,7 +20,7 @@ static int add_command(game_server_t *server, game_client_t *client,
     int status;
 
     if (!client->team_name)
-        return give_team_name(server, client, command);
+        return server->init_client(server, client, command);
     cmd = malloc(sizeof(pending_command_t));
     if ((status = pending_command_init(cmd, command)) != SUCCESS) {
         pending_command_destroy(cmd);

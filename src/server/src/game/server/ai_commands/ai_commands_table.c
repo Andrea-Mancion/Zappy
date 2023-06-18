@@ -13,16 +13,16 @@ const game_command_t ai_commands_table[] = {
     {"Forward", &ai_command_forward, 7},
     {"Right", &ai_command_right, 7},
     {"Left", &ai_command_left, 7},
+    {"Take", &ai_command_take, 7},
+    {"Set", &ai_command_set, 7},
     /*
-    {"Look", &command_look, 7},
-    {"Inventory", &command_inventory, 1},
-    {"Broadcast", &command_broadcast, 7},
-    {"Connect_nbr", &command_connect_nbr, 0},
-    {"Fork", &command_fork, 42},
-    {"Eject", &command_eject, 7},
-    {"Take", &command_take, 7},
-    {"Set", &command_set, 7},
-    {"Incantation", &command_incantation, 300},
+    {"Look", &ai_command_look, 7},
+    {"Inventory", &ai_command_inventory, 1},
+    {"Broadcast", &ai_command_broadcast, 7},
+    {"Connect_nbr", &ai_command_connect_nbr, 0},
+    {"Fork", &ai_command_fork, 42},
+    {"Eject", &ai_command_eject, 7},
+    {"Incantation", &ai_command_incantation, 300},
     */
     {NULL, NULL, 0}
 };

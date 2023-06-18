@@ -11,6 +11,7 @@
 
     #include <arpa/inet.h>
     #include <sys/select.h>
+    #include <stddef.h>
 
 // Settings
     #define MAX_CLIENTS 100
@@ -39,6 +40,14 @@ typedef enum game_resource_e {
     THYSTAME,
     RESOURCE_COUNT
 } game_resource_t;
+
+typedef struct game_resource_name_pair_s {
+    char *name;
+    game_resource_t resource;
+} game_resource_name_pair_t;
+
+// Resources names array
+extern const game_resource_name_pair_t resource_names[];
 
 // Direction enum
 typedef enum game_direction_e {
