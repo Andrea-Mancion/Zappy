@@ -24,8 +24,8 @@ ATTR_CONSTRUCTOR void premain(void)
 // Main function
 int main(const int argc, const char *argv[])
 {
-    ATTR_CLEANUP(params_destroy) program_params_t params = {0};
-    ATTR_CLEANUP(server_destroy) game_server_t server = {0};
+    ATTR_CLEANUP(params_destroy) program_params_t params = default_params;
+    ATTR_CLEANUP(server_destroy) game_server_t server = default_server;
 
     if (!handle_error(params_init(&params, argc - 1, argv + 1), error_params))
         return PROGRAM_EXIT_FAILURE;

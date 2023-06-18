@@ -56,6 +56,9 @@ struct game_server_s {
     void (*destroy)(game_server_t *server);
 };
 
+// Default structure of server
+extern const game_server_t default_server;
+
 // Server ctor and dtor
 int server_init(game_server_t *server, program_params_t *params);
 void server_destroy(game_server_t *server);

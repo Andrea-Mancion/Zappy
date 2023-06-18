@@ -11,7 +11,7 @@
 #include "game/client_class.h"
 
 // Initial structure of server
-static const game_server_t default_server = {
+const game_server_t default_server = {
     .socket = -1,
     .address = {
         .sin_family = AF_INET,
@@ -87,14 +87,10 @@ int server_init(game_server_t *server, program_params_t *params)
 // Server destructor
 void server_destroy(game_server_t *server)
 {
-    if (server->teams.destroy)
-        server->teams.destroy(&server->teams);
-    if (server->map.destroy)
-        server->map.destroy(&server->map);
-    if (server->clients.destroy)
-        server->clients.destroy(&server->clients);
-    if (server->events.destroy)
-        server->events.destroy(&server->events);
+    server->teams.destroy(&server->teams);
+    server->map.destroy(&server->map);
+    server->clients.destroy(&server->clients);
+    server->events.destroy(&server->events);
     if (server->socket >= 0)
         close(server->socket);
 }

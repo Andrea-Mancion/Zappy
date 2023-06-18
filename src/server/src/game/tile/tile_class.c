@@ -10,7 +10,7 @@
 #include "zappy_misc.h"
 
 // Initial structure of tile
-static const game_tile_t default_tile = {
+const game_tile_t default_tile = {
     .food = 0,
     .linemate = 0,
     .deraumere = 0,

@@ -45,6 +45,9 @@ typedef struct program_params_s {
     void (*destroy)(struct program_params_s *params);
 } program_params_t;
 
+// Initial structure of params
+extern const program_params_t default_params;
+
 // Params ctor, dtor and methods
 int params_init(program_params_t *params, const int argc, const char *argv[]);
 bool params_is_valid(program_params_t *params);

@@ -9,7 +9,7 @@
 #include "zappy_program.h"
 
 // Initial structure of params
-static const program_params_t default_params = {
+const program_params_t default_params = {
     .mode = RUN,
     .port = 0,
     .width = 0,

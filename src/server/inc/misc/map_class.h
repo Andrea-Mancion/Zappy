@@ -30,6 +30,9 @@ typedef struct map_s {
     void (*val_dtor)(void *);
 } map_t;
 
+// Default structure of map
+extern const map_t default_map;
+
 // Map ctor, dtor and methods
 int map_init(map_t *map, void (*key_dtor)(void *), void (*val_dtor)(void *),
     int (*key_cmp)(void *, void *));

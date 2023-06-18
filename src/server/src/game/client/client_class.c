@@ -12,7 +12,7 @@
 #include "game/map_class.h"
 
 // Initial structure of client
-static const game_client_t default_client = {
+const game_client_t default_client = {
     .socket = -1,
     .team_name = NULL,
     .buffer = NULL,
@@ -28,7 +28,7 @@ static const game_client_t default_client = {
 };
 
 // Initial structure of pending command
-static const pending_command_t default_command = {
+const pending_command_t default_command = {
     .input = NULL,
     .received_at = -1,
     .duration = -1,
