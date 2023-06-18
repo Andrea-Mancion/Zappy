@@ -307,9 +307,16 @@ def createClock(ai_socket, name):
         objectArray = look(ai_socket)
         print("ObjectArray2: " + objectArray)
         is_empty = not bool(objectArray[1])
+        is_empty_too = not bool(objectArray[2])
         if (is_empty == False):
             forward(ai_socket)
             left(ai_socket)
+            forward(ai_socket)
+        elif (is_empty_too == False):
+            forward(ai_socket)
+            right(ai_socket)
+            forward(ai_socket)
+        else:
             forward(ai_socket)
         x += 1
         # add a condition of if there is a new character
