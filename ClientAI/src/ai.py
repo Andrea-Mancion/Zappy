@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-
+import random
 import sys
 import socket
 import time
+import os
 
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
@@ -40,10 +41,38 @@ def canTakeObject(ai_socket):
     else:
         print("Can't take object, i'm not in a object case")
 
+def forkPlayer(ai_socket, name):
+    # Si je ne m'abuse the nbValue est le resultat de combien de place il reste dans la team
+
+    nbValue = nbTeams(ai_socket, name)
+    if (nbValue > 0):
+        ai_socket.send(str.encode("Fork\n"))
+        serverSting = ai_socket.recv(1024).decode()
+        print("Server2: " + serverSting)
+        if (serverSting == "ok\n"):
+            print("Forking")
+            pip = os.fork()
+            if (pip == 0):
+                print("I'm the child")
+
 def createClock(ai_socket, name):
+    serverSting = ai_socket.recv(2046).decode()
+    if (serverSting == "WELCOME\n"):
+        ai_socket.send(str.encode(name + "\n"))
+    serverSting = ai_socket.recv(2046).decode()
+    print("Server1: " + serverSting)
     while not False:
         canTakeObject(ai_socket)
+        forkPlayer(ai_socket, name)
         break
+        # add a condition of if there is a new character
+
+        
+def nbTeams(ai_socket, name):
+    ai_socket.send(str.encode("Connect_nbr\n"))
+    nbValue = ai_socket.recv(1024).decode()
+    print(nbValue)
+    return nbValue
 
 
 def beginning(port, name, machine):
@@ -51,8 +80,79 @@ def beginning(port, name, machine):
     ai_socket.connect((machine, int(port)))
     print("Connected to server")
     createClock(ai_socket, name)
+    move_ia(ai_socket)
     ai_socket.close()
     print("Disconnected from server")
+
+
+def move_ia(ai_socket):
+    while not False:
+        time.sleep(0.5)
+        value = random.randint(0, 2)
+        if value == 0:
+            forward(ai_socket)
+        if value == 1:
+            right(ai_socket)
+        if value == 2:
+            left(ai_socket)
+        if value == 4:
+            look(ai_socket)
+
+
+def forward(ai_socket):
+    print("Command: Forward")
+    cmd = "Forward\n"
+    cmd = cmd.encode()
+    ai_socket.send(cmd)
+    rec = ai_socket.recv(1024)
+    rec = rec.decode()
+    if (rec == "ok\n"):
+        print("Forward OK")
+    else:
+        print("Forward KO")
+    print(rec)
+
+
+def right(ai_socket):
+    print("Command: Right")
+    cmd = "Right\n"
+    cmd = cmd.encode()
+    ai_socket.send(cmd)
+    rec = ai_socket.recv(1024)
+    rec = rec.decode()
+    if (rec == "ok\n"):
+        print("Forward OK")
+    else:
+        print("Forward KO")
+    print(rec)
+
+
+def left(ai_socket):
+    print("Command: Left")
+    cmd = "Left\n"
+    cmd = cmd.encode()
+    ai_socket.send(cmd)
+    rec = ai_socket.recv(1024)
+    rec = rec.decode()
+    if (rec == "ok\n"):
+        print("Forward OK")
+    else:
+        print("Forward KO")
+    print(rec)
+
+
+def look(ai_socket):
+    print("Command: Look")
+    cmd = "Look\n"
+    cmd = cmd.encode()
+    ai_socket.send(cmd)
+    rec = ai_socket.recv(1024)
+    rec = rec.decode()
+    if (rec == None):
+        print("Look KO")
+    else:
+        print("Look OK")
+    print(rec)
 
 def main(ac, av):
     if (ac == 2 and av[1] == "-help"):
