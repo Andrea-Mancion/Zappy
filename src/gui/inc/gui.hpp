@@ -8,4 +8,6 @@
 #pragma once
 
 #include "macros.hpp"
+#include "server.hpp"
+#include "commands.hpp"
 #include "map.hpp"

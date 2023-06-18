@@ -5,7 +5,7 @@
 ** inventory
 */
 
-#include "inventory.hpp"
+#include "../inc/inventory.hpp"
 
 std::vector<std::string> split(std::string str, char delim)
 {
@@ -62,6 +62,7 @@ unsigned int Inventory::getItem(Stones stone) const
         case THYSTAME:
             return _thystame;
     }
+    return 0;
 }
 
 void Inventory::setItems(std::string str)
