@@ -5,7 +5,6 @@ import socket
 import time
 import os
 
-
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
     print("\tport\tis the port number")
@@ -24,6 +23,24 @@ def checkString(string):
         return False
     return True
 
+def canTakeObject(ai_socket):
+    # Faire la condition pour check si quand on look on est sur un objet (n'importe lequel, et n'importe quelle nombre), si c'est le cas on peut prendre un objet qui est sur cette case
+    # Voici la variable objectArray, celui va contenir les objects que nous renvoi la fonction look. (a split)
+    objectArray = []
+    element_split = objectArray[0].split(" ")
+    if (len(element_split) > 1):
+        for item in Ressources:
+            for element in element_split:
+                if (item == element):
+                    ai_socket.send(str.encode("Take " + element + "\n"))
+                    serverString = ai_socket.recv(2046).decode()
+                    if (serverString == "ok\n"):
+                        print("I take the object")
+                    else:
+                        print("I can't take the object")
+    else:
+        print("Can't take object, i'm not in a object case")
+
 def forkPlayer(ai_socket, name):
     # Si je ne m'abuse the nbValue est le resultat de combien de place il reste dans la team
 
@@ -38,7 +55,6 @@ def forkPlayer(ai_socket, name):
             if (pip == 0):
                 print("I'm the child")
 
-
 def createClock(ai_socket, name):
     serverSting = ai_socket.recv(2046).decode()
     if (serverSting == "WELCOME\n"):
@@ -46,8 +62,10 @@ def createClock(ai_socket, name):
     serverSting = ai_socket.recv(2046).decode()
     print("Server1: " + serverSting)
     while not False:
-        # add a condition of if there is a new character
+        canTakeObject(ai_socket)
         forkPlayer(ai_socket, name)
+        break
+        # add a condition of if there is a new character
 
         
 def nbTeams(ai_socket, name):
