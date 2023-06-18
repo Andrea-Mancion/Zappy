@@ -23,6 +23,22 @@ def checkString(string):
         return False
     return True
 
+def StartElevation(ai_socket, lvl):
+    # Recuperer les élements de la fonction look pour check si on est sur une case vide
+    # Voici la variable qui va recuperer le tableau
+    object_look = []
+    object_split = object_look[0].split(" ")
+    if (len(object_split) == 1):
+        # Appeler la fonction qui va permettre de faire le set Object down avec en paramettre la socket et le lvl
+        ai_socket.send(str.encode("Incantation\n"))
+        serverString = ai_socket.recv(2046).decode()
+        if (serverString != "ko\n"):
+            #Recuperer le lvl que le serveur envoie
+            print(serverString)
+            lvl += 1
+            print("Here my new lvl: " + lvl)
+    return lvl
+
 def setObjectDown(ai_socket, item):
     # NE PAS OUBLIER DE VERIFIER SI ON POSSEDE BIEN L'OBJET QU'ON VEUT POSER
     # REFLECHIR A COMMENT SAVOIR QUELLE OBJET DEPOSER (PS: Grace au lvl et au 2ème paramètre)
@@ -141,6 +157,7 @@ def createClock(ai_socket, name):
     while not False:
         canTakeObject(ai_socket)
         forkPlayer(ai_socket, name)
+        lvl = StartElevation(ai_socket, lvl)
         break
         # add a condition of if there is a new character
 
