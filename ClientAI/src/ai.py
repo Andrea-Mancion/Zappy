@@ -5,6 +5,16 @@ import socket
 import time
 import os
 
+Ressources = [
+    "food",
+    "linemate",
+    "deraumere",
+    "sibur",
+    "mendiane",
+    "phiras",
+    "thystame"
+]
+
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
     print("\tport\tis the port number")
@@ -212,6 +222,7 @@ def createClock(ai_socket, name):
     # Avoir le lvl du joueur (recuperer soit au tout debut (base 1) soit a chaque elevation)
     # D'ailleur ne pas oublier de faire ceci que dans le cas ou on veut faire un level up
     lvl = 1
+    x = 0
     serverSting = ai_socket.recv(2046).decode()
     if (serverSting == "WELCOME\n"):
         ai_socket.send(str.encode(name + "\n"))
@@ -219,11 +230,19 @@ def createClock(ai_socket, name):
     print("Server1: " + serverSting)
     while not False:
         canTakeObject(ai_socket)
+        objectArray = look(ai_socket)
+        print("ObjectArray2: " + objectArray)
+        is_empty = not bool(objectArray[1])
+        if (is_empty == False):
+            forward(ai_socket)
+            left(ai_socket)
+            forward(ai_socket)
+        x += 1
         # add a condition of if there is a new character
         # forkPlayer(ai_socket, name)
-        forkPlayer(ai_socket, name)
-        lvl = StartElevation(ai_socket, lvl)
-        break
+        #lvl = StartElevation(ai_socket, lvl)
+        if (x == 2):
+            break
 
 def beginning(port, name, machine):
     ai_socket = socket.socket()
