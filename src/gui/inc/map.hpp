@@ -23,8 +23,12 @@ class Map {
         ~Map();
         void setDimension(int width, int heigth);
         std::pair<unsigned int, unsigned int> getDimension() const;
-        void getPlayer(size_t id);
+        Player *getPlayer(size_t id);
+        std::vector<Player> *getPlayers();
         void addPlayer(Player player);
+        std::vector<std::vector<Inventory>> *getTiles();
+        Inventory *getTile(size_t x, size_t y);
+        void setTiles(std::vector<std::vector<Inventory)
 };
 
 void draw_map(sf::RenderWindow& window, sf::Sprite& sprite, sf::Sprite& playerSprite);

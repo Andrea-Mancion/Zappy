@@ -77,7 +77,6 @@ void draw_map(sf::RenderWindow& window, sf::Sprite& sprite, sf::Sprite& playerSp
 //     return sprite;
 // }
 
-
 ////////////////////////////////////////////
 
 Map::Map()
@@ -109,12 +108,37 @@ std::pair<unsigned int, unsigned int> Map::getDimension() const
     return _dimension;
 }
 
-void Map::getPlayer(size_t id)
+Player *Map::getPlayer(size_t id)
 {
-    _players[id];
+    return &this->_players[id];
 }
 
 void Map::addPlayer(Player player)
 {
     _players.push_back(player);
+}
+
+std::vector<Player> *Map::getPlayers()
+{
+    return &this->_players;
+}
+
+std::vector<std::vector<Inventory>> *Map::getTiles()
+{
+    return &this->_tiles;
+}
+
+Inventory *Map::getTile(size_t x, size_t y)
+{
+    return &this->_tiles[x][y];
+}
+
+void Map::setTiles(std::vector<std::vector<Inventory>> tiles)
+{
+    this->_tiles = tiles;
+}
+
+void Map::setTile(size_t x, size_t y, Inventory tile)
+{
+    this->_tiles[x][y] = tile;
 }
