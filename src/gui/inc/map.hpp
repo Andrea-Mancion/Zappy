@@ -16,9 +16,13 @@ class Map {
         std::pair<unsigned int, unsigned int> _dimension;
         std::vector<std::vector<Inventory>> _tiles;
         std::vector<Player> _players;
+        sf::Texture _texture;
+        sf::Sprite _sprite;
+        
 
-    public:
+    public : 
         Map();
+        Map(unsigned int width, unsigned int heigth, std::string path, float scale);
         Map(unsigned int width, unsigned int heigth, std::vector<std::vector<Inventory>> tiles);
         ~Map();
         void setDimension(int width, int heigth);
@@ -28,12 +32,9 @@ class Map {
         void addPlayer(Player player);
         std::vector<std::vector<Inventory>> *getTiles();
         Inventory *getTile(size_t x, size_t y);
-        void setTiles(std::vector<std::vector<Inventory>>);
-        void setTile(size_t x, size_t y, Inventory tile);
+        void setTiles(std::vector<std::vector<Inventory>> tiles);
+        void draw_map(sf::RenderWindow &window);
 };
 
-void draw_map(sf::RenderWindow& window, sf::Sprite& sprite, sf::Sprite& playerSprite);
-sf::Sprite createSprite(const std::string& filename, float scale);
-void drawSprite(sf::RenderWindow& window, const sf::Sprite& sprite);
-void displayWindow(sf::RenderWindow& window);
-void clearWindow(sf::RenderWindow& window, const sf::Color& backgroundColor);
+
+sf::Sprite createSprite(const std::string &filename, float scale);
