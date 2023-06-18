@@ -15,6 +15,67 @@ Ressources = [
     "thystame"
 ]
 
+max_ressources = {"linemate": 9, "deraumere": 8, "sibur": 10, "mendiane": 5, "phiras": 6, "thystame": 1}
+
+need_ressources = [
+    {
+        "linemate": 1,
+        "deraumere": 0,
+        "sibur": 0,
+        "mendiane": 0,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 1,
+        "sibur": 1,
+        "mendiane": 0,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 2,
+        "deraumere": 0,
+        "sibur": 1,
+        "mendiane": 0,
+        "phiras": 2,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 1,
+        "sibur": 2,
+        "mendiane": 0,
+        "phiras": 1,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 2,
+        "sibur": 1,
+        "mendiane": 3,
+        "phiras": 0,
+        "thystame": 0
+    },
+    {
+        "linemate": 1,
+        "deraumere": 2,
+        "sibur": 3,
+        "mendiane": 0,
+        "phiras": 1,
+        "thystame": 0
+    },
+    {
+        "linemate": 2,
+        "deraumere": 2,
+        "sibur": 2,
+        "mendiane": 2,
+        "phiras": 2,
+        "thystame": 1
+    }
+]
+
 def printHelp():
     print("USAGE: ./zappy_ai -p port -n name -h machine")
     print("\tport\tis the port number")
@@ -218,11 +279,29 @@ def forkPlayer(ai_socket, name):
             if (pip == 0):
                 print("I'm the child")
 
+def firstCommunication(ai_socket, name):
+    serverString = ai_socket.recv(2048).decode()
+    print(serverString)
+    ai_socket.send(str.encode(name + "\n"))
+    serverString = ai_socket.recv(2048).decode()
+    if (serverString == "ko\n"):
+        print("Bad team name")
+        exit(84)
+    nbValue = serverString.split("\n")[0]
+    print("number of slots unused: " + nbValue)
+    serverSplit = serverString.split("\n")[1].split(" ")
+    mapWidth = serverSplit[0]
+    mapHeight = serverSplit[1]
+    print(mapWidth + " " + mapHeight)
+    return nbValue, mapWidth, mapHeight
+
+
 def createClock(ai_socket, name):
     # Avoir le lvl du joueur (recuperer soit au tout debut (base 1) soit a chaque elevation)
     # D'ailleur ne pas oublier de faire ceci que dans le cas ou on veut faire un level up
     lvl = 1
     x = 0
+    nbValue, mapWidth, mapHeight = firstCommunication(ai_socket, name)
     serverSting = ai_socket.recv(2046).decode()
     if (serverSting == "WELCOME\n"):
         ai_socket.send(str.encode(name + "\n"))
