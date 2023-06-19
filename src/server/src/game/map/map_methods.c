@@ -32,6 +32,8 @@ void map_refill(game_map_t *map)
     &map->total_deraumere, &map->total_sibur, &map->total_mendiane,
     &map->total_phiras, &map->total_thystame};
 
+    if (map->last_refill + 20 * (time_unit * 1000) < timer->tick(timer))
+        return;
     for (int i = 0; i < RESOURCE_COUNT; i++) {
         for (int j = *total_resources[i];
             j < total_tiles * RESOURCE_DENSITIES[i]; j++)
