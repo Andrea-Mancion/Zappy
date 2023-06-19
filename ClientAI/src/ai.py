@@ -170,6 +170,7 @@ def setObjectDown(ai_socket, item):
     # Utiliser la function look pour recuperer les informations des case et split sur les virgules
     # Voici la variable qui va contenir les données du look
     itemsLook = look(ai_socket)
+    print("items: " + itemsLook)
     itemsLook_split = itemsLook[0].split(" ")
     # Voici la variable qui va contenir les données du inventory
     itemsGet = getInventory(ai_socket)
@@ -304,7 +305,6 @@ def createClock(ai_socket, name):
         canTakeObject(ai_socket)
         objectArray = look(ai_socket)
         print("ObjectArray2: " + objectArray)
-        objectInventory = getInventory(ai_socket)
         is_empty = not bool(objectArray[1])
         is_empty_too = not bool(objectArray[2])
         if (is_empty == False):
@@ -321,7 +321,7 @@ def createClock(ai_socket, name):
         # add a condition of if there is a new character
         # forkPlayer(ai_socket, name)
         lvl = StartElevation(ai_socket, lvl)
-        if (x == 1):
+        if (x == 10):
             break
 
 def beginning(port, name, machine):
