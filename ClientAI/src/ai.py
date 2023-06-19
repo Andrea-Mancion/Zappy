@@ -322,7 +322,7 @@ def createClock(ai_socket, name):
         # forkPlayer(ai_socket, name)
         # lvl = StartElevation(ai_socket, lvl)
         if (x == 5):
-            break
+            print("Here's my bouvle " + str(x))
 
 def beginning(port, name, machine):
     ai_socket = socket.socket()
