@@ -148,6 +148,18 @@ def look(ai_socket):
         print("Look OK")
         return rec
 
+def broadcast(ai_socket, message):
+    cmd = "Broadcast " + message + "\n"
+    cmd = cmd.encode()
+    ai_socket.send(cmd)
+    rec = ai_socket.recv(1024)
+    rec = rec.decode()
+    if (rec == "ok\n"):
+        print("Broadcast OK")
+    else:
+        print("Broadcast KO")
+    print(rec)
+
 def nbTeams(ai_socket, name):
     ai_socket.send(str.encode("Connect_nbr\n"))
     nbValue = ai_socket.recv(1024).decode()
