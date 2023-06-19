@@ -153,7 +153,7 @@ def nbTeams(ai_socket, name):
     ai_socket.send(str.encode("Connect_nbr\n"))
     nbValue = ai_socket.recv(1024).decode()
     print("value: " + nbValue)
-    return nbValue
+    return int(nbValue)
 
 def getInventory(ai_socket):
     ai_socket.send(str.encode("Inventory\n"))
@@ -165,14 +165,10 @@ def getInventory(ai_socket):
     return serverString
 
 def setObjectDown(ai_socket, item):
-    # NE PAS OUBLIER DE VERIFIER SI ON POSSEDE BIEN L'OBJET QU'ON VEUT POSER
-    # REFLECHIR A COMMENT SAVOIR QUELLE OBJET DEPOSER (PS: Grace au lvl et au 2ème paramètre)
-    # Utiliser la function look pour recuperer les informations des case et split sur les virgules
-    # Voici la variable qui va contenir les données du look
     itemsLook = look(ai_socket)
     itemsLook_split = itemsLook[0].split(" ")
-    # Voici la variable qui va contenir les données du inventory
     itemsGet = getInventory(ai_socket)
+    print("Here's my inventory: " + itemsGet)
     itemsGet = itemsGet.strip("[]")
     itemsList = itemsGet.split(", ")
     myInventory = []
@@ -180,7 +176,6 @@ def setObjectDown(ai_socket, item):
         item_split = item2.split()
         myInventory.extend(item_split)
     print(myInventory)
-    # Check si on est bien seul et sans object sur la case (grace au split)
     if (len(itemsLook_split) == 1):
         for i in range(len(myInventory)):
             if (myInventory[i] == item):
@@ -222,12 +217,9 @@ def canSetObject(ai_socket, lvl):
             return True
 
 def StartElevation(ai_socket, lvl):
-    # Recuperer les élements de la fonction look pour check si on est sur une case vide
-    # Voici la variable qui va recuperer le tableau
     object_look = look(ai_socket)
     object_split = object_look[0].split(" ")
     if (len(object_split) == 1):
-        # Appeler la fonction qui va permettre de faire le set Object down avec en paramettre la socket et le lvl
         if canSetObject(ai_socket, lvl) == True:
             ai_socket.send(str.encode("Incantation\n"))
             serverString = ai_socket.recv(2046).decode()
@@ -243,8 +235,6 @@ def StartElevation(ai_socket, lvl):
     return lvl
 
 def canTakeObject(ai_socket):
-    # Faire la condition pour check si quand on look on est sur un objet (n'importe lequel, et n'importe quelle nombre), si c'est le cas on peut prendre un objet qui est sur cette case
-    # Voici la variable objectArray, celui va contenir les objects que nous renvoi la fonction look. (a split)
     objectArray = look(ai_socket)
     print("ObjectArray: " + objectArray)
     element_split = objectArray.split(",")[0].split(" ")
@@ -264,8 +254,12 @@ def canTakeObject(ai_socket):
     else:
         print("Can't take object, i'm not in a object case")
 
+def childProcess(ai_socket, name):
+    createClock(ai_socket, name)
+    ai_socket.close()
+    print("The child is dead")
+
 def forkPlayer(ai_socket, name):
-    # Si je ne m'abuse the nbValue est le resultat de combien de place il reste dans la team
     nbValue = nbTeams(ai_socket, name)
     if (nbValue > 0):
         ai_socket.send(str.encode("Fork\n"))
@@ -296,7 +290,6 @@ def firstCommunication(ai_socket, name):
 
 def createClock(ai_socket, name):
     # Avoir le lvl du joueur (recuperer soit au tout debut (base 1) soit a chaque elevation)
-    # D'ailleur ne pas oublier de faire ceci que dans le cas ou on veut faire un level up
     lvl = 1
     x = 0
     nbValue, mapWidth, mapHeight = firstCommunication(ai_socket, name)
@@ -312,9 +305,9 @@ def createClock(ai_socket, name):
             forward(ai_socket)
         x += 1
         # add a condition of if there is a new character
-        # forkPlayer(ai_socket, name)
+        forkPlayer(ai_socket, name)
         lvl = StartElevation(ai_socket, lvl)
-        if (x == 1):
+        if (x == 2):
             break
 
 def beginning(port, name, machine):
