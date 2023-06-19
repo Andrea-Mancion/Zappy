@@ -14,6 +14,7 @@ int main(int ac, char **av)
     //sf::Sprite playerSprite = createSprite("assets/player/dino.png", 0.3f);
     Server *server;
     Map map(15, 15, "assets/grass1.png", 0.5f);
+    Commands cmd;
 
     try {
         server = new Server(ac, av);
@@ -24,7 +25,7 @@ int main(int ac, char **av)
     while (window.isOpen()) {
         sf::Event event;
         if (server->isReceivingTransmission())
-            server->getTransmission();
+            cmd.doCommand(&map, server->getTransmission(), *server);
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Resized) {
                 sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);

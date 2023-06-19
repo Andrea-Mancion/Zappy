@@ -18,9 +18,9 @@ class Map {
         std::vector<Player> _players;
         sf::Texture _texture;
         sf::Sprite _sprite;
-        
 
-    public : 
+
+    public :
         Map();
         Map(unsigned int width, unsigned int heigth, std::string path, float scale);
         Map(unsigned int width, unsigned int heigth, std::vector<std::vector<Inventory>> tiles);

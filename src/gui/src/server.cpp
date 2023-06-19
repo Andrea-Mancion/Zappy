@@ -19,17 +19,14 @@ const char *ServerWarning::what() const throw()
 
 Server::Server(int ac, char **av)
 {
-    int port;
-    std::string ip;
-
     printf("GUI: Initialize server ...\n");
     if (!this->areArgumentsCorrect(ac, av))
         throw ServerError(std::cerr, "GUI: Incorrect arguments");
     if ((this->_sd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
         throw ServerError(std::cerr, "GUI: Error while creating socket");
     this->_s_addr.sin_family = AF_INET;
-    this->_s_addr.sin_addr.s_addr = inet_addr(ip.c_str());
-    this->_s_addr.sin_port = htons(port);
+    this->_s_addr.sin_addr.s_addr = inet_addr(this->_ip.c_str());
+    this->_s_addr.sin_port = htons(this->_port);
     if (setsockopt(this->_sd, SOL_SOCKET, SO_REUSEADDR, &this->_s_addr, sizeof(int)) == -1)
         throw ServerError(std::cerr, "GUI: Error setting socket options");
     if (connect(this->_sd, (struct sockaddr *)&this->_s_addr, sizeof(this->_s_addr)) == -1)
@@ -62,8 +59,9 @@ bool Server::areArgumentsCorrect(int ac, char **av)
         return false;
     if (!this->isNumber((std::string)av[pos]))
         return false;
-    this->_port = std::atoi(av[pos + 1]);
-    for (int i = 1, pos = -1; i < ac - 1; i++) {
+    this->_port = std::atoi(av[pos]);
+    pos = -1;
+    for (int i = 1; i < ac - 1; i++) {
         if (!strcmp(av[i], "-h")) {
             pos = i + 1;
             break;
