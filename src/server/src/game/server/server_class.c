@@ -87,10 +87,14 @@ int server_init(game_server_t *server, program_params_t *params)
 // Server destructor
 void server_destroy(game_server_t *server)
 {
-    server->teams.destroy(&server->teams);
-    server->map.destroy(&server->map);
-    server->clients.destroy(&server->clients);
-    server->events.destroy(&server->events);
+    if (server->teams.destroy)
+        server->teams.destroy(&server->teams);
+    if (server->map.destroy)
+        server->map.destroy(&server->map);
+    if (server->clients.destroy)
+        server->clients.destroy(&server->clients);
+    if (server->events.destroy)
+        server->events.destroy(&server->events);
     if (server->socket >= 0)
         close(server->socket);
 }

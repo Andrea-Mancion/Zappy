@@ -15,7 +15,7 @@
 
 // Settings
     #define MAX_CLIENTS 100
-    #define BUF_SIZE 1024
+    #define BUFFER_SIZE 1024
     #define MAX_PENDING_COMMANDS 10
     #define REFILL_TIME 20
     #define FOOD_TIME 126

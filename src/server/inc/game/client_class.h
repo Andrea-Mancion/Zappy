@@ -38,7 +38,6 @@ typedef struct game_client_s {
     game_direction_t direction;
     int x;
     int y;
-    int life_units;
     int level;
     int inventory[RESOURCE_COUNT];
     void (*destroy)(struct game_client_s *client);

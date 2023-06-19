@@ -21,9 +21,16 @@ const game_client_t default_client = {
     .x = 0,
     .y = 0,
     .commands = {0},
-    .life_units = 10,
     .level = 1,
-    .inventory = {0},
+    .inventory = {
+        [FOOD] = 10,
+        [LINEMATE] = 0,
+        [DERAUMERE] = 0,
+        [SIBUR] = 0,
+        [MENDIANE] = 0,
+        [PHIRAS] = 0,
+        [THYSTAME] = 0,
+    },
     .destroy = &client_destroy,
 };
 
@@ -43,9 +50,9 @@ int client_init(game_client_t *client, int socket)
         return ERR_SOCKET;
     *client = default_client;
     client->socket = socket;
-    if (!(client->buffer = malloc(sizeof(char) * BUF_SIZE)))
+    if (!(client->buffer = malloc(sizeof(char) * BUFFER_SIZE)))
         return ERR_ALLOC;
-    memset(client->buffer, '\0', BUF_SIZE);
+    memset(client->buffer, '\0', BUFFER_SIZE);
     list_init(&client->commands, (void (*)(void *))&pending_command_destroy,
         NULL);
     return SUCCESS;

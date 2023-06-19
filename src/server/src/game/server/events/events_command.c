@@ -11,30 +11,25 @@
 #include "game/command_class.h"
 #include "game/event_class.h"
 
-static const char *error_message = "Couldn't execute command";
+static const char *error_message = "Couldn't execute ai command";
 static const char *ko_message = "ko";
 
 // Finds the command in the table and executes it, returns false if not found
-static int server_execute_command(game_server_t *server, game_client_t *client,
+static int execute_ai_command(game_server_t *server, game_client_t *client,
     pending_command_t *command, char **args)
 {
-    long long int now = tick();
-    const game_command_t *commands_table = strcmp(client->team_name, "GRAPHIC")
-        == 0 ? graphic_commands_table : ai_commands_table;
-
-    for (int i = 0; commands_table[i].command; i++) {
-        if (strcmp(commands_table[i].command, args[0]) != 0)
+    for (int i = 0; ai_commands_table[i].command; i++) {
+        if (strcmp(ai_commands_table[i].command, args[0]) != 0)
             continue;
-        command->received_at = now;
-        command->duration = commands_table[i].duration;
-        return commands_table[i].function(server, client, args + 1,
+        command->duration = ai_commands_table[i].duration;
+        return ai_commands_table[i].function(server, client, args + 1,
             &command->output);
     }
     return ERR_COMMAND;
 }
 
 // Parses a client-given command and executes it
-static int server_parse_command(game_server_t *server, game_client_t *client,
+static int parse_ai_command(game_server_t *server, game_client_t *client,
     pending_command_t *command)
 {
     char **args = malloc(sizeof(char *) * (strlen(command->input) + 1));
@@ -44,7 +39,7 @@ static int server_parse_command(game_server_t *server, game_client_t *client,
     for (char *sub = strtok(command->input, " "); sub; sub = strtok(NULL, " "))
         args[j++] = sub;
     args[j] = NULL;
-    if (!args[0] || (status = server_execute_command(
+    if (!args[0] || (status = execute_ai_command(
         server, client, command, args)) != SUCCESS) {
         free(args);
         return status;
@@ -58,12 +53,12 @@ void event_start_command(game_server_t *server,
     game_client_t *client)
 {
     pending_command_t *cmd = client->commands.get(&client->commands, 0);
-    event_params_t params = {cmd->received_at, cmd->duration * 1e6,
+    event_params_t params = {tick(), cmd->duration * 1e6,
         PLAYER_COMMAND, client};
 
     if (cmd->output)
         return;
-    if (!handle_error(server_parse_command(server, client, cmd),
+    if (!handle_error(parse_ai_command(server, client, cmd),
         error_message)) {
         cmd->output = strdup(ko_message);
         event_end_command(server, client);

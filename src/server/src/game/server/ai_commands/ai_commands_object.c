@@ -21,7 +21,7 @@ const game_resource_name_pair_t resource_names[] = {
 };
 
 // Get resource address from tile
-int *get_resource_address(game_server_t *server, game_client_t *client,
+static int *get_resource_address(game_server_t *server, game_client_t *client,
     game_resource_t resource)
 {
     game_tile_t *tile = &server->map.tiles[client->y][client->x];
@@ -33,12 +33,24 @@ int *get_resource_address(game_server_t *server, game_client_t *client,
     return resources_addresses[resource];
 }
 
+void server_notify_all_graphic(game_server_t *server, char *message)
+{
+    game_client_t *client;
+
+    for (int i = 0; i < server->clients.size; i++) {
+        client = server->clients.get(&server->clients, i);
+        if (strcmp(client->team_name, "GRAPHIC") == 0)
+            dprintf(client->socket, "%s\n", message);
+    }
+}
+
 // Take command
 int ai_command_take(game_server_t *server, game_client_t *client,
     char **args, char **output)
 {
     game_resource_t enum_resource = RESOURCE_COUNT;
     int *address;
+
     if (args[0] == NULL)
         return ERR_COMMAND;
     for (int i = 0; i < RESOURCE_COUNT; i++)
@@ -51,10 +63,7 @@ int ai_command_take(game_server_t *server, game_client_t *client,
         return SUCCESS;
     }
     *address -= 1;
-    if (enum_resource == FOOD)
-        client->life_units += 1;
-    else
-        client->inventory[enum_resource] += 1;
+    client->inventory[enum_resource] += 1;
     *output = strdup("ok");
     return SUCCESS;
 }
@@ -81,5 +90,19 @@ int ai_command_set(game_server_t *server, game_client_t *client,
     *address += 1;
     client->inventory[enum_resource] -= 1;
     *output = strdup("ok");
+    return SUCCESS;
+}
+
+// Connect_nbr command
+int ai_command_connect_nbr(game_server_t *server, game_client_t *client,
+    ATTR_UNUSED char **args, char **output)
+{
+    int count = 0;
+    list_t *team = server->teams.get(&server->teams, client->team_name);
+    char outp[10] = {0};
+
+    count = server->max_team_capacity - team->size;
+    sprintf(outp, "%d", count);
+    *output = strdup(outp);
     return SUCCESS;
 }
