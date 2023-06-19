@@ -320,8 +320,8 @@ def createClock(ai_socket, name):
         x += 1
         # add a condition of if there is a new character
         # forkPlayer(ai_socket, name)
-        lvl = StartElevation(ai_socket, lvl)
-        if (x == 10):
+        # lvl = StartElevation(ai_socket, lvl)
+        if (x == 5):
             break
 
 def beginning(port, name, machine):
