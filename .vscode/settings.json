@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "client_class.h": "c",
+        "params_class.h": "c",
+        "server_class.h": "c",
+        "list_class.h": "c",
+        "zappy_misc.h": "c",
+        "memory_resource": "c"
+    }
+}
