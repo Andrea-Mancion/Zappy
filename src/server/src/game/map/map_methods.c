@@ -5,7 +5,6 @@
 ** Server side - server class
 */
 
-#include "misc/timer_class.h"
 #include "game/map_class.h"
 
 // Function that spawns a given resource on a random tile of the map
@@ -26,7 +25,7 @@ static void map_spawn_resource(game_map_t *map, game_resource_t resource)
 }
 
 // Function that refills the map with the correct amount of resources
-void map_refill(game_map_t *map, timer_millis_t *timer, int time_unit)
+void map_refill(game_map_t *map)
 {
     int total_tiles = map->width * map->height;
     int *total_resources[] = {&map->total_food, &map->total_linemate,
@@ -40,5 +39,4 @@ void map_refill(game_map_t *map, timer_millis_t *timer, int time_unit)
             j < total_tiles * RESOURCE_DENSITIES[i]; j++)
             map_spawn_resource(map, i);
     }
-    map->last_refill = timer->tick(timer);
 }

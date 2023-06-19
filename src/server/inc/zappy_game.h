@@ -13,10 +13,12 @@
     #include <sys/select.h>
 
 // Settings
-    #define MAX_CLIENTS 10
+    #define MAX_CLIENTS 100
     #define BUF_SIZE 1024
-    #define MAX_CLIENT_COMMANDS 10
+    #define MAX_PENDING_COMMANDS 10
     #define REFILL_TIME 20
+    #define FOOD_TIME 126
+    #define MAX_LEVEL 8
 // Resource densities
     #define FOOD_DENSITY 0.5
     #define LINEMATE_DENSITY 0.3
@@ -46,5 +48,13 @@ typedef enum game_direction_e {
     WEST,
     DIRECTION_COUNT
 } game_direction_t;
+
+// Event type enum
+typedef enum game_event_type_e {
+    MAP_REFILL,
+    PLAYER_REMOVE_HEALTH,
+    PLAYER_COMMAND,
+    EVENT_TYPE_COUNT
+} game_event_type_t;
 
 #endif

@@ -6,6 +6,7 @@
 */
 
 #include "game/tile_class.h"
+#include "game/client_class.h"
 #include "zappy_misc.h"
 
 // Initial structure of tile
@@ -27,7 +28,7 @@ int tile_init(game_tile_t *tile)
     int status;
 
     *tile = default_tile;
-    if ((status = list_init(&tile->players)) != SUCCESS)
+    if ((status = list_init(&tile->players, NULL, client_cmp)) != SUCCESS)
         return status;
     return SUCCESS;
 }
@@ -35,5 +36,6 @@ int tile_init(game_tile_t *tile)
 // Tile destructor
 void tile_destroy(game_tile_t *tile)
 {
-    tile->players.destroy(&tile->players);
+    if (tile->players.destroy)
+        tile->players.destroy(&tile->players);
 }

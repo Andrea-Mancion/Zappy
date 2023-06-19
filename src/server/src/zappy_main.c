@@ -11,7 +11,7 @@
 
 const char *error_params = "Params init failed";
 const char *error_server = "Server init failed";
-const char *error_network = "Network error";
+const char *error_loop = "Server loop interrupted";
 const char *invalid_parameters = "Invalid parameters. Run with -help for more "
     "info.";
 
@@ -21,27 +21,26 @@ ATTR_CONSTRUCTOR void premain(void)
     srand(time(NULL));
 }
 
-// Main function - server disconnects as soon as all clients disconnected
+// Main function
 int main(const int argc, const char *argv[])
 {
-    ATTR_CLEANUP(params_destroy) program_params_t params;
-    ATTR_CLEANUP(server_destroy) game_server_t server;
+    ATTR_CLEANUP(params_destroy) program_params_t params = {0};
+    ATTR_CLEANUP(server_destroy) game_server_t server = {0};
 
-    if (!HANDLE_ERROR(params_init(&params, argc - 1, argv + 1), error_params))
+    if (!handle_error(params_init(&params, argc - 1, argv + 1), error_params))
         return PROGRAM_EXIT_FAILURE;
-    if (!params.is_valid(&params)) {
-        fprintf(stderr, "%s\n", invalid_parameters);
-        return PROGRAM_EXIT_FAILURE;
-    }
     if (params.mode == HELP) {
         fprintf(stdout, "%s\n", USAGE);
         return PROGRAM_EXIT_SUCCESS;
     }
-    if (!HANDLE_ERROR(server_init(&server, &params), error_server))
+    if (!params.is_valid(&params)) {
+        fprintf(stderr, "%s\n", invalid_parameters);
         return PROGRAM_EXIT_FAILURE;
-    do {
-        if (!HANDLE_ERROR(server.run(&server), error_network))
-            return PROGRAM_EXIT_FAILURE;
-    } while (server.client_list.size > 0);
+    }
+    if (!handle_error(server_init(&server, &params), error_server))
+        return PROGRAM_EXIT_FAILURE;
+    fprintf(stdout, "Port: %d\n", params.port);
+    if (!handle_error(server.run(&server), error_loop))
+        return PROGRAM_EXIT_FAILURE;
     return PROGRAM_EXIT_SUCCESS;
 }

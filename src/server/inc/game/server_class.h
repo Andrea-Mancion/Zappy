@@ -14,32 +14,63 @@
 
     #include "zappy_program.h"
     #include "misc/list_class.h"
-    #include "misc/timer_class.h"
+    #include "misc/map_class.h"
     #include "game/map_class.h"
     #include "game/client_class.h"
 
 // Definitions
 typedef struct timeval timeval_t;
+typedef struct sockaddr_in sockaddr_in_t;
+typedef struct game_server_s game_server_t;
 
 // Server class
-typedef struct game_server_s {
+struct game_server_s {
     int socket;
-    struct sockaddr_in address;
-    list_t client_list;
+    sockaddr_in_t address;
+    list_t clients;
+    list_t events;
+    map_t teams;
     game_map_t map;
-    timer_millis_t timer;
-    bool (*read_from_client)(struct game_server_s *server, game_client_t *cli);
-    int (*run)(struct game_server_s *server);
-    void (*destroy)(struct game_server_s *server);
-} game_server_t;
+    timeval_t timeout;
+    int max_team_capacity;
+    int frequency;
+    // Events
+    bool (*add_event)(game_server_t *server, void *params);
+    bool (*remove_events)(game_server_t *server, game_event_type_t type,
+        game_client_t *client);
+    // Client
+    int (*accept_client)(game_server_t *server);
+    bool (*read_client)(game_server_t *server, game_client_t *client);
+    void (*disconnect_client)(game_server_t *server, game_client_t *client);
+    // Select
+    int (*select)(game_server_t *server);
+    // Run
+    int (*run)(game_server_t *server);
+    // Util
+    game_client_t *(*get_player)(game_server_t *server, int id);
+    void (*set_timeout)(game_server_t *server);
+    long long int (*get_timeout)(game_server_t *server);
+    // Dtor
+    void (*destroy)(game_server_t *server);
+};
 
-// Const variables
-extern const timeval_t select_timeout;
-
-// Server ctor, dtor and methods
+// Server ctor and dtor
 int server_init(game_server_t *server, program_params_t *params);
-int server_run(game_server_t *server);
-bool server_read_from_client(game_server_t *server, game_client_t *client);
 void server_destroy(game_server_t *server);
+// Run and select methods
+int server_run(game_server_t *server);
+int server_select(game_server_t *server);
+// Util methods
+game_client_t *server_get_player(game_server_t *server, int id);
+void server_set_timeout(game_server_t *server);
+long long int server_get_timeout(game_server_t *server);
+// Event-related methods
+bool server_add_event(game_server_t *server, void *params);
+bool server_remove_events(game_server_t *server, game_event_type_t type,
+    game_client_t *client);
+// Client-related methods
+int server_accept_client(game_server_t *server);
+bool server_read_client(game_server_t *server, game_client_t *client);
+void server_disconnect_client(game_server_t *server, game_client_t *client);
 
 #endif

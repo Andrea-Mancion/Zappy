@@ -13,12 +13,20 @@ SRC_DIR	=	./src/
 
 SRC	=	\
 	$(SRC_DIR)zappy_main.c	\
-	$(SRC_DIR)game/commands/commands_table.c	\
-	$(SRC_DIR)game/commands/commands_movement.c	\
+	$(SRC_DIR)game/server/ai_commands/ai_commands_table.c	\
+	$(SRC_DIR)game/server/ai_commands/ai_commands_movement.c	\
+	$(SRC_DIR)game/server/graphic_commands/graphic_commands_table.c	\
+	$(SRC_DIR)game/server/events/events_table.c	\
+	$(SRC_DIR)game/server/events/events_command.c	\
+	$(SRC_DIR)game/server/events/events1.c	\
 	$(SRC_DIR)game/server/server_class.c	\
-	$(SRC_DIR)game/server/server_accept_client.c	\
-	$(SRC_DIR)game/server/server_read_client.c	\
+	$(SRC_DIR)game/server/server_methods.c	\
+	$(SRC_DIR)game/server/server_select.c	\
+	$(SRC_DIR)game/server/server_client.c	\
+	$(SRC_DIR)game/server/server_event.c	\
+	$(SRC_DIR)game/server/server_run.c	\
 	$(SRC_DIR)game/client/client_class.c	\
+	$(SRC_DIR)game/client/client_methods.c	\
 	$(SRC_DIR)game/map/map_class.c	\
 	$(SRC_DIR)game/map/map_methods.c	\
 	$(SRC_DIR)game/tile/tile_class.c	\
@@ -26,8 +34,8 @@ SRC	=	\
 	$(SRC_DIR)program/params/params_methods.c	\
 	$(SRC_DIR)misc/list/list_class.c	\
 	$(SRC_DIR)misc/list/list_methods.c	\
-	$(SRC_DIR)misc/timer/timer_class.c	\
-	$(SRC_DIR)misc/timer/timer_methods.c	\
+	$(SRC_DIR)misc/map/map_class.c	\
+	$(SRC_DIR)misc/map/map_methods.c	\
 
 OBJ	=	$(SRC:.c=.o)
 
