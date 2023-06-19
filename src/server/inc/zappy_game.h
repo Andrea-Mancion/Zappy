@@ -11,10 +11,11 @@
 
     #include <arpa/inet.h>
     #include <sys/select.h>
+    #include <stddef.h>
 
 // Settings
     #define MAX_CLIENTS 100
-    #define BUF_SIZE 1024
+    #define BUFFER_SIZE 1024
     #define MAX_PENDING_COMMANDS 10
     #define REFILL_TIME 20
     #define FOOD_TIME 126
@@ -39,6 +40,14 @@ typedef enum game_resource_e {
     THYSTAME,
     RESOURCE_COUNT
 } game_resource_t;
+
+typedef struct game_resource_name_pair_s {
+    char *name;
+    game_resource_t resource;
+} game_resource_name_pair_t;
+
+// Resources names array
+extern const game_resource_name_pair_t resource_names[];
 
 // Direction enum
 typedef enum game_direction_e {

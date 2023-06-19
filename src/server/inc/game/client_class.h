@@ -21,6 +21,9 @@ typedef struct pending_command_s {
     void (*destroy)(struct pending_command_s *command);
 } pending_command_t;
 
+// Default structure of pending command
+extern const pending_command_t default_pending_command;
+
 // Client command ctor, dtor and methods
 int pending_command_init(pending_command_t *command, char *input);
 void pending_command_destroy(pending_command_t *command);
@@ -35,11 +38,14 @@ typedef struct game_client_s {
     game_direction_t direction;
     int x;
     int y;
-    int life_units;
     int level;
     int inventory[RESOURCE_COUNT];
     void (*destroy)(struct game_client_s *client);
 } game_client_t;
+
+
+// Default structure of client
+extern const game_client_t default_client;
 
 // Client ctor, dtor and methods
 int client_init(game_client_t *client, int socket);

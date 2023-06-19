@@ -9,7 +9,7 @@
 #include "zappy_misc.h"
 
 // Initial structure of map
-static const game_map_t default_map = {
+const game_map_t default_map = {
     .width = 0,
     .height = 0,
     .tiles = NULL,

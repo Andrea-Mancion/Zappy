@@ -11,7 +11,7 @@
 #include "game/client_class.h"
 
 // Initial structure of server
-static const game_server_t default_server = {
+const game_server_t default_server = {
     .socket = -1,
     .address = {
         .sin_family = AF_INET,
@@ -41,6 +41,7 @@ static const game_server_t default_server = {
     .disconnect_client = &server_disconnect_client,
     .set_timeout = &server_set_timeout,
     .get_timeout = &server_get_timeout,
+    .init_client = &server_init_client,
 };
 
 // Initialize the teams of the server

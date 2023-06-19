@@ -13,17 +13,23 @@
     #include "game/server_class.h"
     #include "game/client_class.h"
 
-// Pair structure of the command table
-typedef struct game_command_s {
+// Pair structure of the graphic command table
+typedef struct game_ai_command_s {
     const char *command;
     int (*function)(game_server_t *server, game_client_t *client, char **args,
         char **output);
     int duration;
-} game_command_t;
+} game_ai_command_t;
+
+// Pair structure of the ai command table
+typedef struct game_graphic_command_s {
+    const char *command;
+    int (*function)(game_server_t *server, game_client_t *client, char **args);
+} game_graphic_command_t;
 
 // Const variables
-extern const game_command_t graphic_commands_table[];
-extern const game_command_t ai_commands_table[];
+extern const game_graphic_command_t graphic_commands_table[];
+extern const game_ai_command_t ai_commands_table[];
 
 // AI command functions
 int ai_command_forward(game_server_t *server, game_client_t *client,
@@ -50,5 +56,25 @@ int ai_command_set(game_server_t *server, game_client_t *client, char **args,
     char **output);
 int ai_command_incantation(game_server_t *server, game_client_t *client,
     char **args, char **output);
+
+// Graphic command functions
+int graphic_command_msz(game_server_t *server, game_client_t *client,
+    char **args);
+int graphic_command_bct(game_server_t *server, game_client_t *client,
+    char **args);
+int graphic_command_mct(game_server_t *server, game_client_t *client,
+    char **args);
+int graphic_command_tna(game_server_t *server, game_client_t *client,
+    char **args);
+int graphic_command_ppo(game_server_t *server, game_client_t *client,
+    char **args);
+int graphic_command_plv(game_server_t *server, game_client_t *client,
+    char **args);
+int graphic_command_pin(game_server_t *server, game_client_t *client,
+    char **args);
+int graphic_command_sgt(game_server_t *server, game_client_t *client,
+    char **args);
+int graphic_command_sst(game_server_t *server, game_client_t *client,
+    char **args);
 
 #endif

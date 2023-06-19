@@ -33,6 +33,9 @@ typedef struct list_s {
     int (*item_cmp)(void *, void *);
 } list_t;
 
+// Default structure of list
+extern const list_t default_list;
+
 // List ctor, dtor and methods
 int list_init(list_t *list, void (*item_dtor)(void *), int (*item_cmp)(void *,
     void *));

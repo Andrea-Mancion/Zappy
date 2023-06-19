@@ -39,6 +39,9 @@ typedef struct game_map_s {
     void (*destroy)(struct game_map_s *map);
 } game_map_t;
 
+// Default structure of map
+extern const game_map_t default_game_map;
+
 // Map ctor, dtor and methods
 int game_map_init(game_map_t *map, int width, int height);
 void game_map_destroy(game_map_t *map);

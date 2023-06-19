@@ -9,7 +9,7 @@
 #include "misc/list_class.h"
 
 // Initial structure of list
-static const list_t default_list = {
+const list_t default_list = {
     .head = NULL,
     .size = 0,
     .add = &list_add,

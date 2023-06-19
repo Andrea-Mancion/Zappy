@@ -24,6 +24,9 @@ typedef struct game_tile_s {
     void (*destroy)(struct game_tile_s *tile);
 } game_tile_t;
 
+// Default structure of tile
+extern const game_tile_t default_tile;
+
 // Tile ctor, dtor and methods
 int tile_init(game_tile_t *tile);
 void tile_destroy(game_tile_t *tile);

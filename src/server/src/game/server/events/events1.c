@@ -18,12 +18,12 @@ void event_remove_player_health(game_server_t *server,
     event_params_t params = {tick(), FOOD_TIME * 1e6,
         PLAYER_REMOVE_HEALTH, client};
 
-    client->life_units--;
-    if (client->life_units <= 0) {
+    if (client->inventory[FOOD] <= 0) {
         dprintf(client->socket, "dead\n");
         server->disconnect_client(server, client);
         return;
     }
+    client->inventory[FOOD]--;
     server->add_event(server, &params);
 }
 

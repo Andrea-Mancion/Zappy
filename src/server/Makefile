@@ -15,7 +15,10 @@ SRC	=	\
 	$(SRC_DIR)zappy_main.c	\
 	$(SRC_DIR)game/server/ai_commands/ai_commands_table.c	\
 	$(SRC_DIR)game/server/ai_commands/ai_commands_movement.c	\
+	$(SRC_DIR)game/server/ai_commands/ai_commands_object.c	\
 	$(SRC_DIR)game/server/graphic_commands/graphic_commands_table.c	\
+	$(SRC_DIR)game/server/graphic_commands/graphic_commands_player.c	\
+	$(SRC_DIR)game/server/graphic_commands/graphic_commands_map.c	\
 	$(SRC_DIR)game/server/events/events_table.c	\
 	$(SRC_DIR)game/server/events/events_command.c	\
 	$(SRC_DIR)game/server/events/events1.c	\
@@ -23,6 +26,7 @@ SRC	=	\
 	$(SRC_DIR)game/server/server_methods.c	\
 	$(SRC_DIR)game/server/server_select.c	\
 	$(SRC_DIR)game/server/server_client.c	\
+	$(SRC_DIR)game/server/server_client_init.c	\
 	$(SRC_DIR)game/server/server_event.c	\
 	$(SRC_DIR)game/server/server_run.c	\
 	$(SRC_DIR)game/client/client_class.c	\

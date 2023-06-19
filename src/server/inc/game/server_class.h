@@ -40,6 +40,8 @@ struct game_server_s {
         game_client_t *client);
     // Client
     int (*accept_client)(game_server_t *server);
+    int (*init_client)(game_server_t *server, game_client_t *client, char *
+        team);
     bool (*read_client)(game_server_t *server, game_client_t *client);
     void (*disconnect_client)(game_server_t *server, game_client_t *client);
     // Select
@@ -53,6 +55,9 @@ struct game_server_s {
     // Dtor
     void (*destroy)(game_server_t *server);
 };
+
+// Default structure of server
+extern const game_server_t default_server;
 
 // Server ctor and dtor
 int server_init(game_server_t *server, program_params_t *params);
@@ -70,6 +75,8 @@ bool server_remove_events(game_server_t *server, game_event_type_t type,
     game_client_t *client);
 // Client-related methods
 int server_accept_client(game_server_t *server);
+int server_init_client(game_server_t *server, game_client_t *client, char *
+    team);
 bool server_read_client(game_server_t *server, game_client_t *client);
 void server_disconnect_client(game_server_t *server, game_client_t *client);
 
