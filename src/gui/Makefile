@@ -12,11 +12,12 @@ SRC	=	$(SRC_DIR)map.cpp		\
 		$(SRC_DIR)gui.cpp		\
 		$(SRC_DIR)inventory.cpp	\
 		$(SRC_DIR)player.cpp	\
-		$(SRC_DIR)server.cpp	\
+		$(SRC_DIR)commands.cpp	\
+		$(SRC_DIR)server.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 
-NAME	=	gui
+NAME	=	zappy_gui
 
 CFLAGS	+=	-Wall -Wextra -lsfml-graphics -lsfml-window -lsfml-system
 
@@ -26,6 +27,7 @@ all:	$(NAME)
 
 $(NAME):	$(OBJ)
 		g++ -o $(NAME) $(OBJ) $(CFLAGS)
+		rm -f $(OBJ)
 
 clean:
 		rm -f $(OBJ)
