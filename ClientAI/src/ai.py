@@ -267,7 +267,6 @@ def canTakeObject(ai_socket):
 
 def forkPlayer(ai_socket, name):
     # Si je ne m'abuse the nbValue est le resultat de combien de place il reste dans la team
-
     nbValue = nbTeams(ai_socket, name)
     if (nbValue > 0):
         ai_socket.send(str.encode("Fork\n"))
@@ -278,6 +277,16 @@ def forkPlayer(ai_socket, name):
             pip = os.fork()
             if (pip == 0):
                 print("I'm the child")
+
+def getInventory(ai_socket):
+    ai_socket.send(str.encode("Inventory\n"))
+    serverString = ai_socket.recv(2046).decode()
+    print("Inventory: " + serverString)
+    if (serverString != "ko\n"):
+        print("I get my inventory")
+    else:
+        print("I can't get my inventory")
+    return serverString
 
 def firstCommunication(ai_socket, name):
     serverString = ai_socket.recv(2048).decode()
@@ -302,15 +311,11 @@ def createClock(ai_socket, name):
     lvl = 1
     x = 0
     nbValue, mapWidth, mapHeight = firstCommunication(ai_socket, name)
-    serverSting = ai_socket.recv(2046).decode()
-    if (serverSting == "WELCOME\n"):
-        ai_socket.send(str.encode(name + "\n"))
-    serverSting = ai_socket.recv(2046).decode()
-    print("Server1: " + serverSting)
     while not False:
         canTakeObject(ai_socket)
         objectArray = look(ai_socket)
         print("ObjectArray2: " + objectArray)
+        objectInventory = getInventory(ai_socket)
         is_empty = not bool(objectArray[1])
         if (is_empty == False):
             forward(ai_socket)
