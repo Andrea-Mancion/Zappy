@@ -156,6 +156,20 @@ def look(ai_socket):
         print("Look OK")
         return rec
 
+def broadcast(ai_socket, message):
+    cmd = "Broadcast " + message + "\n"
+    cmd = cmd.encode()
+    ai_socket.send(cmd)
+    rec = ai_socket.recv(1024)
+    rec = rec.decode()
+    if (rec == "ok\n"):
+        print("Broadcast " + message + " OK")
+    else:
+        print("Broadcast KO")
+    print(rec)
+    serverString = ai_socket.recv(2046).decode()
+    print("serverString8: " + serverString)
+
 def nbTeams(ai_socket, name):
     ai_socket.send(str.encode("Connect_nbr\n"))
     nbValue = ai_socket.recv(1024).decode()
@@ -255,9 +269,9 @@ def canTakeObject(ai_socket):
                     serverString = ai_socket.recv(2046).decode()
                     print("Server3: " + serverString)
                     if (serverString == "ok\n"):
-                        print("I take the " + element)
+                        broadcast(ai_socket, "I take the " + element)
                     else:
-                        print("I can't take the " + element)
+                        broadcast(ai_socket, "I can't take the " + element)
     else:
         print("Can't take object, i'm not in a object case")
 
@@ -308,9 +322,16 @@ def createClock(ai_socket, name):
         print("ObjectArray2: " + objectArray)
         objectInventory = getInventory(ai_socket)
         is_empty = not bool(objectArray[1])
+        is_empty_too = not bool(objectArray[2])
         if (is_empty == False):
             forward(ai_socket)
             left(ai_socket)
+            forward(ai_socket)
+        elif (is_empty_too == False):
+            forward(ai_socket)
+            right(ai_socket)
+            forward(ai_socket)
+        else:
             forward(ai_socket)
         # add a condition of if there is a new character
         forkPlayer(ai_socket, name)
