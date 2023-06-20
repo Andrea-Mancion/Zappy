@@ -95,6 +95,13 @@ def checkString(string):
         return False
     return True
 
+def ifDeathPlayer(ai_socket):
+    serverString = ai_socket.recv(2046).decode()
+    print("server2 " + serverString)
+    if (serverString == "dead\n"):
+        return True
+    return False
+
 def forward(ai_socket):
     print("Command: Forward")
     cmd = "Forward\n"
@@ -287,7 +294,6 @@ def firstCommunication(ai_socket, name):
     print(mapWidth + " " + mapHeight)
     return nbValue, mapWidth, mapHeight
 
-
 def createClock(ai_socket, name):
     # Avoir le lvl du joueur (recuperer soit au tout debut (base 1) soit a chaque elevation)
     lvl = 1
@@ -306,13 +312,13 @@ def createClock(ai_socket, name):
             forward(ai_socket)
             left(ai_socket)
             forward(ai_socket)
-        x += 1
         # add a condition of if there is a new character
         forkPlayer(ai_socket, name)
         lvl = StartElevation(ai_socket, lvl)
         print("my current level: " + str(lvl))
-        if (x == 2):
-            break
+        if (ifDeathPlayer(ai_socket) == True):
+            print("Player is dead")
+            sys.exit(0)
 
 def beginning(port, name, machine):
     ai_socket = socket.socket()
