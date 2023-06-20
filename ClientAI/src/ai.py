@@ -180,13 +180,14 @@ def setObjectDown(ai_socket, item):
     for item2 in itemsList:
         item_split = item2.split()
         myInventory.extend(item_split)
-    print(myInventory)
+    print("myInventory" + str(myInventory))
     # Check si on est bien seul et sans object sur la case (grace au split)
     if (len(itemsLook_split) == 1):
         for i in range(len(myInventory)):
             if (myInventory[i] == item):
                 if i + 1 < len(myInventory):
                     number = myInventory[i + 1]
+                    print("number: " + number)
                 if (int(number) > 0):
                     print("item " + item)
                     ai_socket.send(str.encode("Set " + item + "\n"))
@@ -311,12 +312,15 @@ def createClock(ai_socket, name):
             forward(ai_socket)
             left(ai_socket)
             forward(ai_socket)
+            canTakeObject(ai_socket)
         elif (is_empty_too == False):
             forward(ai_socket)
             right(ai_socket)
             forward(ai_socket)
+            canTakeObject(ai_socket)
         else:
             forward(ai_socket)
+            canTakeObject(ai_socket)
         x += 1
         # add a condition of if there is a new character
         # forkPlayer(ai_socket, name)
