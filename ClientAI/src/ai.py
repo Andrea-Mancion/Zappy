@@ -310,6 +310,7 @@ def createClock(ai_socket, name):
         # add a condition of if there is a new character
         forkPlayer(ai_socket, name)
         lvl = StartElevation(ai_socket, lvl)
+        print("my current level: " + str(lvl))
         if (x == 2):
             break
 
