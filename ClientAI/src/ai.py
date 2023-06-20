@@ -155,10 +155,12 @@ def broadcast(ai_socket, message):
     rec = ai_socket.recv(1024)
     rec = rec.decode()
     if (rec == "ok\n"):
-        print("Broadcast OK")
+        print("Broadcast " + message + " OK")
     else:
         print("Broadcast KO")
     print(rec)
+    serverString = ai_socket.recv(2046).decode()
+    print("serverString8: " + serverString)
 
 def nbTeams(ai_socket, name):
     ai_socket.send(str.encode("Connect_nbr\n"))
@@ -271,9 +273,9 @@ def canTakeObject(ai_socket):
                     serverString = ai_socket.recv(2046).decode()
                     print("Server3: " + serverString)
                     if (serverString == "ok\n"):
-                        print("I take the " + element)
+                        broadcast(ai_socket, "I take the " + element)
                     else:
-                        print("I can't take the " + element)
+                        broadcast(ai_socket, "I can't take the " + element)
     else:
         print("Can't take object, i'm not in a object case")
 
