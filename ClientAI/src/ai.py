@@ -4,6 +4,7 @@ import sys
 import socket
 import time
 import os
+import re
 
 Ressources = [
     "food",
@@ -94,6 +95,13 @@ def checkString(string):
         return False
     return True
 
+def ifDeathPlayer(ai_socket):
+    serverString = ai_socket.recv(2046).decode()
+    print("server2 " + serverString)
+    if (serverString == "dead\n"):
+        return True
+    return False
+
 def forward(ai_socket):
     print("Command: Forward")
     cmd = "Forward\n"
@@ -166,100 +174,88 @@ def nbTeams(ai_socket, name):
     ai_socket.send(str.encode("Connect_nbr\n"))
     nbValue = ai_socket.recv(1024).decode()
     print("value: " + nbValue)
-    return nbValue
+    return int(nbValue)
+
+def getInventory(ai_socket):
+    ai_socket.send(str.encode("Inventory\n"))
+    serverString = ai_socket.recv(2046).decode()
+    if (serverString != "ko\n"):
+        print("I get my inventory")
+    else:
+        print("I can't get my inventory")
+    return serverString
 
 def setObjectDown(ai_socket, item):
-    # NE PAS OUBLIER DE VERIFIER SI ON POSSEDE BIEN L'OBJET QU'ON VEUT POSER
-    # REFLECHIR A COMMENT SAVOIR QUELLE OBJET DEPOSER (PS: Grace au lvl et au 2ème paramètre)
-    # Utiliser la function look pour recuperer les informations des case et split sur les virgules
-    # Voici la variable qui va contenir les données du look
-    itemsLook = []
+    itemsLook = look(ai_socket)
     itemsLook_split = itemsLook[0].split(" ")
-    # Voici la variable qui va contenir les données du inventory
-    itemsGet = []
-    # Check si on est bien seul et sans object sur la case (grace au split)
+    itemsGet = getInventory(ai_socket)
+    print("Here's my inventory: " + itemsGet)
+    itemsGet = itemsGet.strip("[]")
+    itemsList = itemsGet.split(", ")
+    myInventory = []
+    for item2 in itemsList:
+        item_split = item2.split()
+        myInventory.extend(item_split)
+    print(myInventory)
     if (len(itemsLook_split) == 1):
-        for element in itemsGet:
-            if (element == item):
-                print("item " + item)
-                ai_socket.send(str.encode("Set " + item + "\n"))
-                serverString = ai_socket.recv(2046).decode()
-                print("1 " + serverString)
-                if (serverString == "ok"):
-                    print("Object set down")
-                else:
-                    print("Object not set down")
-                break
-
-# Function to call when we need to Start the elevation
+        for i in range(len(myInventory)):
+            if (myInventory[i] == item):
+                if i + 1 < len(myInventory):
+                    number = myInventory[i + 1]
+                if (int(number) > 0):
+                    print("item " + item)
+                    ai_socket.send(str.encode("Set " + item + "\n"))
+                    serverString = ai_socket.recv(2046).decode()
+                    print("1 " + serverString)
+                    if (serverString == "ok\n"):
+                        print("Object set down")
+                        return True
+                    else:
+                        print("Object not set down")
+                        return False
 
 def canSetObject(ai_socket, lvl):
     if (lvl == 1):
-        setObjectDown(ai_socket, "linemate")
+        if setObjectDown(ai_socket, "linemate") == True:
+            return True
     elif (lvl == 2):
-        setObjectDown(ai_socket, "linemate")
-        setObjectDown(ai_socket, "deraumere")
-        setObjectDown(ai_socket, "sibur")
+        if setObjectDown(ai_socket, "linemate") == True and setObjectDown(ai_socket, "deraumere") == True and setObjectDown(ai_socket, "sibur") == True:
+            return True
     elif (lvl == 3):
-        setObjectDown(ai_socket, "linemate")
-        setObjectDown(ai_socket, "linemate")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "phiras")
-        setObjectDown(ai_socket, "phiras")
+        if setObjectDown(ai_socket, "linemate") == True and setObjectDown(ai_socket, "linemate") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "phiras") == True and setObjectDown(ai_socket, "phiras") == True:
+            return True
     elif (lvl == 4):
-        setObjectDown(ai_socket, "linemate")
-        setObjectDown(ai_socket, "deraumere")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "phiras")
+        if setObjectDown(ai_socket, "linemate") == True and setObjectDown(ai_socket, "deraumere") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "phiras") == True:
+            return True
     elif (lvl == 5):
-        setObjectDown(ai_socket, "linemate")
-        setObjectDown(ai_socket, "deraumere")
-        setObjectDown(ai_socket, "deraumere")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "mendiane")
-        setObjectDown(ai_socket, "mendiane")
-        setObjectDown(ai_socket, "menidane")
+        if setObjectDown(ai_socket, "linemate") == True and setObjectDown(ai_socket, "deraumere") == True and setObjectDown(ai_socket, "deraumere") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "mendiane") == True and setObjectDown(ai_socket, "mendiane") == True and setObjectDown(ai_socket, "menidane") == True:
+            return True
     elif (lvl == 6):
-        setObjectDown(ai_socket, "linemate")
-        setObjectDown(ai_socket, "deraumere")
-        setObjectDown(ai_socket, "deraumere")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "phiras")
+        if setObjectDown(ai_socket, "linemate") == True and setObjectDown(ai_socket, "deraumere") == True and setObjectDown(ai_socket, "deraumere") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "phiras") == True:
+            return True
     elif (lvl == 7):
-        setObjectDown(ai_socket, "linemate")
-        setObjectDown(ai_socket, "linemate")
-        setObjectDown(ai_socket, "deraumere")
-        setObjectDown(ai_socket, "deraumere")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "sibur")
-        setObjectDown(ai_socket, "mendiane")
-        setObjectDown(ai_socket, "mendiane")
-        setObjectDown(ai_socket, "phiras")
-        setObjectDown(ai_socket, "phiras")
-        setObjectDown(ai_socket, "thystame")
+        if setObjectDown(ai_socket, "linemate") == True and setObjectDown(ai_socket, "linemate") == True and setObjectDown(ai_socket, "deraumere") == True and setObjectDown(ai_socket, "deraumere") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "sibur") == True and setObjectDown(ai_socket, "mendiane") == True and setObjectDown(ai_socket, "mendiane") == True and setObjectDown(ai_socket, "phiras") == True and setObjectDown(ai_socket, "phiras") == True and setObjectDown(ai_socket, "thystame") == True:
+            return True
 
 def StartElevation(ai_socket, lvl):
-    # Recuperer les élements de la fonction look pour check si on est sur une case vide
-    # Voici la variable qui va recuperer le tableau
-    object_look = []
+    object_look = look(ai_socket)
     object_split = object_look[0].split(" ")
     if (len(object_split) == 1):
-        # Appeler la fonction qui va permettre de faire le set Object down avec en paramettre la socket et le lvl
-        ai_socket.send(str.encode("Incantation\n"))
-        serverString = ai_socket.recv(2046).decode()
-        if (serverString != "ko\n"):
-            #Recuperer le lvl que le serveur envoie
-            print(serverString)
-            lvl += 1
-            print("Here my new lvl: " + lvl)
+        if canSetObject(ai_socket, lvl) == True:
+            ai_socket.send(str.encode("Incantation\n"))
+            serverString = ai_socket.recv(2046).decode()
+            if (serverString != "ko\n"):
+                #Recuperer le lvl que le serveur envoie
+                print("2 " + serverString)
+                serverString = ai_socket.recv(2046).decode()
+                print("3 " + serverString)
+                lvl += 1
+                print("Here my new lvl: " + str(lvl))
+            else:
+                print("I failed to level-up\n")
     return lvl
 
 def canTakeObject(ai_socket):
-    # Faire la condition pour check si quand on look on est sur un objet (n'importe lequel, et n'importe quelle nombre), si c'est le cas on peut prendre un objet qui est sur cette case
-    # Voici la variable objectArray, celui va contenir les objects que nous renvoi la fonction look. (a split)
     objectArray = look(ai_socket)
     print("ObjectArray: " + objectArray)
     element_split = objectArray.split(",")[0].split(" ")
@@ -279,9 +275,12 @@ def canTakeObject(ai_socket):
     else:
         print("Can't take object, i'm not in a object case")
 
-def forkPlayer(ai_socket, name):
-    # Si je ne m'abuse the nbValue est le resultat de combien de place il reste dans la team
+def childProcess(ai_socket, name):
+    createClock(ai_socket, name)
+    ai_socket.close()
+    print("The child is dead")
 
+def forkPlayer(ai_socket, name):
     nbValue = nbTeams(ai_socket, name)
     if (nbValue > 0):
         ai_socket.send(str.encode("Fork\n"))
@@ -309,17 +308,19 @@ def firstCommunication(ai_socket, name):
     print(mapWidth + " " + mapHeight)
     return nbValue, mapWidth, mapHeight
 
-
 def createClock(ai_socket, name):
     # Avoir le lvl du joueur (recuperer soit au tout debut (base 1) soit a chaque elevation)
-    # D'ailleur ne pas oublier de faire ceci que dans le cas ou on veut faire un level up
     lvl = 1
     x = 0
     nbValue, mapWidth, mapHeight = firstCommunication(ai_socket, name)
+    if (nbValue == 0):
+        print("No more place in the server")
+        exit(0)
     while not False:
         canTakeObject(ai_socket)
         objectArray = look(ai_socket)
         print("ObjectArray2: " + objectArray)
+        objectInventory = getInventory(ai_socket)
         is_empty = not bool(objectArray[1])
         is_empty_too = not bool(objectArray[2])
         if (is_empty == False):
@@ -332,12 +333,13 @@ def createClock(ai_socket, name):
             forward(ai_socket)
         else:
             forward(ai_socket)
-        x += 1
         # add a condition of if there is a new character
-        # forkPlayer(ai_socket, name)
-        #lvl = StartElevation(ai_socket, lvl)
-        if (x == 2):
-            break
+        forkPlayer(ai_socket, name)
+        lvl = StartElevation(ai_socket, lvl)
+        print("my current level: " + str(lvl))
+        if (ifDeathPlayer(ai_socket) == True):
+            print("Player is dead")
+            sys.exit(0)
 
 def beginning(port, name, machine):
     ai_socket = socket.socket()
