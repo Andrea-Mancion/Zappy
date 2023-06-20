@@ -293,6 +293,9 @@ def createClock(ai_socket, name):
     lvl = 1
     x = 0
     nbValue, mapWidth, mapHeight = firstCommunication(ai_socket, name)
+    if (nbValue == 0):
+        print("No more place in the server")
+        exit(0)
     while not False:
         canTakeObject(ai_socket)
         objectArray = look(ai_socket)
