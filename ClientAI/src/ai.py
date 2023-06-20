@@ -24,7 +24,8 @@ def checkString(string):
 
 def ifDeathPlayer(ai_socket):
     serverString = ai_socket.recv(2046).decode()
-    if (serverString == "dead"):
+    print("server2 " + serverString)
+    if (serverString == "dead\n"):
         return True
     return False
 
@@ -35,10 +36,12 @@ def createClock(ai_socket, name):
             ai_socket.send(str.encode(name + "\n"))
         serverString = ai_socket.recv(2046).decode()
         print(serverString)
+        ai_socket.send(str.encode("Forward\n"))
+        serverString = ai_socket.recv(2046).decode()
+        print("Server: " + serverString)
         if (ifDeathPlayer(ai_socket) == True):
             print("Player is dead")
-            # Use either os.kill with the getpid as parameter or sys.exit(0) to kill the child process
-        break
+            sys.exit(0)
 
 
 def beginning(port, name, machine):
