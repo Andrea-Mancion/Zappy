@@ -15,16 +15,16 @@ static void init_as_ai(game_server_t *server, list_t *team, game_client_t *
     client, char *command)
 {
     game_client_t *target;
-    game_client_t **id = malloc(sizeof(game_client_t *));
+    int *id = malloc(sizeof(int));
     event_params_t params = {tick(), FOOD_TIME * 1e6, PLAYER_REMOVE_HEALTH,
         client};
     client_init_as_ai(client, &server->map);
-    *id = client;
+    *id = client->id;
     team->add(team, id);
     client->team_name = strdup(command);
     server->add_event(server, &params);
-    dprintf(client->socket, "%d\n", server->max_team_capacity - team->size);
-    dprintf(client->socket, "%d %d\n", server->map.width, server->map.height);
+    dprintf(client->socket, "%d\n%d %d\n", server->max_team_capacity - team->
+        size, server->map.width, server->map.height);
     for (int i = 0; i < server->clients.size; i++) {
         target = server->clients.get(&server->clients, i);
         if (target->team_name && strcmp(target->team_name, "GRAPHIC") == 0) {

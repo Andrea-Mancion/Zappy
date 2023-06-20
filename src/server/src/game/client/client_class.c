@@ -62,11 +62,16 @@ int client_init(game_client_t *client, int socket)
 void client_init_as_ai(game_client_t *client, game_map_t *map)
 {
     static int id = 0;
+    int *player_id;
 
     client->direction = rand() % DIRECTION_COUNT;
     client->x = rand() % map->width;
     client->y = rand() % map->height;
     client->id = ++id;
+    player_id = malloc(sizeof(int));
+    *player_id = client->id;
+    map->tiles[client->y][client->x].players.add(&map->tiles[client->y]
+        [client->x].players, player_id);
 }
 
 // Client destructor

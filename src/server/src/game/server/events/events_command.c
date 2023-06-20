@@ -25,6 +25,7 @@ static int execute_ai_command(game_server_t *server, game_client_t *client,
         return ai_commands_table[i].function(server, client, args + 1,
             &command->output);
     }
+    printf("Command not found: \"%s\"\n", args[0]);
     return ERR_COMMAND;
 }
 
@@ -39,8 +40,8 @@ static int parse_ai_command(game_server_t *server, game_client_t *client,
     for (char *sub = strtok(command->input, " "); sub; sub = strtok(NULL, " "))
         args[j++] = sub;
     args[j] = NULL;
-    if (!args[0] || (status = execute_ai_command(
-        server, client, command, args)) != SUCCESS) {
+    if (!args[0] || (status = execute_ai_command(server, client, command, args)
+        ) != SUCCESS) {
         free(args);
         return status;
     }
@@ -53,8 +54,7 @@ void event_start_command(game_server_t *server,
     game_client_t *client)
 {
     pending_command_t *cmd = client->commands.get(&client->commands, 0);
-    event_params_t params = {tick(), cmd->duration * 1e6,
-        PLAYER_COMMAND, client};
+    event_params_t params = {tick(), 0, PLAYER_COMMAND, client};
 
     if (cmd->output)
         return;
@@ -62,8 +62,10 @@ void event_start_command(game_server_t *server,
         error_message)) {
         cmd->output = strdup(ko_message);
         event_end_command(server, client);
-    } else
+    } else {
+        params.duration = cmd->duration * 1e6;
         server->add_event(server, &params);
+    }
 }
 
 // Sends the command's output to the client and removes it from the list

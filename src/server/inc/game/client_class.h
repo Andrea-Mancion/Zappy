@@ -54,5 +54,6 @@ void client_init_as_ai(game_client_t *client, game_map_t *map);
 
 // Other functions
 int client_cmp(void *a, void *b);
+int client_cmp_id(void *a, void *b);
 
 #endif

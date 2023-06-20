@@ -108,10 +108,10 @@ void server_disconnect_client(game_server_t *server,
     list_t *team = server->teams.get(&server->teams, client->team_name);
     int index;
     if (team)
-        if ((index = team->index(team, &client)) < team->size)
+        if ((index = team->index(team, &client->id)) < team->size)
             team->remove(team, index);
     team = &server->map.tiles[client->y][client->x].players;
-    if ((index = team->index(team, &client)) < team->size)
+    if ((index = team->index(team, &client->id)) < team->size)
         team->remove(team, index);
     server->remove_events(server, PLAYER_COMMAND, client);
     server->remove_events(server, PLAYER_REMOVE_HEALTH, client);
