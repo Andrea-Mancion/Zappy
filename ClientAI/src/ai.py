@@ -370,17 +370,17 @@ def createClock(ai_socket, name):
         print("my current level: " + str(lvl))
         objectArray = look(ai_socket)
         print("ObjectArray2: " + objectArray)
-        is_empty = not bool(objectArray[1])
-        is_empty_too = not bool(objectArray[2])
+        is_empty = not bool(objectArray.split(",")[1])
+        is_empty_too = not bool(objectArray.split(",")[2])
         if (is_empty == False):
             forward(ai_socket)
             left(ai_socket)
             forward(ai_socket)
         elif (is_empty_too == False):
             forward(ai_socket)
-            right(ai_socket)
-            forward(ai_socket)
         else:
+            forward(ai_socket)
+            right(ai_socket)
             forward(ai_socket)
 
 def beginning(port, name, machine):
