@@ -207,6 +207,15 @@ def getInventory(ai_socket):
         print("I can't get my inventory")
     return serverString
 
+def getInventory(ai_socket):
+    ai_socket.send(str.encode("Inventory\n"))
+    serverString = ai_socket.recv(2046).decode()
+    if (serverString != "ko\n"):
+        print("I get my inventory")
+    else:
+        print("I can't get my inventory")
+    return serverString
+
 def setObjectDown(ai_socket, item):
     itemsLook = look(ai_socket)
     itemsLook_split = itemsLook[0].split(" ")
@@ -376,6 +385,7 @@ def createClock(ai_socket, name):
             forward(ai_socket)
             left(ai_socket)
             forward(ai_socket)
+            canTakeObject(ai_socket)
         elif (is_empty_too == False):
             forward(ai_socket)
         else:
