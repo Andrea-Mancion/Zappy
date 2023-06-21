@@ -45,3 +45,15 @@ long long int server_get_timeout(game_server_t *server)
 {
     return server->timeout.tv_sec * 1e6 + server->timeout.tv_usec;
 }
+
+// Notifies all graphical clients of a new event
+void server_notify_graphic(game_server_t *server, char *message)
+{
+    game_client_t *client;
+
+    for (int i = 0; i < server->clients.size; i++) {
+        client = server->clients.get(&server->clients, i);
+        if (strcmp(client->team_name, "GRAPHIC") == 0)
+            dprintf(client->socket, "%s\n", message);
+    }
+}
