@@ -9,7 +9,6 @@
 #include "map.hpp"
 #include <unordered_map>
 
-
 class Commands {
     private:
         std::unordered_map<std::string, bool(Commands::*)(Map *map, std::vector<std::string> cmd, Server server)> _cmdList;
@@ -41,5 +40,5 @@ class Commands {
     public:
         Commands();
         ~Commands() = default;
-        bool doCommand(Map *map, std::vector<std::string> cmd, Server server);
+        bool doCommand(Map *map, std::vector<std::vector<std::string>> cmd, Server server);
 };
