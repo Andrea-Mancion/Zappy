@@ -10,6 +10,13 @@
 #include "game/client_class.h"
 #include "zappy_game.h"
 
+static const int direction_increment_forward[][2] = {
+    [NORTH] = {0, -1},
+    [EAST] = {1, 0},
+    [SOUTH] = {0, 1},
+    [WEST] = {-1, 0},
+};
+
 // Forward command
 int ai_command_forward(game_server_t *server, game_client_t *client,
     ATTR_UNUSED char **args, char **output)
@@ -21,14 +28,12 @@ int ai_command_forward(game_server_t *server, game_client_t *client,
     *player = client->id;
     server->map.tiles[client->y][client->x].players.remove(
         &server->map.tiles[client->y][client->x].players, index);
-    if (client->direction == NORTH)
-        client->y = (client->y - 1) % server->map.height;
-    else if (client->direction == EAST)
-        client->x = (client->x + 1) % server->map.width;
-    if (client->direction == SOUTH)
-        client->y = (client->y + 1) % server->map.height;
-    else if (client->direction == WEST)
-        client->x = (client->x - 1) % server->map.width;
+    client->x = (client->x + direction_increment_forward[client->direction][0]
+        + server->map.width) % server->map.width;
+    client->y = (client->y + direction_increment_forward[client->direction][1]
+        + server->map.height) % server->map.height;
+    printf("%d %d %p\n", client->x, client->y,
+        &server->map.tiles[client->y][client->x].players);
     server->map.tiles[client->y][client->x].players.add(
         &server->map.tiles[client->y][client->x].players, player);
     *output = strdup("ok");
