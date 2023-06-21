@@ -279,7 +279,7 @@ def canSetObject(ai_socket, lvl):
 def StartElevation(ai_socket, lvl):
     object_look = look(ai_socket)
     object_split = object_look.split(",")[0].split(" ")
-    object_split.pop(0)
+    object_split = [re.sub(r'[\[\]]', '', item).strip() for item in object_split]
     print("Here's where i am: " + str(object_split) + "\n" + str(len(object_split)))
     if (len(object_split) == 1):
         if canSetObject(ai_socket, lvl) == True:
@@ -380,8 +380,8 @@ def createClock(ai_socket, name):
         print("my current level: " + str(lvl))
         objectArray = look(ai_socket)
         print("ObjectArray2: " + objectArray)
-        is_empty = len(objectArray[1]) <= 1
-        is_empty_too = len(objectArray[2]) <= 2
+        is_empty = not bool(objectArray.split(",")[1])
+        is_empty_too = not bool(objectArray.split(",")[2])
         if (is_empty == False):
             forward(ai_socket)
             left(ai_socket)
