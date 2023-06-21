@@ -306,7 +306,8 @@ def canTakeObject(ai_socket):
     objectArray = look(ai_socket)
     print("ObjectArray: " + objectArray)
     element_split = objectArray.split(",")[0].split(" ")
-    element_split.pop(0)
+    element_split = [re.sub(r'[\[\]]', '', item).strip() for item in element_split]
+    print("element_split: " + str(element_split))
     if (len(element_split) > 1):
         for item in Ressources:
             for element in element_split:
@@ -379,8 +380,8 @@ def createClock(ai_socket, name):
         print("my current level: " + str(lvl))
         objectArray = look(ai_socket)
         print("ObjectArray2: " + objectArray)
-        is_empty = not bool(objectArray.split(",")[1])
-        is_empty_too = not bool(objectArray.split(",")[2])
+        is_empty = len(objectArray[1]) <= 1
+        is_empty_too = len(objectArray[2]) <= 2
         if (is_empty == False):
             forward(ai_socket)
             left(ai_socket)
@@ -392,6 +393,7 @@ def createClock(ai_socket, name):
             forward(ai_socket)
             right(ai_socket)
             forward(ai_socket)
+
 
 def beginning(port, name, machine):
     ai_socket = socket.socket()
