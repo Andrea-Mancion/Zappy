@@ -241,6 +241,8 @@ def setObjectDown(ai_socket, item):
                             return False
                 except ValueError:
                     print("The Server doesn't send the right thing")
+            else:
+                print("I don't have this item")
 
 def canSetObject(ai_socket, lvl):
     if (lvl == 1):
@@ -363,7 +365,7 @@ def createClock(ai_socket, name):
     while not False:
         canTakeObject(ai_socket)
         # add a condition of if there is a new character
-        forkPlayer(ai_socket, name)
+        #forkPlayer(ai_socket, name)
         lvl = StartElevation(ai_socket, lvl)
         print("my current level: " + str(lvl))
         objectArray = look(ai_socket)
