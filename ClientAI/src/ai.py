@@ -157,6 +157,7 @@ def look(ai_socket):
         sys.exit(0)
     elif (rec == None):
         print("Look KO")
+        print(rec)
     else:
         print("Look OK")
         return rec
@@ -201,6 +202,7 @@ def getInventory(ai_socket):
         sys.exit(0)
     elif (serverString != "ko\n"):
         print("I get my inventory")
+        print(serverString)
     else:
         print("I can't get my inventory")
     return serverString
