@@ -1,0 +1,26 @@
+##
+## EPITECH PROJECT, 2023
+## Makefile
+## File description:
+## Makefile
+##
+
+D_SRC = ./src/
+
+NAME = zappy_ai
+
+$(NAME)	:
+			cp $(D_SRC)ai.py ./
+			mv ai.py zappy_ai
+			chmod +x zappy_ai
+
+all	:	$(NAME)
+
+clean:
+		rm -rf zappy_ai
+
+fclean:	clean
+
+re	:	fclean all
+
+.PHONY: all clean fclean re
