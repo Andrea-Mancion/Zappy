@@ -32,8 +32,6 @@ int ai_command_forward(game_server_t *server, game_client_t *client,
         + server->map.width) % server->map.width;
     client->y = (client->y + direction_increment_forward[client->direction][1]
         + server->map.height) % server->map.height;
-    printf("%d %d %p\n", client->x, client->y,
-        &server->map.tiles[client->y][client->x].players);
     server->map.tiles[client->y][client->x].players.add(
         &server->map.tiles[client->y][client->x].players, player);
     *output = strdup("ok");
@@ -53,7 +51,8 @@ int ai_command_right(ATTR_UNUSED game_server_t *server, game_client_t *client,
 int ai_command_left(ATTR_UNUSED game_server_t *server, game_client_t *client,
     ATTR_UNUSED char **args, char **output)
 {
-    client->direction = (client->direction - 1) % DIRECTION_COUNT;
+    client->direction = (client->direction - 1 + DIRECTION_COUNT) %
+        DIRECTION_COUNT;
     *output = strdup("ok");
     return SUCCESS;
 }

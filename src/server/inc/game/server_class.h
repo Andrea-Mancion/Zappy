@@ -52,6 +52,7 @@ struct game_server_s {
     game_client_t *(*get_player)(game_server_t *server, int id);
     void (*set_timeout)(game_server_t *server);
     long long int (*get_timeout)(game_server_t *server);
+    void (*notify_graphic)(game_server_t *server, char *message);
     // Dtor
     void (*destroy)(game_server_t *server);
 };
@@ -69,6 +70,7 @@ int server_select(game_server_t *server);
 game_client_t *server_get_player(game_server_t *server, int id);
 void server_set_timeout(game_server_t *server);
 long long int server_get_timeout(game_server_t *server);
+void server_notify_graphic(game_server_t *server, char *message);
 // Event-related methods
 bool server_add_event(game_server_t *server, void *params);
 bool server_remove_events(game_server_t *server, game_event_type_t type,

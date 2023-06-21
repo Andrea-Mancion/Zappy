@@ -30,14 +30,16 @@ static void get_tile_content(game_tile_t *tile, char *buffer)
         [DERAUMERE] = &tile->deraumere, [SIBUR] = &tile->sibur, [MENDIANE] =
         &tile->mendiane, [PHIRAS] = &tile->phiras, [THYSTAME] =
         &tile->thystame};
+    bool is_there_even_something = false;
 
     for (int i = 0; i < RESOURCE_COUNT; i++) {
         for (int j = 0; j < *addresses[i]; j++) {
             strcat(buffer, resource_names[i]);
             strcat(buffer, " ");
+            is_there_even_something = true;
         }
     }
-    if (tile->players.size == 0)
+    if (tile->players.size == 0 && is_there_even_something)
         buffer[strlen(buffer) - 1] = '\0';
     for (int j = 0; j < tile->players.size; j++) {
         strcat(buffer, "player");
@@ -79,7 +81,7 @@ int ai_command_look(game_server_t *server, game_client_t *client,
     char buffer[BUFFER_SIZE] = {0};
 
     buffer[0] = '[';
-    for (int i = 0; i < client->level; i++) {
+    for (int i = 0; i < client->level + 1; i++) {
         if (i != 0)
             strcat(buffer, ", ");
         get_line_content(&server->map, client, buffer, i);
