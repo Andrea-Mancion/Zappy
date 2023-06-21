@@ -95,13 +95,6 @@ def checkString(string):
         return False
     return True
 
-def ifDeathPlayer(ai_socket):
-    serverString = ai_socket.recv(2046).decode()
-    print("server2 " + serverString)
-    if (serverString == "dead\n"):
-        return True
-    return False
-
 def forward(ai_socket):
     print("Command: Forward")
     cmd = "Forward\n"
@@ -109,7 +102,10 @@ def forward(ai_socket):
     ai_socket.send(cmd)
     rec = ai_socket.recv(1024)
     rec = rec.decode()
-    if (rec == "ok\n"):
+    if (rec == "dead\n"):
+        print("I died")
+        sys.exit(0)
+    elif (rec == "ok\n"):
         print("Forward OK")
     else:
         print("Forward KO")
@@ -123,7 +119,10 @@ def right(ai_socket):
     ai_socket.send(cmd)
     rec = ai_socket.recv(1024)
     rec = rec.decode()
-    if (rec == "ok\n"):
+    if (rec == "dead\n"):
+        print("I died")
+        sys.exit(0)
+    elif (rec == "ok\n"):
         print("Right OK")
     else:
         print("Right KO")
@@ -137,7 +136,10 @@ def left(ai_socket):
     ai_socket.send(cmd)
     rec = ai_socket.recv(1024)
     rec = rec.decode()
-    if (rec == "ok\n"):
+    if (rec == "dead\n"):
+        print("I died")
+        sys.exit(0)
+    elif (rec == "ok\n"):
         print("Left OK")
     else:
         print("Left KO")
@@ -150,7 +152,10 @@ def look(ai_socket):
     ai_socket.send(cmd)
     rec = ai_socket.recv(1024)
     rec = rec.decode()
-    if (rec == None):
+    if (rec == "dead\n"):
+        print("I died")
+        sys.exit(0)
+    elif (rec == None):
         print("Look KO")
     else:
         print("Look OK")
@@ -162,24 +167,39 @@ def broadcast(ai_socket, message):
     ai_socket.send(cmd)
     rec = ai_socket.recv(1024)
     rec = rec.decode()
-    if (rec == "ok\n"):
+    if (rec == "dead\n"):
+        print("I died")
+        sys.exit(0)
+    elif (rec == "ok\n"):
         print("Broadcast " + message + " OK")
     else:
         print("Broadcast KO")
     print(rec)
     serverString = ai_socket.recv(2046).decode()
     print("serverString8: " + serverString)
+    if (serverString == "dead\n"):
+        print("I died")
+        sys.exit(0)
 
 def nbTeams(ai_socket, name):
     ai_socket.send(str.encode("Connect_nbr\n"))
     nbValue = ai_socket.recv(1024).decode()
     print("value: " + nbValue)
-    return int(nbValue)
+    if (nbValue == "dead\n"):
+        print("I died")
+        sys.exit(0)
+    try:
+        return int(nbValue)
+    except ValueError:
+        print("The server doesn't send the right number of teams")
 
 def getInventory(ai_socket):
     ai_socket.send(str.encode("Inventory\n"))
     serverString = ai_socket.recv(2046).decode()
-    if (serverString != "ko\n"):
+    if (serverString == "dead\n"):
+        print("I died")
+        sys.exit(0)
+    elif (serverString != "ko\n"):
         print("I get my inventory")
     else:
         print("I can't get my inventory")
@@ -202,17 +222,23 @@ def setObjectDown(ai_socket, item):
             if (myInventory[i] == item):
                 if i + 1 < len(myInventory):
                     number = myInventory[i + 1]
-                if (int(number) > 0):
-                    print("item " + item)
-                    ai_socket.send(str.encode("Set " + item + "\n"))
-                    serverString = ai_socket.recv(2046).decode()
-                    print("1 " + serverString)
-                    if (serverString == "ok\n"):
-                        print("Object set down")
-                        return True
-                    else:
-                        print("Object not set down")
-                        return False
+                try:
+                    if (int(number) > 0):
+                        print("item " + item)
+                        ai_socket.send(str.encode("Set " + item + "\n"))
+                        serverString = ai_socket.recv(2046).decode()
+                        print("1 " + serverString)
+                        if (serverString == "dead\n"):
+                            print("I died")
+                            sys.exit(0)
+                        elif (serverString == "ok\n"):
+                            print("Object set down")
+                            return True
+                        else:
+                            print("Object not set down")
+                            return False
+                except ValueError:
+                    print("The Server doesn't send the right thing")
 
 def canSetObject(ai_socket, lvl):
     if (lvl == 1):
@@ -244,11 +270,17 @@ def StartElevation(ai_socket, lvl):
         if canSetObject(ai_socket, lvl) == True:
             ai_socket.send(str.encode("Incantation\n"))
             serverString = ai_socket.recv(2046).decode()
-            if (serverString != "ko\n"):
+            if (serverString == "dead\n"):
+                print("I died")
+                sys.exit(0)
+            elif (serverString != "ko\n"):
                 #Recuperer le lvl que le serveur envoie
                 print("2 " + serverString)
                 serverString = ai_socket.recv(2046).decode()
                 print("3 " + serverString)
+                if (serverString == "dead\n"):
+                    print("I died")
+                    sys.exit(0)
                 lvl += 1
                 print("Here my new lvl: " + str(lvl))
             else:
@@ -268,10 +300,13 @@ def canTakeObject(ai_socket):
                     ai_socket.send(str.encode("Take " + element + "\n"))
                     serverString = ai_socket.recv(2046).decode()
                     print("Server3: " + serverString)
-                    if (serverString == "ok\n"):
-                        broadcast(ai_socket, "I take the " + element)
+                    if (serverString == "dead\n"):
+                        print("I died")
+                        sys.exit(0)
+                    elif (serverString == "ok\n"):
+                        print("I take the " + element)
                     else:
-                        broadcast(ai_socket, "I can't take the " + element)
+                        print("I can't take the " + element)
     else:
         print("Can't take object, i'm not in a object case")
 
@@ -282,15 +317,21 @@ def childProcess(ai_socket, name):
 
 def forkPlayer(ai_socket, name):
     nbValue = nbTeams(ai_socket, name)
-    if (nbValue > 0):
-        ai_socket.send(str.encode("Fork\n"))
-        serverSting = ai_socket.recv(1024).decode()
-        print("Server2: " + serverSting)
-        if (serverSting == "ok\n"):
-            print("Forking")
-            pip = os.fork()
-            if (pip == 0):
-                print("I'm the child")
+    try:
+        if (nbValue > 0):
+            ai_socket.send(str.encode("Fork\n"))
+            serverSting = ai_socket.recv(1024).decode()
+            print("Server2: " + serverSting)
+            if (serverSting == "dead\n"):
+                print("I died")
+                sys.exit(0)
+            elif (serverSting == "ok\n"):
+                print("Forking")
+                pip = os.fork()
+                if (pip == 0):
+                    print("I'm the child")
+    except TypeError:
+        print("TypeError 'cause the server doesn't send the right value team")
 
 def firstCommunication(ai_socket, name):
     serverString = ai_socket.recv(2048).decode()
@@ -311,7 +352,6 @@ def firstCommunication(ai_socket, name):
 def createClock(ai_socket, name):
     # Avoir le lvl du joueur (recuperer soit au tout debut (base 1) soit a chaque elevation)
     lvl = 1
-    x = 0
     nbValue, mapWidth, mapHeight = firstCommunication(ai_socket, name)
     if (nbValue == 0):
         print("No more place in the server")
@@ -337,9 +377,6 @@ def createClock(ai_socket, name):
         forkPlayer(ai_socket, name)
         lvl = StartElevation(ai_socket, lvl)
         print("my current level: " + str(lvl))
-        if (ifDeathPlayer(ai_socket) == True):
-            print("Player is dead")
-            sys.exit(0)
 
 def beginning(port, name, machine):
     ai_socket = socket.socket()
