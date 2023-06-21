@@ -41,13 +41,8 @@ typedef enum game_resource_e {
     RESOURCE_COUNT
 } game_resource_t;
 
-typedef struct game_resource_name_pair_s {
-    char *name;
-    game_resource_t resource;
-} game_resource_name_pair_t;
-
 // Resources names array
-extern const game_resource_name_pair_t resource_names[];
+extern const char *resource_names[];
 
 // Direction enum
 typedef enum game_direction_e {

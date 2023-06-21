@@ -14,6 +14,13 @@
 int ai_command_forward(game_server_t *server, game_client_t *client,
     ATTR_UNUSED char **args, char **output)
 {
+    int index = server->map.tiles[client->y][client->x].players.index(
+        &server->map.tiles[client->y][client->x].players, &client->id);
+    int *player = malloc(sizeof(int));
+
+    *player = client->id;
+    server->map.tiles[client->y][client->x].players.remove(
+        &server->map.tiles[client->y][client->x].players, index);
     if (client->direction == NORTH)
         client->y = (client->y - 1) % server->map.height;
     else if (client->direction == EAST)
@@ -22,6 +29,8 @@ int ai_command_forward(game_server_t *server, game_client_t *client,
         client->y = (client->y + 1) % server->map.height;
     else if (client->direction == WEST)
         client->x = (client->x - 1) % server->map.width;
+    server->map.tiles[client->y][client->x].players.add(
+        &server->map.tiles[client->y][client->x].players, player);
     *output = strdup("ok");
     return SUCCESS;
 }

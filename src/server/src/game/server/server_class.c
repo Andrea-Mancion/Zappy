@@ -53,7 +53,7 @@ static int teams_init(game_server_t *server, program_params_t *params)
     (void *, void *))&strcmp);
     for (int i = 0; params->team_names[i]; i++) {
         team = malloc(sizeof(list_t));
-        list_init(team, NULL, client_cmp);
+        list_init(team, NULL, client_cmp_id);
         server->teams.set(&server->teams, strdup(params->team_names[i]), team);
     }
     return SUCCESS;

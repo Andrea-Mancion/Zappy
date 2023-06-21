@@ -16,3 +16,12 @@ int client_cmp(void *a, void *b)
 
     return client_a - client_b;
 }
+
+// Compare function but with client id
+int client_cmp_id(void *a, void *b)
+{
+    int *pa = a;
+    int *id = b;
+
+    return *pa - *id;
+}

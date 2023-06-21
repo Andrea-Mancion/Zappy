@@ -10,14 +10,14 @@
 #include "game/client_class.h"
 #include "zappy_game.h"
 
-const game_resource_name_pair_t resource_names[] = {
-    {"food", FOOD},
-    {"linemate", LINEMATE},
-    {"deraumere", DERAUMERE},
-    {"sibur", SIBUR},
-    {"mendiane", MENDIANE},
-    {"phiras", PHIRAS},
-    {"thystame", THYSTAME},
+const char *resource_names[] = {
+    [FOOD] = "food",
+    [LINEMATE] = "linemate",
+    [DERAUMERE] = "deraumere",
+    [SIBUR] = "sibur",
+    [MENDIANE] = "mendiane",
+    [PHIRAS] = "phiras",
+    [THYSTAME] = "thystame",
 };
 
 // Get resource address from tile
@@ -33,17 +33,6 @@ static int *get_resource_address(game_server_t *server, game_client_t *client,
     return resources_addresses[resource];
 }
 
-void server_notify_all_graphic(game_server_t *server, char *message)
-{
-    game_client_t *client;
-
-    for (int i = 0; i < server->clients.size; i++) {
-        client = server->clients.get(&server->clients, i);
-        if (strcmp(client->team_name, "GRAPHIC") == 0)
-            dprintf(client->socket, "%s\n", message);
-    }
-}
-
 // Take command
 int ai_command_take(game_server_t *server, game_client_t *client,
     char **args, char **output)
@@ -54,8 +43,8 @@ int ai_command_take(game_server_t *server, game_client_t *client,
     if (args[0] == NULL)
         return ERR_COMMAND;
     for (int i = 0; i < RESOURCE_COUNT; i++)
-        if (strcmp(args[0], resource_names[i].name) == 0)
-            enum_resource = resource_names[i].resource;
+        if (strcmp(args[0], resource_names[i]) == 0)
+            enum_resource = i;
     if (enum_resource == RESOURCE_COUNT)
         return ERR_COMMAND;
     if (!*(address = get_resource_address(server, client, enum_resource))) {
@@ -78,8 +67,8 @@ int ai_command_set(game_server_t *server, game_client_t *client,
     if (args[0] == NULL)
         return ERR_COMMAND;
     for (int i = 0; i < RESOURCE_COUNT; i++)
-        if (strcmp(args[0], resource_names[i].name) == 0)
-            enum_resource = resource_names[i].resource;
+        if (strcmp(args[0], resource_names[i]) == 0)
+            enum_resource = i;
     if (enum_resource == RESOURCE_COUNT)
         return ERR_COMMAND;
     address = get_resource_address(server, client, enum_resource);

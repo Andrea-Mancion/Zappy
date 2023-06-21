@@ -28,7 +28,7 @@ int tile_init(game_tile_t *tile)
     int status;
 
     *tile = default_tile;
-    if ((status = list_init(&tile->players, NULL, client_cmp)) != SUCCESS)
+    if ((status = list_init(&tile->players, NULL, client_cmp_id)) != SUCCESS)
         return status;
     return SUCCESS;
 }
