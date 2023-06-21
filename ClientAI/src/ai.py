@@ -157,9 +157,9 @@ def look(ai_socket):
         sys.exit(0)
     elif (rec == None):
         print("Look KO")
-        print(rec)
     else:
         print("Look OK")
+        print(rec)
         return rec
 
 def broadcast(ai_socket, message):
@@ -267,7 +267,9 @@ def canSetObject(ai_socket, lvl):
 
 def StartElevation(ai_socket, lvl):
     object_look = look(ai_socket)
-    object_split = object_look[0].split(" ")
+    object_split = object_look.split(",")[0].split(" ")
+    object_split.pop(0)
+    print("Here's where i am: " + str(object_split) + "\n" + str(len(object_split)))
     if (len(object_split) == 1):
         if canSetObject(ai_socket, lvl) == True:
             ai_socket.send(str.encode("Incantation\n"))
@@ -360,9 +362,12 @@ def createClock(ai_socket, name):
         exit(0)
     while not False:
         canTakeObject(ai_socket)
+        # add a condition of if there is a new character
+        forkPlayer(ai_socket, name)
+        lvl = StartElevation(ai_socket, lvl)
+        print("my current level: " + str(lvl))
         objectArray = look(ai_socket)
         print("ObjectArray2: " + objectArray)
-        objectInventory = getInventory(ai_socket)
         is_empty = not bool(objectArray[1])
         is_empty_too = not bool(objectArray[2])
         if (is_empty == False):
@@ -375,10 +380,6 @@ def createClock(ai_socket, name):
             forward(ai_socket)
         else:
             forward(ai_socket)
-        # add a condition of if there is a new character
-        forkPlayer(ai_socket, name)
-        lvl = StartElevation(ai_socket, lvl)
-        print("my current level: " + str(lvl))
 
 def beginning(port, name, machine):
     ai_socket = socket.socket()
