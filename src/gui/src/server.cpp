@@ -91,13 +91,12 @@ bool Server::isReceivingTransmission()
 {
     timeval time;
 
-    time.tv_usec = 1000;
+    time.tv_usec = 1;
     time.tv_sec = 0;
     FD_ZERO(&this->_rfds);
     FD_SET(this->_sd, &this->_rfds);
     if (this->_activity == 1)
         return false;
-    printf("select\n");
     this->_activity = select(this->_sd + 1, &this->_rfds, NULL, NULL, &time);
     if (this->_activity > 0) {
         this->readTransmission();
