@@ -48,10 +48,6 @@ void Map::setDimension(int width, int heigth)
 {
     _dimension.first = width;
     _dimension.second = heigth;
-
-    // sf::Vector2u size = _window->getSize();
-    // float x_size = (float)(width) / (size.x / _texture.getSize().x);
-    // _sprite.setScale(sf::Vector2f(x_size, x_size));
 }
 
 std::pair<unsigned int, unsigned int> Map::getDimension() const
@@ -61,7 +57,10 @@ std::pair<unsigned int, unsigned int> Map::getDimension() const
 
 Player *Map::getPlayer(size_t id)
 {
-    return &this->_players[id];
+    for (int i = 0; this->_players.size(); i++)
+        if (this->_players.at(i).getId() == id)
+            return &this->_players.at(i);
+    return nullptr;
 }
 
 void Map::addPlayer(Player player)
@@ -136,5 +135,55 @@ void Map::draw_players(sf::RenderWindow &window)
         std::cout << "x: " << isoX << " y: " << isoY << std::endl;
         this->_players[i].getSprite()->setPosition((int)isoX, (int)isoY);
         this->_players[i].draw(window);
+    }
+}
+
+void Map::inventoryDisplay(sf::RenderWindow &window)
+{
+    sf::Mouse mouse;
+    sf::Keyboard keyboard;
+    bool isInventoryOpen = false;
+
+    if (mouse.isButtonPressed(sf::Mouse::Left)) {
+        sf::Vector2i pos = mouse.getPosition(window);
+        for (size_t i = 0; i < this->_players.size(); i++) {
+            if (this->_players[i].getSprite()->getGlobalBounds().contains(pos.x, pos.y)) {
+                isInventoryOpen = true;
+                break;
+            }
+        }
+    }
+    if (isInventoryOpen) {
+        sf::Texture backgroundTexture;
+        if (!backgroundTexture.loadFromFile("assets/inventory/papyrus.png")) {
+            std::cerr << "Error: could not load background texture" << std::endl;
+            return;
+        }
+        sf::Sprite backgroundSprite(backgroundTexture);
+
+        sf::Texture accessoryTexture1;
+        if (!accessoryTexture1.loadFromFile("assets/inventory/food/food.png")) {
+            std::cerr << "Error: could not load accessory texture" << std::endl;
+            return;
+        }
+        sf::Sprite accessorySprite1(accessoryTexture1);
+
+        while (isInventoryOpen) {
+            sf::Event event;
+            while (window.pollEvent(event)) {
+                if (event.type == sf::Event::Closed) {
+                    window.close();
+                    return;
+                }
+                if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+                    isInventoryOpen = false;
+                    break;
+                }
+            }
+            window.clear();
+            window.draw(backgroundSprite);
+            window.draw(accessorySprite1);
+            window.display();
+        }
     }
 }
