@@ -21,6 +21,8 @@ class Map {
         sf::RenderWindow *_window;
         bool _isInventoryOpen = false;
         int _displayInventoryId;
+        std::vector<std::string> _inventoryNames;
+        std::vector<std::pair<sf::Texture, sf::Sprite>> _inventorySprites;
 
     public :
         Map();
@@ -36,7 +38,7 @@ class Map {
         std::vector<std::vector<Inventory>> *getTiles();
         Inventory *getTile(size_t x, size_t y);
         void setTiles(std::vector<std::vector<Inventory>> tiles);
-        void draw_map(sf::RenderWindow &window);
+        void draw_map(sf::RenderWindow &window, float zoomLevel);
         void draw_players(sf::RenderWindow &window);
         void inventoryDisplay(sf::RenderWindow &window);
         void setDisplayInventory(bool value, int id);
