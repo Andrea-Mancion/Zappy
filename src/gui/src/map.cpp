@@ -30,6 +30,17 @@ Map::Map(unsigned int width, unsigned int height, std::string path, sf::RenderWi
     _sprite.setTexture(_texture);
     _sprite.setScale(sf::Vector2f(0.5f, 0.5f));
     // _sprite.setScale(sf::Vector2f(size.x / _texture.getSize().x, size.y / _texture.getSize().y));
+
+    //_inventoryNames = std::vector<std::string>("food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame");
+    _inventorySprites = std::vector<std::pair<sf::Texture, sf::Sprite>>();
+    for (size_t i = 0; i < _inventoryNames.size(); i++) {
+        sf::Texture texture;
+        sf::Sprite sprite;
+        texture.loadFromFile("assets/" + _inventoryNames[i] + ".png");
+        sprite.setTexture(texture);
+        sprite.setScale(sf::Vector2f(0.5f, 0.5f));
+        _inventorySprites.push_back(std::pair<sf::Texture, sf::Sprite>(texture, sprite));
+    }
 }
 
 Map::Map(unsigned int width, unsigned int heigth, std::vector<std::vector<Inventory>> tiles, sf::RenderWindow *window)
@@ -93,7 +104,7 @@ void Map::setTiles(std::vector<std::vector<Inventory>> tiles)
     this->_tiles = tiles;
 }
 
-void Map::draw_map(sf::RenderWindow &window)
+void Map::draw_map(sf::RenderWindow& window, float zoomLevel)
 {
     sf::Vector2u size = window.getSize();
     sf::FloatRect bounds = this->_sprite.getGlobalBounds();
@@ -103,12 +114,20 @@ void Map::draw_map(sf::RenderWindow &window)
     sf::Color backgroundColor(176, 224, 230);
     window.clear(backgroundColor);
 
-    for (size_t i = 0; i < this->_dimension.second; i++)
-    {
-        for (size_t j = 0; j < this->_dimension.first; j++)
-        {
+    float centerX = (this->_dimension.first - 1) * 0.5f * (bounds.width / 2);
+    float centerY = (this->_dimension.second - 1) * 0.5f * (bounds.height / 2);
+
+    float offsetX = (size.x / 2) - (zoomLevel * centerX);
+    float offsetY = (size.y / 2) - (zoomLevel * centerY);
+
+    sf::View view(sf::FloatRect(offsetX, offsetY, size.x / zoomLevel, size.y / zoomLevel));
+    view.setCenter(size.x / 2, size.y / 2);
+    window.setView(view);
+
+    for (size_t i = 0; i < this->_dimension.second; i++) {
+        for (size_t j = 0; j < this->_dimension.first; j++) {
             isoX = (i - j) * 0.5f * (bounds.width / 2) + size.x / 2;
-            isoY = (i + j) * 0.4f * (bounds.height / 2) + size.y / 4;
+            isoY = (i + j) * 0.4f * (bounds.height / 2) + size.y / 3;
 
             this->_sprite.setPosition((int)isoX, (int)isoY);
             window.draw(this->_sprite);
@@ -131,7 +150,6 @@ void Map::setDisplayInventory(bool value)
     this->_isInventoryOpen = value;
 }
 
-
 void Map::draw_players(sf::RenderWindow &window)
 {
     sf::Vector2u size = window.getSize();
@@ -151,29 +169,69 @@ void Map::draw_players(sf::RenderWindow &window)
 
         std::cout << "x: " << isoX << " y: " << isoY << std::endl;
         this->_players[i].getSprite()->setPosition((int)isoX, (int)isoY);
+        this->_players[i].updateSpriteFrame();
         this->_players[i].draw(window);
     }
 }
 
 void Map::inventoryDisplay(sf::RenderWindow &window)
 {
-
-    if (this->_isInventoryOpen) {
+    if (this->_isInventoryOpen)
+    {
         sf::Texture backgroundTexture;
         if (!backgroundTexture.loadFromFile("assets/inventory/papyrus.png")) {
             std::cerr << "Error: could not load background texture" << std::endl;
             return;
         }
         sf::Sprite backgroundSprite(backgroundTexture);
+        sf::Vector2f newSize(200.0f, 300.0f);
+        backgroundSprite.setScale(newSize.x / backgroundSprite.getLocalBounds().width,
+                                  newSize.y / backgroundSprite.getLocalBounds().height);
 
         sf::Texture accessoryTexture1;
         if (!accessoryTexture1.loadFromFile("assets/inventory/food/food.png")) {
             std::cerr << "Error: could not load accessory texture" << std::endl;
             return;
         }
-        printf("DRAW TEXTURE\n");
         sf::Sprite accessorySprite1(accessoryTexture1);
+
+        sf::Vector2f newAccessorySize(50.0f, 50.0f);
+        accessorySprite1.setScale(newAccessorySize.x / accessorySprite1.getLocalBounds().width,
+                                  newAccessorySize.y / accessorySprite1.getLocalBounds().height);
+
+        accessorySprite1.setPosition(50.0f, 50.0f);
+
+        sf::Texture accessoryTexture2;
+        if (!accessoryTexture2.loadFromFile("assets/inventory/gems/sibur.png"))
+        {
+            std::cerr << "Error: could not load accessory texture" << std::endl;
+            return;
+        }
+        sf::Sprite accessorySprite2(accessoryTexture2);
+
+        sf::Vector2f newAccessorySize1(40.0f, 50.0f);
+        accessorySprite2.setScale(newAccessorySize1.x / accessorySprite2.getLocalBounds().width,
+                                  newAccessorySize1.y / accessorySprite2.getLocalBounds().height);
+
+        accessorySprite2.setPosition(100.0f, 50.0f);
+
+        sf::Texture accessoryTexture3;
+        if (!accessoryTexture3.loadFromFile("assets/inventory/gems/deraumere.png"))
+        {
+            std::cerr << "Error: could not load accessory texture" << std::endl;
+            return;
+        }
+        sf::Sprite accessorySprite3(accessoryTexture3);
+
+        sf::Vector2f newAccessorySize2(40.0f, 50.0f);
+        accessorySprite3.setScale(newAccessorySize2.x / accessorySprite3.getLocalBounds().width,
+                                  newAccessorySize2.y / accessorySprite3.getLocalBounds().height);
+
+        accessorySprite3.setPosition(50.0f, 100.0f);
+
         window.draw(backgroundSprite);
         window.draw(accessorySprite1);
+        window.draw(accessorySprite2);
+        window.draw(accessorySprite3);
     }
 }

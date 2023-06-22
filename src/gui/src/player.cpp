@@ -29,10 +29,13 @@ Player::Player(size_t x, size_t y, size_t id, std::string path)
     _id = id;
     _texture = sf::Texture();
     _sprite = sf::Sprite();
+    _clock = sf::Clock();
 
     _texture.loadFromFile(path);
     _sprite.setTexture(_texture);
     _sprite.setScale(sf::Vector2f(0.3f, 0.3f));
+    _sprite.setTextureRect(sf::IntRect(267 * 4, 0, 270, 200));
+    _clock.restart();
 }
 
 Player::~Player()
@@ -128,4 +131,26 @@ sf::Sprite *Player::getSprite() const
 void Player::draw(sf::RenderWindow &window)
 {
     window.draw(_sprite);
+}
+
+void Player::updateSpriteFrame()
+{
+    sf::IntRect rect = _sprite.getTextureRect();
+
+    if (_clock.getElapsedTime().asSeconds() >= 1) {
+        if (rect.left == 267 * 4) {
+            rect.left = 267 * 5;
+            rect.top = 0;
+            rect.width = 270;
+            rect.height = 200;
+
+        } else {
+            rect.left = 267 * 4;
+            rect.top = 0;
+            rect.width = 270;
+            rect.height = 200;
+        }
+        _sprite.setTextureRect(rect);
+        _clock.restart();
+    }
 }
