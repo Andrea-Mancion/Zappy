@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** libs.hpp
 ** File description:
-** map
+** libraries
 */
 
 #pragma once

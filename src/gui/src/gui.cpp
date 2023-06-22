@@ -1,19 +1,18 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.cpp
+** hui.cpp
 ** File description:
-** window and map
+** main function
 */
 
 #include "../inc/gui.hpp"
 
 int main(int ac, char **av)
 {
-    sf::RenderWindow window(sf::VideoMode(1580, 920), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(1580, 920), "Zappy GUI");
 
-    //sf::Sprite playerSprite = createSprite("assets/player/dino.png", 0.3f);
     Server *server;
-    Map map(15, 15, "assets/grass1.png", 0.5f);
+    Map map(0, 0, "assets/grass1.png", &window);
     Commands cmd;
 
     try {
@@ -35,6 +34,8 @@ int main(int ac, char **av)
                 window.close();
         }
         map.draw_map(window);
+        map.draw_players(window);
+        window.display();
     }
     return 0;
 }

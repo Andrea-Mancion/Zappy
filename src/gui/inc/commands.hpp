@@ -1,14 +1,13 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** commands.hpp
 ** File description:
-** map
+** commands
 */
 
 #include "libs.hpp"
 #include "map.hpp"
 #include <unordered_map>
-
 
 class Commands {
     private:
@@ -41,5 +40,5 @@ class Commands {
     public:
         Commands();
         ~Commands() = default;
-        bool doCommand(Map *map, std::vector<std::string> cmd, Server server);
+        bool doCommand(Map *map, std::vector<std::vector<std::string>> cmd, Server server);
 };

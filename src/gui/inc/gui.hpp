@@ -1,13 +1,12 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** gui.hpp
 ** File description:
-** map
+** gui
 */
 
 #pragma once
 
-#include "macros.hpp"
 #include "server.hpp"
 #include "commands.hpp"
 #include "map.hpp"

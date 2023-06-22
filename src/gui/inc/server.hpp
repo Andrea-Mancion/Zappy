@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** server.hpp
 ** File description:
-** map
+** server
 */
 
 #pragma once
@@ -22,6 +22,7 @@ class Server {
     fd_set _rfds;
     int _activity = 0;
     std::vector<std::string> _transmission;
+    std::vector<std::vector<std::string>> _cmds;
     int _port;
     std::string _ip;
 
@@ -32,9 +33,10 @@ class Server {
     bool areArgumentsCorrect(int ac, char **av);
     void sendMessage(std::string msg);
     bool isReceivingTransmission();
-    std::vector<std::string> getTransmission() const;
+    std::vector<std::vector<std::string>> getTransmission() const;
     void readTransmission();
     bool isNumber(std::string str);
+    void ParseTransmission();
 };
 
 class ServerError: public std::exception {

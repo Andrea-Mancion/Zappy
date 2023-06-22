@@ -16,9 +16,10 @@ Player::Player()
     _team = "";
     _id = 0;
     _sprite = sf::Sprite();
+    _texture = sf::Texture();
 }
 
-Player::Player(size_t x, size_t y, size_t id, sf::Sprite sprite)
+Player::Player(size_t x, size_t y, size_t id, std::string path)
 {
     _pos = std::pair<int, int>(x, y);
     _inv = Inventory();
@@ -26,7 +27,12 @@ Player::Player(size_t x, size_t y, size_t id, sf::Sprite sprite)
     _orientation = N;
     _team = "";
     _id = id;
-    _sprite = sprite;
+    _texture = sf::Texture();
+    _sprite = sf::Sprite();
+
+    _texture.loadFromFile(path);
+    _sprite.setTexture(_texture);
+    _sprite.setScale(sf::Vector2f(0.3f, 0.3f));
 }
 
 Player::~Player()
@@ -104,12 +110,22 @@ void Player::setId(size_t id)
     _id = id;
 }
 
-void Player::setSprite(sf::Sprite sprite)
+void Player::setSprite(std::string path)
 {
-    _sprite = sprite;
+    _texture = sf::Texture();
+    _sprite = sf::Sprite();
+
+    _texture.loadFromFile(path);
+    _sprite.setTexture(_texture);
+    _sprite.setScale(sf::Vector2f(0.3f, 0.3f));
 }
 
-sf::Sprite Player::getSprite() const
+sf::Sprite *Player::getSprite() const
 {
-    return _sprite;
+    return const_cast<sf::Sprite *>(&_sprite);
+}
+
+void Player::draw(sf::RenderWindow &window)
+{
+    window.draw(_sprite);
 }

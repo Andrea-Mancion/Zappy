@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** server.hpp
 ** File description:
-** map
+** server
 */
 
 #include "../inc/gui.hpp"
@@ -89,11 +89,15 @@ bool Server::areArgumentsCorrect(int ac, char **av)
 
 bool Server::isReceivingTransmission()
 {
+    timeval time;
+
+    time.tv_usec = 1;
+    time.tv_sec = 0;
     FD_ZERO(&this->_rfds);
     FD_SET(this->_sd, &this->_rfds);
     if (this->_activity == 1)
         return false;
-    this->_activity = select(this->_sd + 1, &this->_rfds, NULL, NULL, 0);
+    this->_activity = select(this->_sd + 1, &this->_rfds, NULL, NULL, &time);
     if (this->_activity > 0) {
         this->readTransmission();
         return true;
@@ -105,38 +109,56 @@ bool Server::isReceivingTransmission()
 
 void Server::readTransmission()
 {
-    std::string str;
-    char part[1000 + 1];
+    std::string str = "";
+    char part[65536 + 1];
     int len;
     std::string commandPart;
 
     this->_transmission.clear();
-    while ((len = read(this->_sd, &part, 1000)) > 0) {
-        part[len] = '\0';
-        str += len;
-        printf("DEBUG: actual transmission received : '%s'\n", str.c_str());
+    if ((len = read(this->_sd, &part, 65536)) > 0) {
+        part[len - 1] = '\0';
+        str += part;
     }
-    if (!str.empty()) {
-        str.pop_back();
-        if (!str.empty())
-            str.pop_back();
-    }
-    printf("DEBUG: Before parsing: '%s'\n", str.c_str());
     while (str.find_last_of('\n') != std::string::npos) {
         len = str.find_first_of('\n');
         commandPart = str.substr(0, len);
         str = str.substr(len + 1, str.size());
         this->_transmission.push_back(commandPart);
     }
-   this->_activity = 0;
+    this->_transmission.push_back(str);
+    this->ParseTransmission();
+    this->_activity = 0;
 }
 
-std::vector<std::string> Server::getTransmission() const
+void Server::ParseTransmission()
 {
-    return this->_transmission;
+    std::vector<std::string> parsed;
+    std::string commandPart;
+    int len;
+
+    this->_cmds.clear();
+    for (int i = 0; i < this->_transmission.size(); i++) {
+        parsed.clear();
+        commandPart.clear();
+        while (this->_transmission[i].find_last_of(' ') != std::string::npos) {
+            len = this->_transmission[i].find_first_of(' ');
+            commandPart = this->_transmission[i].substr(0, len);
+            this->_transmission[i] = this->_transmission[i].substr(len + 1, this->_transmission[i].size());
+            parsed.push_back(commandPart);
+        }
+        parsed.push_back(this->_transmission[i]);
+        this->_cmds.push_back(parsed);
+    }
+}
+
+std::vector<std::vector<std::string>> Server::getTransmission() const
+{
+    return this->_cmds;
 }
 
 void Server::sendMessage(std::string msg)
 {
+    printf("GUI: Message sent : '%s'\n", msg.c_str());
+    msg += "\n";
     dprintf(this->_sd, msg.c_str());
 }
