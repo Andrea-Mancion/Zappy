@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** commands.hpp
 ** File description:
-** map
+** commands
 */
 
 #include "libs.hpp"

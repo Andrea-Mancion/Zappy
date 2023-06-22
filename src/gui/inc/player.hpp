@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** player.hpp
 ** File description:
-** map
+** player
 */
 
 #include "libs.hpp"
@@ -24,10 +24,11 @@ class Player {
     std::string _team;
     size_t _id;
     sf::Sprite _sprite;
+    sf::Texture _texture;
 
     public:
     Player();
-    Player(size_t x, size_t y, size_t id, sf::Sprite sprite);
+    Player(size_t x, size_t y, size_t id, std::string path);
 
     ~Player();
 
@@ -51,6 +52,8 @@ class Player {
     size_t getId() const;
     void setId(size_t id);
 
-    sf::Sprite getSprite() const;
-    void setSprite(sf::Sprite sprite);
+    sf::Sprite *getSprite() const;
+    void setSprite(std::string path);
+
+    void draw(sf::RenderWindow &window);
 };

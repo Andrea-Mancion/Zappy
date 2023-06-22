@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** commands.cpp
 ** File description:
-** map
+** commands
 */
 
 #include "../inc/gui.hpp"
@@ -134,6 +134,7 @@ bool Commands::pnw(Map *map, std::vector<std::string> cmd, Server server)
     newPlayer.setOrientation(std::atoi(cmd[4].c_str()));
     newPlayer.setLevel(std::atoi(cmd[5].c_str()));
     newPlayer.setTeam(cmd[6]);
+    newPlayer.setSprite("assets/player/dino.png");
     map->addPlayer(newPlayer);
     printf("GUI-COMMAND: Connection of a new player:\n");
     printf("   - ID: '%s'\n", cmd[1].c_str());

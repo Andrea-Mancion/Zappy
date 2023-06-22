@@ -18,12 +18,12 @@ class Map {
         std::vector<Player> _players;
         sf::Texture _texture;
         sf::Sprite _sprite;
-
+        sf::RenderWindow *_window;
 
     public :
         Map();
-        Map(unsigned int width, unsigned int heigth, std::string path, float scale);
-        Map(unsigned int width, unsigned int heigth, std::vector<std::vector<Inventory>> tiles);
+        Map(unsigned int width, unsigned int heigth, std::string path, sf::RenderWindow *window);
+        Map(unsigned int width, unsigned int heigth, std::vector<std::vector<Inventory>> tiles, sf::RenderWindow *window);
         ~Map();
         void setDimension(int width, int heigth);
         std::pair<unsigned int, unsigned int> getDimension() const;
@@ -34,7 +34,8 @@ class Map {
         Inventory *getTile(size_t x, size_t y);
         void setTiles(std::vector<std::vector<Inventory>> tiles);
         void draw_map(sf::RenderWindow &window);
+        void draw_players(sf::RenderWindow &window);
 };
 
 
-sf::Sprite createSprite(const std::string &filename, float scale);
+// sf::Sprite createSprite(const std::string &filename, float scale);
