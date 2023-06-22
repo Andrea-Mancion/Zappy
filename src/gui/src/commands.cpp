@@ -76,7 +76,6 @@ bool Commands::msz(Map *map, std::vector<std::string> cmd, Server server)
         inventory.push_back(invLine);
     map->setTiles(inventory);
     printf("GUI-COMMAND: Update map size to %s %s\n", cmd[1].c_str(), cmd[2].c_str());
-    //server.sendMessage("msz\n");
     return true;
 }
 
@@ -121,6 +120,7 @@ bool Commands::tna(Map *map, std::vector<std::string> cmd, Server server)
 //connection of a new player
 bool Commands::pnw(Map *map, std::vector<std::string> cmd, Server server)
 {
+    std::vector<Player> *playerList;
     Player *newPlayer;
 
     if (cmd.size() != 7)
@@ -137,30 +137,31 @@ bool Commands::pnw(Map *map, std::vector<std::string> cmd, Server server)
     newPlayer->setTeam(cmd[6]);
     newPlayer->setSprite("assets/player/dino.png");
     map->addPlayer(*newPlayer);
-    printf("GUI-COMMAND: Connection of a new player:\n");
-    printf("   - ID: '%s'\n", cmd[1].c_str());
-    printf("   - Position: '%s' '%s'\n", cmd[2].c_str(), cmd[3].c_str());
-    printf("   - Orientation: '%s'\n", cmd[4].c_str());
-    printf("   - Level: '%s'\n", cmd[5].c_str());
-    printf("   - Team: '%s'\n", cmd[6].c_str());
+    playerList = map->getPlayers();
+    for (int i = 0; i < playerList->size(); i++) {
+        if (playerList->at(i).getId() == std::atoi(cmd[1].c_str())) {
+            printf("GUI-COMMAND: Connection of a new player:\n");
+            printf("   - ID: '%d'\n", playerList->at(i).getId());
+            printf("   - Position: '%d' '%d'\n", playerList->at(i).getPos().first, playerList->at(i).getPos().second);
+            printf("   - Orientation: '%d'\n", playerList->at(i).getOrientation());
+            printf("   - Level: '%d'\n", playerList->at(i).getLevel());
+            printf("   - Team: '%s'\n", playerList->at(i).getTeam().c_str());
+        }
+    }
     return true;
 }
 
 //player’s position
 bool Commands::ppo(Map *map, std::vector<std::string> cmd, Server server)
 {
-    Player *player;
-
-    printf("ppo\n");
     if (cmd.size() != 5)
-        throw ServerWarning(std::cerr, "Warning: incorrect command pnw syntax");
+        throw ServerWarning(std::cerr, "Warning: incorrect command ppo syntax");
     for (size_t i = 1; i < cmd.size(); i++)
         for (size_t j = 0; j < cmd[i].length(); j++)
             if (!std::isdigit(cmd[i][j]))
-                throw ServerWarning(std::cerr, "Warning: incorrect command pnw syntax");
-    player = map->getPlayer(std::atoi(cmd[1].c_str()));
-    player->setPos(std::make_pair(std::atoi(cmd[2].c_str()), std::atoi(cmd[3].c_str())));
-    printf("GUI-COMMAND: Update player ID '%s' position to '%s' '%s'\n", cmd[1].c_str(), cmd[2].c_str(), cmd[3].c_str());
+                throw ServerWarning(std::cerr, "Warning: incorrect command ppo syntax");
+    map->getPlayer(std::atoi(cmd[1].c_str()))->setPos(std::make_pair(std::atoi(cmd[2].c_str()), std::atoi(cmd[3].c_str())));
+    printf("GUI-COMMAND: Update player ID '%d' position to '%d' '%d'\n", map->getPlayer(std::atoi(cmd[1].c_str()))->getId(), map->getPlayer(std::atoi(cmd[1].c_str()))->getPos().first, map->getPlayer(std::atoi(cmd[1].c_str()))->getPos().second);
     return true;
 }
 
@@ -170,15 +171,14 @@ bool Commands::plv(Map *map, std::vector<std::string> cmd, Server server)
     Player *player;
 
     if (cmd.size() != 3)
-        throw ServerWarning(std::cerr, "Warning: incorrect command pnw syntax");
+        throw ServerWarning(std::cerr, "Warning: incorrect command plv syntax");
     for (size_t i = 1; i < cmd.size(); i++)
         for (size_t j = 0; j < cmd[i].length(); j++)
             if (!std::isdigit(cmd[i][j]))
-                throw ServerWarning(std::cerr, "Warning: incorrect command pnw syntax");
+                throw ServerWarning(std::cerr, "Warning: incorrect command plv syntax");
     player = map->getPlayer(std::atoi(cmd[1].c_str()));
     player->setLevel(std::atoi(cmd[2].c_str()));
     printf("GUI-COMMAND: Set player ID '%s' level to '%s'\n", cmd[1].c_str(), cmd[2].c_str());
-    //server.sendMessage("plv " + cmd[1] + "\n");
     return true;
 }
 
@@ -188,12 +188,11 @@ bool Commands::pin(Map *map, std::vector<std::string> cmd, Server server)
     Player *player;
     Inventory inv;
 
-    if (cmd.size() == 11)
-    {
+    if (cmd.size() == 11) {
         for (size_t i = 1; i < cmd.size(); i++)
             for (size_t j = 0; j < cmd[i].length(); j++)
                 if (!std::isdigit(cmd[i][j]))
-                    throw ServerWarning(std::cerr, "Warning: incorrect command msz syntax");
+                    throw ServerWarning(std::cerr, "Warning: incorrect command pin syntax");
         player = map->getPlayer(std::atoi(cmd[1].c_str()));
         inv.setItem(Stones::FOOD, atoi(cmd[4].c_str()));
         inv.setItem(Stones::LINEMATE, atoi(cmd[5].c_str()));
@@ -267,8 +266,23 @@ bool Commands::pgt(Map *map, std::vector<std::string> cmd, Server server)
 //death of a player
 bool Commands::pdi(Map *map, std::vector<std::string> cmd, Server server)
 {
-    printf("pdi\n");
-    return false;
+    int pos = 0;
+    std::vector<Player> *playerList = map->getPlayers();
+
+    if (cmd.size() != 2)
+        throw ServerWarning(std::cerr, "Warning: incorrect command pdi syntax");
+    for (size_t j = 1; j < cmd[1].length(); j++)
+        if (!std::isdigit(cmd[1][j]))
+            throw ServerWarning(std::cerr, "Warning: incorrect command pdi syntax");
+    for (int i = 0; i < playerList->size(); i++) {
+        if (playerList->at(i).getId() == std::atoi(cmd[1].c_str())) {
+            pos = i;
+            break;
+        }
+    }
+    playerList->erase(playerList->begin() + pos);
+    printf("GUI-COMMAND: Death of player '%d'\n", cmd[1].c_str());
+    return true;
 }
 
 //an egg was laid by a player

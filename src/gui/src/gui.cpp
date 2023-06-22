@@ -36,6 +36,7 @@ int main(int ac, char **av)
         map.draw_map(window);
         map.draw_players(window);
         window.display();
+        map.inventoryDisplay(window);
     }
     return 0;
 }

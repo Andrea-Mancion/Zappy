@@ -35,6 +35,7 @@ class Map {
         void setTiles(std::vector<std::vector<Inventory>> tiles);
         void draw_map(sf::RenderWindow &window);
         void draw_players(sf::RenderWindow &window);
+        void inventoryDisplay(sf::RenderWindow &window);
 };
 
 // sf::Sprite createSprite(const std::string &filename, float scale);
