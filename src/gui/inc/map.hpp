@@ -19,6 +19,8 @@ class Map {
         sf::Texture _texture;
         sf::Sprite _sprite;
         sf::RenderWindow *_window;
+        bool _isInventoryOpen = false;
+        int _displayInventoryId;
 
     public :
         Map();
@@ -28,6 +30,7 @@ class Map {
         void setDimension(int width, int heigth);
         std::pair<unsigned int, unsigned int> getDimension() const;
         Player *getPlayer(size_t id);
+        Player *getPlayerFromId(size_t id);
         std::vector<Player> *getPlayers();
         void addPlayer(Player player);
         std::vector<std::vector<Inventory>> *getTiles();
@@ -36,6 +39,8 @@ class Map {
         void draw_map(sf::RenderWindow &window);
         void draw_players(sf::RenderWindow &window);
         void inventoryDisplay(sf::RenderWindow &window);
+        void setDisplayInventory(bool value, int id);
+        void setDisplayInventory(bool value);
 };
 
 // sf::Sprite createSprite(const std::string &filename, float scale);
