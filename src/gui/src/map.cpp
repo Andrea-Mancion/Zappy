@@ -157,8 +157,6 @@ void Map::draw_players(sf::RenderWindow &window)
 
 void Map::inventoryDisplay(sf::RenderWindow &window)
 {
-    sf::Mouse mouse;
-    sf::Keyboard keyboard;
 
     if (this->_isInventoryOpen) {
         sf::Texture backgroundTexture;
