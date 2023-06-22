@@ -160,8 +160,8 @@ bool Commands::ppo(Map *map, std::vector<std::string> cmd, Server server)
         for (size_t j = 0; j < cmd[i].length(); j++)
             if (!std::isdigit(cmd[i][j]))
                 throw ServerWarning(std::cerr, "Warning: incorrect command ppo syntax");
-    map->getPlayer(std::atoi(cmd[1].c_str()))->setPos(std::make_pair(std::atoi(cmd[2].c_str()), std::atoi(cmd[3].c_str())));
-    printf("GUI-COMMAND: Update player ID '%d' position to '%d' '%d'\n", map->getPlayer(std::atoi(cmd[1].c_str()))->getId(), map->getPlayer(std::atoi(cmd[1].c_str()))->getPos().first, map->getPlayer(std::atoi(cmd[1].c_str()))->getPos().second);
+    map->getPlayerFromId(std::atoi(cmd[1].c_str()))->setPos(std::make_pair(std::atoi(cmd[2].c_str()), std::atoi(cmd[3].c_str())));
+    printf("GUI-COMMAND: Update player ID '%d' position to '%d' '%d'\n", map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getId(), map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getPos().first, map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getPos().second);
     return true;
 }
 
@@ -176,7 +176,7 @@ bool Commands::plv(Map *map, std::vector<std::string> cmd, Server server)
         for (size_t j = 0; j < cmd[i].length(); j++)
             if (!std::isdigit(cmd[i][j]))
                 throw ServerWarning(std::cerr, "Warning: incorrect command plv syntax");
-    player = map->getPlayer(std::atoi(cmd[1].c_str()));
+    player = map->getPlayerFromId(std::atoi(cmd[1].c_str()));
     player->setLevel(std::atoi(cmd[2].c_str()));
     printf("GUI-COMMAND: Set player ID '%s' level to '%s'\n", cmd[1].c_str(), cmd[2].c_str());
     return true;
@@ -193,7 +193,7 @@ bool Commands::pin(Map *map, std::vector<std::string> cmd, Server server)
             for (size_t j = 0; j < cmd[i].length(); j++)
                 if (!std::isdigit(cmd[i][j]))
                     throw ServerWarning(std::cerr, "Warning: incorrect command pin syntax");
-        player = map->getPlayer(std::atoi(cmd[1].c_str()));
+        player = map->getPlayerFromId(std::atoi(cmd[1].c_str()));
         inv.setItem(Stones::FOOD, atoi(cmd[4].c_str()));
         inv.setItem(Stones::LINEMATE, atoi(cmd[5].c_str()));
         inv.setItem(Stones::DERAUMERE, atoi(cmd[6].c_str()));

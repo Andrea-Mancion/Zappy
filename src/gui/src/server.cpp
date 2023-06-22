@@ -92,7 +92,7 @@ bool Server::isReceivingTransmission()
     timeval time;
 
     time.tv_usec = 1;
-    time.tv_sec = 0;
+    time.tv_sec = 1;
     FD_ZERO(&this->_rfds);
     FD_SET(this->_sd, &this->_rfds);
     if (this->_activity == 1)
