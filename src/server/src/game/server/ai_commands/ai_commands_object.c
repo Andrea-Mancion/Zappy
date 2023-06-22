@@ -33,9 +33,11 @@ static int *get_resource_address(game_server_t *server, game_client_t *client,
     return resources_addresses[resource];
 }
 
+// The graphic pair won't fit in the function so here's a standalone one
+
 // Take command
 int ai_command_take(game_server_t *server, game_client_t *client,
-    char **args, char **output)
+    char **args, pending_command_t *command)
 {
     game_resource_t enum_resource = RESOURCE_COUNT;
     int *address;
@@ -48,18 +50,18 @@ int ai_command_take(game_server_t *server, game_client_t *client,
     if (enum_resource == RESOURCE_COUNT)
         return ERR_COMMAND;
     if (!*(address = get_resource_address(server, client, enum_resource))) {
-        *output = strdup("ko");
+        command->output = strdup("ko");
         return SUCCESS;
     }
     *address -= 1;
     client->inventory[enum_resource] += 1;
-    *output = strdup("ok");
+    command->output = strdup("ok");
     return SUCCESS;
 }
 
 // Set command
 int ai_command_set(game_server_t *server, game_client_t *client,
-    char **args, char **output)
+    char **args, pending_command_t *command)
 {
     game_resource_t enum_resource = RESOURCE_COUNT;
     int *address;
@@ -73,25 +75,11 @@ int ai_command_set(game_server_t *server, game_client_t *client,
         return ERR_COMMAND;
     address = get_resource_address(server, client, enum_resource);
     if (client->inventory[enum_resource] == 0) {
-        *output = strdup("ko");
+        command->output = strdup("ko");
         return SUCCESS;
     }
     *address += 1;
     client->inventory[enum_resource] -= 1;
-    *output = strdup("ok");
-    return SUCCESS;
-}
-
-// Connect_nbr command
-int ai_command_connect_nbr(game_server_t *server, game_client_t *client,
-    ATTR_UNUSED char **args, char **output)
-{
-    int count = 0;
-    list_t *team = server->teams.get(&server->teams, client->team_name);
-    char outp[10] = {0};
-
-    count = server->max_team_capacity - team->size;
-    sprintf(outp, "%d", count);
-    *output = strdup(outp);
+    command->output = strdup("ok");
     return SUCCESS;
 }

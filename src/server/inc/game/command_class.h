@@ -17,7 +17,7 @@
 typedef struct game_ai_command_s {
     const char *command;
     int (*function)(game_server_t *server, game_client_t *client, char **args,
-        char **output);
+        pending_command_t *command);
     int duration;
 } game_ai_command_t;
 
@@ -33,29 +33,29 @@ extern const game_ai_command_t ai_commands_table[];
 
 // AI command functions
 int ai_command_forward(game_server_t *server, game_client_t *client,
-    char **args, char **output);
+    char **args, pending_command_t *command);
 int ai_command_right(game_server_t *server, game_client_t *client, char **args,
-    char **output);
+    pending_command_t *command);
 int ai_command_left(game_server_t *server, game_client_t *client, char **args,
-    char **output);
+    pending_command_t *command);
 int ai_command_look(game_server_t *server, game_client_t *client, char **args,
-    char **output);
+    pending_command_t *command);
 int ai_command_inventory(game_server_t *server, game_client_t *client,
-    char **args, char **output);
+    char **args, pending_command_t *command);
 int ai_command_broadcast(game_server_t *server, game_client_t *client,
-    char **args, char **output);
+    char **args, pending_command_t *command);
 int ai_command_connect_nbr(game_server_t *server, game_client_t *client,
-    char **args, char **output);
+    char **args, pending_command_t *command);
 int ai_command_fork(game_server_t *server, game_client_t *client, char **args,
-    char **output);
+    pending_command_t *command);
 int ai_command_eject(game_server_t *server, game_client_t *client, char **args,
-    char **output);
+    pending_command_t *command);
 int ai_command_take(game_server_t *server, game_client_t *client, char **args,
-    char **output);
+    pending_command_t *command);
 int ai_command_set(game_server_t *server, game_client_t *client, char **args,
-    char **output);
+    pending_command_t *command);
 int ai_command_incantation(game_server_t *server, game_client_t *client,
-    char **args, char **output);
+    char **args, pending_command_t *command);
 
 // Graphic command functions
 int graphic_command_msz(game_server_t *server, game_client_t *client,

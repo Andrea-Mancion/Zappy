@@ -13,12 +13,13 @@
 int graphic_command_msz(game_server_t *server, game_client_t *client,
     char **args)
 {
+    graphic_notification_params_t params = default_graphic_notification_params;
+
     if (args[0]) {
-        dprintf(client->socket, "sbp\n");
+        graphic_notification_sbp(server, client, &params);
         return ERR_COMMAND;
     }
-    dprintf(client->socket, "msz %d %d\n", server->map.width,
-        server->map.height);
+    graphic_notification_msz(server, client, &params);
     return SUCCESS;
 }
 
@@ -26,24 +27,20 @@ int graphic_command_msz(game_server_t *server, game_client_t *client,
 int graphic_command_bct(game_server_t *server, game_client_t *client,
     char **args)
 {
-    game_tile_t tile;
-    int x;
-    int y;
+    graphic_notification_params_t params = default_graphic_notification_params;
 
     if (!args[0] || !args[1] || args[2]) {
-        dprintf(client->socket, "sbp\n");
+        graphic_notification_sbp(server, client, &params);
         return ERR_COMMAND;
     }
-    x = atoi(args[0]);
-    y = atoi(args[1]);
-    if (x < 0 || x >= server->map.width || y < 0 || y >= server->map.height) {
-        dprintf(client->socket, "sbp\n");
+    params.x = atoi(args[0]);
+    params.y = atoi(args[1]);
+    if (params.x < 0 || params.x >= server->map.width || params.y < 0 ||
+        params.y >= server->map.height) {
+        graphic_notification_sbp(server, client, &params);
         return ERR_COMMAND;
     }
-    tile = server->map.tiles[x][y];
-    dprintf(client->socket, "bct %d %d %d %d %d %d %d %d %d\n", x, y,
-        tile.food, tile.linemate, tile.deraumere, tile.sibur, tile.mendiane,
-        tile.phiras, tile.thystame);
+    graphic_notification_bct(server, client, &params);
     return SUCCESS;
 }
 
@@ -51,20 +48,13 @@ int graphic_command_bct(game_server_t *server, game_client_t *client,
 int graphic_command_mct(game_server_t *server, game_client_t *client,
     char **args)
 {
-    game_tile_t tile;
+    graphic_notification_params_t params = default_graphic_notification_params;
 
     if (args[0]) {
-        dprintf(client->socket, "sbp\n");
+        graphic_notification_sbp(server, client, &params);
         return ERR_COMMAND;
     }
-    for (int y = 0; y < server->map.height; y++) {
-        for (int x = 0; x < server->map.width; x++) {
-            tile = server->map.tiles[y][x];
-            dprintf(client->socket, "bct %d %d %d %d %d %d %d %d %d\n", x, y,
-                tile.food, tile.linemate, tile.deraumere, tile.sibur,
-                tile.mendiane, tile.phiras, tile.thystame);
-        }
-    }
+    graphic_notification_mct(server, client, &params);
     return SUCCESS;
 }
 
@@ -72,6 +62,7 @@ int graphic_command_mct(game_server_t *server, game_client_t *client,
 int graphic_command_sst(game_server_t *server, game_client_t *client,
     char **args)
 {
+    graphic_notification_params_t params = default_graphic_notification_params;
     int frequency;
 
     if (!args[0] || args[1]) {
@@ -84,6 +75,6 @@ int graphic_command_sst(game_server_t *server, game_client_t *client,
         return ERR_COMMAND;
     }
     server->frequency = frequency;
-    dprintf(client->socket, "sst %d\n", server->frequency);
+    graphic_notification_sgt(server, client, &params);
     return SUCCESS;
 }

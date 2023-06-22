@@ -12,8 +12,7 @@
 #include "game/event_class.h"
 
 // Updates the player's health, returns false if dead
-void event_remove_player_health(game_server_t *server,
-    game_client_t *client)
+void event_remove_player_health(game_server_t *server, game_client_t *client)
 {
     event_params_t params = {tick(), FOOD_TIME * 1e6,
         PLAYER_REMOVE_HEALTH, client};
@@ -28,7 +27,7 @@ void event_remove_player_health(game_server_t *server,
 }
 
 // Refills the map and adds a refill event
-void event_refill(game_server_t *server)
+void event_refill(game_server_t *server, ATTR_UNUSED game_client_t *client)
 {
     event_params_t params = {tick(), REFILL_TIME * 1e6, MAP_REFILL, NULL};
 

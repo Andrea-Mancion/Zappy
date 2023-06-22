@@ -18,6 +18,7 @@ static const char *err_cm = "Couldn't execute graphic command";
 static int execute_graphic_command(game_server_t *server,
     game_client_t *client, char *command)
 {
+    graphic_notification_params_t params = default_graphic_notification_params;
     char *args[strlen(command) + 1];
     int j = 0;
 
@@ -28,7 +29,7 @@ static int execute_graphic_command(game_server_t *server,
         if (strcmp(graphic_commands_table[i].command, args[0]) == 0)
             return graphic_commands_table[i].function(server, client,
                 args + 1);
-    dprintf(client->socket, "suc\n");
+    graphic_notification_suc(server, client, &params);
     return ERR_COMMAND;
 }
 
@@ -45,8 +46,7 @@ static int handle_command(game_server_t *server, game_client_t *client,
         handle_error(execute_graphic_command(server, client, command), err_cm);
         return SUCCESS;
     }
-    cmd = malloc(sizeof(pending_command_t));
-    if (!cmd)
+    if (!(cmd = malloc(sizeof(pending_command_t))))
         return ERR_ALLOC;
     if ((status = pending_command_init(cmd, command)) != SUCCESS) {
         pending_command_destroy(cmd);
@@ -104,9 +104,11 @@ int server_accept_client(game_server_t *server)
 void server_disconnect_client(game_server_t *server,
     game_client_t *client)
 {
-    game_client_t *target;
     list_t *team = server->teams.get(&server->teams, client->team_name);
+    graphic_notification_params_t params = {.id = client->id};
     int index;
+
+    server->notify_all_graphic(server, "pdi", &params);
     if (team)
         if ((index = team->index(team, &client->id)) < team->size)
             team->remove(team, index);
@@ -115,12 +117,6 @@ void server_disconnect_client(game_server_t *server,
         team->remove(team, index);
     server->remove_events(server, PLAYER_COMMAND, client);
     server->remove_events(server, PLAYER_REMOVE_HEALTH, client);
-    for (int i = 0; i < server->clients.size; i++) {
-        target = server->clients.get(&server->clients, i);
-        if (target->team_name && strcmp(target->team_name, "GRAPHIC") == 0)
-            dprintf(((game_client_t *)server->clients.get(&server->clients,
-                i))->socket, "pdi %d\n", client->id);
-    }
     if ((index = server->clients.index(&server->clients, client))
         < server->clients.size)
         server->clients.remove(&server->clients, index);

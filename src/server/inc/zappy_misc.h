@@ -19,11 +19,15 @@
     #include <time.h>
 
 // Tick function - returns current time in microseconds
+    #ifndef CLOCK_REALTIME
+        #define CLOCK_REALTIME 0
+    #endif
+
 static inline long long int tick(void)
 {
     struct timespec ts;
 
-    clock_gettime(0, &ts);
+    clock_gettime(CLOCK_REALTIME, &ts);
     return (ts.tv_sec * 1e6 + ts.tv_nsec / 1e3);
 }
 
