@@ -37,5 +37,4 @@ class Map {
         void draw_players(sf::RenderWindow &window);
 };
 
-
 // sf::Sprite createSprite(const std::string &filename, float scale);

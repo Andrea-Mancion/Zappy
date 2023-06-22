@@ -11,13 +11,9 @@ int main(int ac, char **av)
 {
     sf::RenderWindow window(sf::VideoMode(1580, 920), "Zappy GUI");
 
-    //sf::Sprite playerSprite = createSprite("assets/player/dino.png", 0.3f);
     Server *server;
     Map map(0, 0, "assets/grass1.png", &window);
     Commands cmd;
-
-    Player player(0, 15, 0, "assets/player/dino.png");
-    map.addPlayer(player);
 
     try {
         server = new Server(ac, av);

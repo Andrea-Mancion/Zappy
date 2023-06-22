@@ -121,7 +121,7 @@ bool Commands::tna(Map *map, std::vector<std::string> cmd, Server server)
 //connection of a new player
 bool Commands::pnw(Map *map, std::vector<std::string> cmd, Server server)
 {
-    Player newPlayer;
+    Player *newPlayer;
 
     if (cmd.size() != 7)
         throw ServerWarning(std::cerr, "Warning: incorrect command pnw syntax");
@@ -129,13 +129,14 @@ bool Commands::pnw(Map *map, std::vector<std::string> cmd, Server server)
         for (size_t j = 0; j < cmd[i].length(); j++)
             if (!std::isdigit(cmd[i][j]))
                 throw ServerWarning(std::cerr, "Warning: incorrect command pnw syntax");
-    newPlayer.setId(std::atoi(cmd[1].c_str()));
-    newPlayer.setPos(std::make_pair(std::atoi(cmd[2].c_str()), std::atoi(cmd[3].c_str())));
-    newPlayer.setOrientation(std::atoi(cmd[4].c_str()));
-    newPlayer.setLevel(std::atoi(cmd[5].c_str()));
-    newPlayer.setTeam(cmd[6]);
-    newPlayer.setSprite("assets/player/dino.png");
-    map->addPlayer(newPlayer);
+    newPlayer = new Player();
+    newPlayer->setId(std::atoi(cmd[1].c_str()));
+    newPlayer->setPos(std::make_pair(std::atoi(cmd[2].c_str()), std::atoi(cmd[3].c_str())));
+    newPlayer->setOrientation(std::atoi(cmd[4].c_str()));
+    newPlayer->setLevel(std::atoi(cmd[5].c_str()));
+    newPlayer->setTeam(cmd[6]);
+    newPlayer->setSprite("assets/player/dino.png");
+    map->addPlayer(*newPlayer);
     printf("GUI-COMMAND: Connection of a new player:\n");
     printf("   - ID: '%s'\n", cmd[1].c_str());
     printf("   - Position: '%s' '%s'\n", cmd[2].c_str(), cmd[3].c_str());
@@ -184,8 +185,34 @@ bool Commands::plv(Map *map, std::vector<std::string> cmd, Server server)
 //player’s inventory
 bool Commands::pin(Map *map, std::vector<std::string> cmd, Server server)
 {
-    printf("pin\n");
-    return false;
+    Player *player;
+    Inventory inv;
+
+    if (cmd.size() == 11)
+    {
+        for (size_t i = 1; i < cmd.size(); i++)
+            for (size_t j = 0; j < cmd[i].length(); j++)
+                if (!std::isdigit(cmd[i][j]))
+                    throw ServerWarning(std::cerr, "Warning: incorrect command msz syntax");
+        player = map->getPlayer(std::atoi(cmd[1].c_str()));
+        inv.setItem(Stones::FOOD, atoi(cmd[4].c_str()));
+        inv.setItem(Stones::LINEMATE, atoi(cmd[5].c_str()));
+        inv.setItem(Stones::DERAUMERE, atoi(cmd[6].c_str()));
+        inv.setItem(Stones::SIBUR, atoi(cmd[7].c_str()));
+        inv.setItem(Stones::MENDIANE, atoi(cmd[8].c_str()));
+        inv.setItem(Stones::PHIRAS, atoi(cmd[9].c_str()));
+        inv.setItem(Stones::THYSTAME, atoi(cmd[10].c_str()));
+        player->setInventory(inv);
+        printf("GUI-COMMAND: Update player '%s' inventory:\n", cmd[1].c_str());
+        printf("   - FOOD     : '%d'\n", player->getInventory().getItem(Stones::FOOD));
+        printf("   - LINEMATE : '%d'\n", player->getInventory().getItem(Stones::LINEMATE));
+        printf("   - DERAUMERE: '%d'\n", player->getInventory().getItem(Stones::DERAUMERE));
+        printf("   - SIBUR    : '%d'\n", player->getInventory().getItem(Stones::SIBUR));
+        printf("   - MENDIANE : '%d'\n", player->getInventory().getItem(Stones::MENDIANE));
+        printf("   - PHIRAS   : '%d'\n", player->getInventory().getItem(Stones::PHIRAS));
+        printf("   - THYSTAME : '%d'\n", player->getInventory().getItem(Stones::THYSTAME));
+    }
+    return true;
 }
 
 //expulsion
