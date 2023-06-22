@@ -47,13 +47,23 @@ long long int server_get_timeout(game_server_t *server)
 }
 
 // Notifies all graphical clients of a new event
-void server_notify_graphic(game_server_t *server, char *message)
+void server_notify_all_graphic(game_server_t *server, char *command,
+    graphic_notification_params_t *params)
 {
     game_client_t *client;
+    const graphic_notification_t *graphic_notification = NULL;
 
+    for (int i = 0; graphic_notifications_table[i].command; i++) {
+        if (strcmp(graphic_notifications_table[i].command, command) == 0) {
+            graphic_notification = &graphic_notifications_table[i];
+            break;
+        }
+    }
+    if (!graphic_notification)
+        return;
     for (int i = 0; i < server->clients.size; i++) {
         client = server->clients.get(&server->clients, i);
         if (strcmp(client->team_name, "GRAPHIC") == 0)
-            dprintf(client->socket, "%s\n", message);
+            graphic_notification->function(server, client, params);
     }
 }

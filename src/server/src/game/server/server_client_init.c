@@ -14,43 +14,45 @@
 static void init_as_ai(game_server_t *server, list_t *team, game_client_t *
     client, char *command)
 {
-    game_client_t *target;
     int *id = malloc(sizeof(int));
-    event_params_t params = {tick(), FOOD_TIME * 1e6, PLAYER_REMOVE_HEALTH,
+    event_params_t e_params = {tick(), FOOD_TIME * 1e6, PLAYER_REMOVE_HEALTH,
         client};
+    graphic_notification_params_t params = default_graphic_notification_params;
+
     client_init_as_ai(client, &server->map);
     *id = client->id;
     team->add(team, id);
     client->team_name = strdup(command);
-    server->add_event(server, &params);
+    server->add_event(server, &e_params);
     dprintf(client->socket, "%d\n%d %d\n", server->max_team_capacity - team->
         size, server->map.width, server->map.height);
-    for (int i = 0; i < server->clients.size; i++) {
-        target = server->clients.get(&server->clients, i);
-        if (target->team_name && strcmp(target->team_name, "GRAPHIC") == 0) {
-            dprintf(target->socket, "pnw %d %d %d %d %d %s\n", client->id,
-                client->x, client->y, client->direction + 1,
-                client->level, client->team_name);
-            graphic_command_mct(server, target, (char *[]){NULL});
-        }
-    }
+    params = (graphic_notification_params_t){.id = client->id, .x = client->x,
+        .y = client->y, .direction = client->direction + 1, .level =
+        client->level, .team_name = client->team_name
+    };
+    server->notify_all_graphic(server, "pnw", &params);
 }
 
+// Initialize the client as a graphic
 static void init_as_graphic(game_server_t *server, game_client_t *client)
 {
+    graphic_notification_params_t params = default_graphic_notification_params;
     game_client_t *target;
 
     client->team_name = strdup("GRAPHIC");
-    graphic_command_msz(server, client, (char *[]){NULL});
-    graphic_command_sgt(server, client, (char *[]){NULL});
-    graphic_command_mct(server, client, (char *[]){NULL});
-    graphic_command_tna(server, client, (char *[]){NULL});
+    graphic_notification_msz(server, client, &params);
+    graphic_notification_sgt(server, client, &params);
+    graphic_notification_mct(server, client, &params);
+    graphic_notification_tna(server, client, &params);
     for (int i = 0; i < server->clients.size; i++) {
         target = server->clients.get(&server->clients, i);
-        if (target->team_name && strcmp(target->team_name, "GRAPHIC") != 0)
-            dprintf(client->socket, "pnw %d %d %d %d %d %s\n", target->id,
-                target->x, target->y, target->direction + 1,
-                target->level, target->team_name);
+        if (target->team_name && strcmp(target->team_name, "GRAPHIC") != 0) {
+            params = (graphic_notification_params_t){.id = target->id, .x =
+                target->x, .y = target->y, .direction = target->direction + 1,
+                .level = target->level, .team_name = target->team_name
+            };
+            graphic_notification_pnw(server, client, &params);
+        }
     }
 }
 

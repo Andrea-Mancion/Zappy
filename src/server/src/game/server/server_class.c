@@ -41,7 +41,7 @@ const game_server_t default_server = {
     .disconnect_client = &server_disconnect_client,
     .set_timeout = &server_set_timeout,
     .get_timeout = &server_get_timeout,
-    .notify_graphic = &server_notify_graphic,
+    .notify_all_graphic = &server_notify_all_graphic,
     .init_client = &server_init_client,
 };
 

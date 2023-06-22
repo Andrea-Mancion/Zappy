@@ -15,9 +15,10 @@
 // Client command structure
 typedef struct pending_command_s {
     char *input;
-    long long int received_at;// in microseconds
-    int duration;// in seconds
+    long long int received_at;
+    int duration;
     char *output;
+    list_t graphic_notifications;
     void (*destroy)(struct pending_command_s *command);
 } pending_command_t;
 

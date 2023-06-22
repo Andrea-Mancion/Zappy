@@ -93,6 +93,7 @@ int pending_command_init(pending_command_t *command, char *input)
     command->input = strdup(input);
     if (!command->input)
         return ERR_ALLOC;
+    list_init(&command->graphic_notifications, NULL, NULL);
     return SUCCESS;
 }
 
@@ -103,4 +104,5 @@ void pending_command_destroy(pending_command_t *command)
         free(command->input);
     if (command->output)
         free(command->output);
+    command->graphic_notifications.destroy(&command->graphic_notifications);
 }

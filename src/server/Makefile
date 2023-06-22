@@ -11,15 +11,22 @@ INC_DIR	=	./inc/
 
 SRC_DIR	=	./src/
 
+GR_NOTIF_DIR	=	$(SRC_DIR)game/server/graphic_commands/output/
+
 SRC	=	\
 	$(SRC_DIR)zappy_main.c	\
 	$(SRC_DIR)game/server/ai_commands/ai_commands_table.c	\
 	$(SRC_DIR)game/server/ai_commands/ai_commands_movement.c	\
 	$(SRC_DIR)game/server/ai_commands/ai_commands_object.c	\
 	$(SRC_DIR)game/server/ai_commands/ai_commands_check.c	\
-	$(SRC_DIR)game/server/graphic_commands/graphic_commands_table.c	\
-	$(SRC_DIR)game/server/graphic_commands/graphic_commands_player.c	\
-	$(SRC_DIR)game/server/graphic_commands/graphic_commands_map.c	\
+	$(SRC_DIR)game/server/graphic_commands/input/graphic_commands_table.c	\
+	$(SRC_DIR)game/server/graphic_commands/input/graphic_commands_player.c	\
+	$(SRC_DIR)game/server/graphic_commands/input/graphic_commands_map.c	\
+	$(GR_NOTIF_DIR)graphic_notifications_map.c	\
+	$(GR_NOTIF_DIR)graphic_notifications_player.c	\
+	$(GR_NOTIF_DIR)graphic_notifications_player2.c	\
+	$(GR_NOTIF_DIR)graphic_notifications_error.c	\
+	$(GR_NOTIF_DIR)graphic_notifications_table.c	\
 	$(SRC_DIR)game/server/events/events_table.c	\
 	$(SRC_DIR)game/server/events/events_command.c	\
 	$(SRC_DIR)game/server/events/events_automatic.c	\

@@ -23,7 +23,7 @@ static int execute_ai_command(game_server_t *server, game_client_t *client,
             continue;
         command->duration = ai_commands_table[i].duration;
         return ai_commands_table[i].function(server, client, args + 1,
-            &command->output);
+            command);
     }
     printf("Command not found: \"%s\"\n", args[0]);
     return ERR_COMMAND;
@@ -72,12 +72,20 @@ void event_start_command(game_server_t *server,
 void event_end_command(game_server_t *server, game_client_t *client)
 {
     pending_command_t *cmd = client->commands.get(&client->commands, 0);
+    graphic_notification_pair_t *pair;
 
     if (!cmd) {
         printf("No command to end, event missing or invalid timeout\n");
         return;
     }
     dprintf(client->socket, "%s\n", cmd->output);
+    if (strcmp(cmd->output, ko_message) != 0) {
+        for (int i = 0; i < cmd->graphic_notifications.size; i++) {
+            pair = cmd->graphic_notifications.get(&cmd->graphic_notifications,
+                i);
+            server->notify_all_graphic(server, pair->command, &pair->params);
+        }
+    }
     client->commands.remove(&client->commands, 0);
     if (client->commands.size > 0)
         event_start_command(server, client);

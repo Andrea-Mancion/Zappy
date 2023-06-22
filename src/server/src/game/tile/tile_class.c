@@ -25,11 +25,8 @@ const game_tile_t default_tile = {
 // Tile constructor
 int tile_init(game_tile_t *tile)
 {
-    int status;
-
     *tile = default_tile;
-    if ((status = list_init(&tile->players, NULL, client_cmp_id)) != SUCCESS)
-        return status;
+    list_init(&tile->players, NULL, client_cmp_id);
     return SUCCESS;
 }
 
