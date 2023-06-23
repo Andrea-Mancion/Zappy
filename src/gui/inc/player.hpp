@@ -25,6 +25,7 @@ class Player {
     size_t _id;
     sf::Sprite _sprite;
     sf::Texture _texture;
+    sf::Clock _clock;
 
     public:
     Player();
@@ -56,4 +57,6 @@ class Player {
     void setSprite(std::string path);
 
     void draw(sf::RenderWindow &window);
+
+    void updateSpriteFrame();
 };

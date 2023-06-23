@@ -135,7 +135,7 @@ bool Commands::pnw(Map *map, std::vector<std::string> cmd, Server server)
     newPlayer->setOrientation(std::atoi(cmd[4].c_str()));
     newPlayer->setLevel(std::atoi(cmd[5].c_str()));
     newPlayer->setTeam(cmd[6]);
-    newPlayer->setSprite("assets/player/dino.png");
+    newPlayer->setSprite("assets/player/dino_sprite.png");
     map->addPlayer(*newPlayer);
     playerList = map->getPlayers();
     for (int i = 0; i < playerList->size(); i++) {
