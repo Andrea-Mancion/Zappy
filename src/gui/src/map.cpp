@@ -22,6 +22,7 @@ Map::Map(unsigned int width, unsigned int height, std::string path, sf::RenderWi
     _texture = sf::Texture();
     _window = window;
     _sprite = sf::Sprite();
+
     if (!_texture.loadFromFile(path)) {
         std::cerr << "Cannot load file " << path << std::endl;
         exit(84);
@@ -31,16 +32,15 @@ Map::Map(unsigned int width, unsigned int height, std::string path, sf::RenderWi
     _sprite.setScale(sf::Vector2f(0.5f, 0.5f));
     // _sprite.setScale(sf::Vector2f(size.x / _texture.getSize().x, size.y / _texture.getSize().y));
 
-
-    // _inventoryNames = std::vector<std::string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
-    _inventorySprites = std::vector<std::pair<sf::Texture, sf::Sprite>>();
+    _inventoryNames = std::vector<std::string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
+    _inventorySprites = std::vector<std::pair<sf::Texture *, sf::Sprite *>>();
     for (size_t i = 0; i < _inventoryNames.size(); i++) {
-        sf::Texture texture;
-        sf::Sprite sprite;
-        texture.loadFromFile("assets/" + _inventoryNames[i] + ".png");
-        sprite.setTexture(texture);
-        sprite.setScale(sf::Vector2f(0.5f, 0.5f));
-        _inventorySprites.push_back(std::pair<sf::Texture, sf::Sprite>(texture, sprite));
+        sf::Texture *texture = new sf::Texture();
+        sf::Sprite *sprite = new sf::Sprite();
+        texture->loadFromFile("assets/" + _inventoryNames[i] + ".png");
+        sprite->setTexture(*texture);
+        sprite->setScale(sf::Vector2f(0.08f, 0.08f));
+        _inventorySprites.push_back(std::pair<sf::Texture *, sf::Sprite *>(texture, sprite));
     }
 }
 
@@ -105,15 +105,13 @@ void Map::setTiles(std::vector<std::vector<Inventory>> tiles)
     this->_tiles = tiles;
 }
 
-void Map::draw_map(sf::RenderWindow& window, float zoomLevel)
+void Map::drawMap(sf::RenderWindow& window, float zoomLevel)
 {
     sf::Vector2u size = window.getSize();
     sf::FloatRect bounds = this->_sprite.getGlobalBounds();
+    Inventory *tile = nullptr;
     float isoX = 0.0f;
     float isoY = 0.0f;
-
-    sf::Color backgroundColor(176, 224, 230);
-    window.clear(backgroundColor);
 
     float centerX = (this->_dimension.first - 1) * 0.5f * (bounds.width / 2);
     float centerY = (this->_dimension.second - 1) * 0.5f * (bounds.height / 2);
@@ -127,15 +125,42 @@ void Map::draw_map(sf::RenderWindow& window, float zoomLevel)
 
     for (size_t i = 0; i < this->_dimension.second; i++) {
         for (size_t j = 0; j < this->_dimension.first; j++) {
-            isoX = (i - j) * 0.5f * (bounds.width / 2) + size.x / 2;
+            if ((int)((int)i - (int)j) < 0)
+                isoX = -(i - j) * 0.5f * -(bounds.width / 2) + size.x / 2;
+            else
+                isoX = (i - j) * 0.5f * (bounds.width / 2) + size.x / 2;
             isoY = (i + j) * 0.4f * (bounds.height / 2) + size.y / 3;
 
             this->_sprite.setPosition((int)isoX, (int)isoY);
             window.draw(this->_sprite);
+        }
+    }
+}
 
-            isoX = (i - j) * 0.5f * -(bounds.width / 2) + size.x / 2;
-            this->_sprite.setPosition((int)isoX, (int)isoY);
-            window.draw(this->_sprite);
+void Map::drawResources(sf::RenderWindow& window)
+{
+    sf::Vector2u size = window.getSize();
+    sf::FloatRect bounds = this->_sprite.getGlobalBounds();
+    Inventory *tile = nullptr;
+    float isoX = 0.0f;
+    float isoY = 0.0f;
+
+    for (size_t i = 0; i < this->_dimension.second; i++) {
+        for (size_t j = 0; j < this->_dimension.first; j++) {
+            if ((int)((int)i - (int)j) < 0)
+                isoX = -(i + 1 - j) * 0.5f * -(bounds.width / 2) + size.x / 2;
+            else
+                isoX = (i + 1- j) * 0.5f * (bounds.width / 2) + size.x / 2;
+            isoY = (i + j) * 0.4f * (bounds.height / 2) + size.y / 3;
+            tile = &this->_tiles[i][j];
+            for (size_t item = 0; item <= this->_inventoryNames.size(); item++)
+            {
+                if (tile->getItem((Stones)(item)) > 0)
+                {
+                    this->_inventorySprites[item].second->setPosition((int)isoX, (int)isoY);
+                    window.draw(*this->_inventorySprites[item].second);
+                }
+            }
         }
     }
 }
@@ -151,7 +176,7 @@ void Map::setDisplayInventory(bool value)
     this->_isInventoryOpen = value;
 }
 
-void Map::draw_players(sf::RenderWindow &window)
+void Map::draw_players(sf::RenderWindow & window)
 {
     sf::Vector2u size = window.getSize();
     sf::FloatRect bounds = this->_sprite.getGlobalBounds();
@@ -162,10 +187,12 @@ void Map::draw_players(sf::RenderWindow &window)
     for (size_t i = 0; i < this->_players.size(); i++)
     {
         player = this->_players[i].getPos();
-        if ((int)((int)player.first - (int)player.second) < 0) {
+        if ((int)((int)player.first - (int)player.second) < 0)
+        {
             isoX = -(player.first - player.second) * 0.5f * -(bounds.width / 2) + size.x / 2;
-        } else
-            isoX = (player.first - player.second) * 0.5f * (bounds.width / 2) + size.x / 2;
+        }
+        else
+            isoX = (player.first - player.second) * 0.4f * (bounds.width / 2) + size.x / 2;
         isoY = (player.first + player.second) * 0.4f * (bounds.height / 2) + size.y / 3;
 
         std::cout << "x: " << isoX << " y: " << isoY << std::endl;
@@ -175,22 +202,24 @@ void Map::draw_players(sf::RenderWindow &window)
     }
 }
 
-void Map::inventoryDisplay(sf::RenderWindow &window)
+void Map::inventoryDisplay(sf::RenderWindow & window)
 {
     if (this->_isInventoryOpen)
     {
         sf::Texture backgroundTexture;
-        if (!backgroundTexture.loadFromFile("assets/inventory/papyrus.png")) {
+        if (!backgroundTexture.loadFromFile("assets/inventory/papyrus.png"))
+        {
             std::cerr << "Error: could not load background texture" << std::endl;
             return;
         }
         sf::Sprite backgroundSprite(backgroundTexture);
         sf::Vector2f newSize(200.0f, 300.0f);
         backgroundSprite.setScale(newSize.x / backgroundSprite.getLocalBounds().width,
-                                  newSize.y / backgroundSprite.getLocalBounds().height);
+                                    newSize.y / backgroundSprite.getLocalBounds().height);
 
         sf::Texture accessoryTexture1;
-        if (!accessoryTexture1.loadFromFile("assets/inventory/food/food.png")) {
+        if (!accessoryTexture1.loadFromFile("assets/inventory/food/food.png"))
+        {
             std::cerr << "Error: could not load accessory texture" << std::endl;
             return;
         }
@@ -198,7 +227,7 @@ void Map::inventoryDisplay(sf::RenderWindow &window)
 
         sf::Vector2f newAccessorySize(50.0f, 50.0f);
         accessorySprite1.setScale(newAccessorySize.x / accessorySprite1.getLocalBounds().width,
-                                  newAccessorySize.y / accessorySprite1.getLocalBounds().height);
+                                    newAccessorySize.y / accessorySprite1.getLocalBounds().height);
 
         accessorySprite1.setPosition(50.0f, 50.0f);
 
@@ -212,7 +241,7 @@ void Map::inventoryDisplay(sf::RenderWindow &window)
 
         sf::Vector2f newAccessorySize1(40.0f, 50.0f);
         accessorySprite2.setScale(newAccessorySize1.x / accessorySprite2.getLocalBounds().width,
-                                  newAccessorySize1.y / accessorySprite2.getLocalBounds().height);
+                                    newAccessorySize1.y / accessorySprite2.getLocalBounds().height);
 
         accessorySprite2.setPosition(100.0f, 50.0f);
 
@@ -226,7 +255,7 @@ void Map::inventoryDisplay(sf::RenderWindow &window)
 
         sf::Vector2f newAccessorySize2(40.0f, 50.0f);
         accessorySprite3.setScale(newAccessorySize2.x / accessorySprite3.getLocalBounds().width,
-                                  newAccessorySize2.y / accessorySprite3.getLocalBounds().height);
+                                    newAccessorySize2.y / accessorySprite3.getLocalBounds().height);
 
         accessorySprite3.setPosition(50.0f, 100.0f);
 
@@ -234,5 +263,34 @@ void Map::inventoryDisplay(sf::RenderWindow &window)
         window.draw(accessorySprite1);
         window.draw(accessorySprite2);
         window.draw(accessorySprite3);
+    }
+}
+
+std::vector<std::string> Map::getTeamNames()
+{
+    return this->_teamName;
+}
+
+void Map::addTeamName(std::string name)
+{
+    if (std::find(this->_teamName.begin(), this->_teamName.end(), name) == this->_teamName.end())
+        this->_teamName.push_back(name);
+}
+
+std::vector<std::pair<int, std::string>> Map::getBroadCastList()
+{
+    return this->_broadcastList;
+}
+
+void Map::addToBroadcastList(std::string elem, int id)
+{
+    if (this->_broadcastList.size() < 5)
+    {
+        this->_broadcastList.push_back(std::make_pair(id, elem));
+    }
+    else if (this->_broadcastList.size() >= 5)
+    {
+        this->_broadcastList.erase(this->_broadcastList.begin());
+        this->_broadcastList.push_back(std::make_pair(id, elem));
     }
 }

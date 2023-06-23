@@ -22,7 +22,9 @@ class Map {
         bool _isInventoryOpen = false;
         int _displayInventoryId;
         std::vector<std::string> _inventoryNames;
-        std::vector<std::pair<sf::Texture, sf::Sprite>> _inventorySprites;
+        std::vector<std::pair<sf::Texture *, sf::Sprite *>> _inventorySprites;
+        std::vector<std::string> _teamName;
+        std::vector<std::pair<int, std::string>> _broadcastList;
 
     public :
         Map();
@@ -38,11 +40,16 @@ class Map {
         std::vector<std::vector<Inventory>> *getTiles();
         Inventory *getTile(size_t x, size_t y);
         void setTiles(std::vector<std::vector<Inventory>> tiles);
-        void draw_map(sf::RenderWindow &window, float zoomLevel);
+        void drawMap(sf::RenderWindow &window, float zoomLevel);
+        void drawResources(sf::RenderWindow &window);
         void draw_players(sf::RenderWindow &window);
         void inventoryDisplay(sf::RenderWindow &window);
         void setDisplayInventory(bool value, int id);
         void setDisplayInventory(bool value);
+        void addTeamName(std::string name);
+        std::vector<std::string> getTeamNames();
+        void addToBroadcastList(std::string elem, int id);
+        std::vector<std::pair<int, std::string>> getBroadCastList();
 };
 
 // sf::Sprite createSprite(const std::string &filename, float scale);
