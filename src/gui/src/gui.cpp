@@ -19,7 +19,8 @@ void updateCloud(sf::Sprite& cloudSprite, float& cloudX, float cloudSpeed, float
 
 int main(int ac, char **av)
 {
-    sf::RenderWindow window(sf::VideoMode(1700, 920), "Zappy GUI");
+    sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+    sf::RenderWindow window(desktopMode, "Zappy GUI");
 
     Server *server;
     Map map(0, 0, "assets/grass7.png", &window);
