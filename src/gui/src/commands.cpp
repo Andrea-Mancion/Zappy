@@ -141,10 +141,10 @@ bool Commands::pnw(Map *map, std::vector<std::string> cmd, Server server)
     for (int i = 0; i < playerList->size(); i++) {
         if (playerList->at(i).getId() == std::atoi(cmd[1].c_str())) {
             printf("GUI-COMMAND: Connection of a new player:\n");
-            printf("   - ID: '%d'\n", playerList->at(i).getId());
-            printf("   - Position: '%d' '%d'\n", playerList->at(i).getPos().first, playerList->at(i).getPos().second);
+            printf("   - ID: '%zu'\n", playerList->at(i).getId());
+            printf("   - Position: '%ld' '%ld'\n", playerList->at(i).getPos().first, playerList->at(i).getPos().second);
             printf("   - Orientation: '%d'\n", playerList->at(i).getOrientation());
-            printf("   - Level: '%d'\n", playerList->at(i).getLevel());
+            printf("   - Level: '%zu'\n", playerList->at(i).getLevel());
             printf("   - Team: '%s'\n", playerList->at(i).getTeam().c_str());
         }
     }
@@ -161,7 +161,7 @@ bool Commands::ppo(Map *map, std::vector<std::string> cmd, Server server)
             if (!std::isdigit(cmd[i][j]))
                 throw ServerWarning(std::cerr, "Warning: incorrect command ppo syntax");
     map->getPlayerFromId(std::atoi(cmd[1].c_str()))->setPos(std::make_pair(std::atoi(cmd[2].c_str()), std::atoi(cmd[3].c_str())));
-    printf("GUI-COMMAND: Update player ID '%d' position to '%d' '%d'\n", map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getId(), map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getPos().first, map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getPos().second);
+    printf("GUI-COMMAND: Update player ID '%zu' position to '%zu' '%zu'\n", map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getId(), map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getPos().first, map->getPlayerFromId(std::atoi(cmd[1].c_str()))->getPos().second);
     return true;
 }
 
@@ -281,7 +281,7 @@ bool Commands::pdi(Map *map, std::vector<std::string> cmd, Server server)
         }
     }
     playerList->erase(playerList->begin() + pos);
-    printf("GUI-COMMAND: Death of player '%d'\n", cmd[1].c_str());
+    printf("GUI-COMMAND: Death of player '%s'\n", cmd[1].c_str());
     return true;
 }
 
