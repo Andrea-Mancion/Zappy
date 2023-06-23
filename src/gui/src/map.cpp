@@ -31,7 +31,8 @@ Map::Map(unsigned int width, unsigned int height, std::string path, sf::RenderWi
     _sprite.setScale(sf::Vector2f(0.5f, 0.5f));
     // _sprite.setScale(sf::Vector2f(size.x / _texture.getSize().x, size.y / _texture.getSize().y));
 
-    //_inventoryNames = std::vector<std::string>("food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame");
+
+    // _inventoryNames = std::vector<std::string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
     _inventorySprites = std::vector<std::pair<sf::Texture, sf::Sprite>>();
     for (size_t i = 0; i < _inventoryNames.size(); i++) {
         sf::Texture texture;
@@ -165,7 +166,7 @@ void Map::draw_players(sf::RenderWindow &window)
             isoX = -(player.first - player.second) * 0.5f * -(bounds.width / 2) + size.x / 2;
         } else
             isoX = (player.first - player.second) * 0.5f * (bounds.width / 2) + size.x / 2;
-        isoY = (player.first + player.second) * 0.4f * (bounds.height / 2) + size.y / 4;
+        isoY = (player.first + player.second) * 0.4f * (bounds.height / 2) + size.y / 3;
 
         std::cout << "x: " << isoX << " y: " << isoY << std::endl;
         this->_players[i].getSprite()->setPosition((int)isoX, (int)isoY);

@@ -121,6 +121,7 @@ void Player::setSprite(std::string path)
     _texture.loadFromFile(path);
     _sprite.setTexture(_texture);
     _sprite.setScale(sf::Vector2f(0.3f, 0.3f));
+    _sprite.setTextureRect(sf::IntRect(267 * 4, 0, 270, 200));
 }
 
 sf::Sprite *Player::getSprite() const
