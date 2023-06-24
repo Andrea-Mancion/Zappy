@@ -129,8 +129,8 @@ void Map::drawMap(sf::RenderWindow& window, float zoomLevel)
     view.setCenter(size.x / 2, size.y / 2);
     window.setView(view);
 
-    for (size_t i = 0; i < this->_dimension.second; i++) {
-        for (size_t j = 0; j < this->_dimension.first; j++) {
+    for (size_t i = 0; i < this->_dimension.first; i++) {
+        for (size_t j = 0; j < this->_dimension.second; j++) {
             if ((int)((int)i - (int)j) < 0)
                 isoX = -(i - j) * 0.5f * -(bounds.width / 2) + size.x / 2;
             else
@@ -151,8 +151,8 @@ void Map::drawResources(sf::RenderWindow& window)
     float isoX = 0.0f;
     float isoY = 0.0f;
 
-    for (size_t i = 0; i < this->_dimension.second; i++) {
-        for (size_t j = 0; j < this->_dimension.first; j++) {
+    for (size_t i = 0; i < this->_dimension.first; i++) {
+        for (size_t j = 0; j < this->_dimension.second; j++) {
             if ((int)((int)i - (int)j) < 0)
                 isoX = -(i + 1 - j) * 0.5f * -(bounds.width / 2) + size.x / 2;
             else
@@ -226,7 +226,7 @@ void Map::inventoryDisplay(sf::RenderWindow & window)
 {
     sf::Mouse mouse;
     sf::Vector2i mousePos = mouse.getPosition(window);
-    
+
     if (this->_isInventoryOpen == true) {
         drawInventory(window);
         return;
@@ -241,7 +241,7 @@ void Map::inventoryDisplay(sf::RenderWindow & window)
             }
         }
     }
-    
+
 }
 
 std::vector<std::string> Map::getTeamNames()

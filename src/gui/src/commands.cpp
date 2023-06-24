@@ -59,7 +59,7 @@ bool Commands::doCommand(Map *map, std::vector<std::vector<std::string>> cmd, Se
 //map size
 bool Commands::msz(Map *map, std::vector<std::string> cmd, Server server)
 {
-    Inventory inv;
+    Inventory *inv;
     std::vector<Inventory> invLine;
     std::vector<std::vector<Inventory>> inventory;
 
@@ -70,9 +70,11 @@ bool Commands::msz(Map *map, std::vector<std::string> cmd, Server server)
             if (!std::isdigit(cmd[i][j]))
                 throw ServerWarning(std::cerr, "Warning: incorrect command msz syntax");
     map->setDimension(std::atoi(cmd[1].c_str()), std::atoi(cmd[2].c_str()));
+    for (int i = 0; i < map->getDimension().second; i++) {
+        inv = new Inventory();
+        invLine.push_back(*inv);
+    }
     for (int i = 0; i < map->getDimension().first; i++)
-        invLine.push_back(inv);
-    for (int i = 0; i < map->getDimension().second; i++)
         inventory.push_back(invLine);
     map->setTiles(inventory);
     printf("GUI-COMMAND: Update map size to %s %s\n", cmd[1].c_str(), cmd[2].c_str());
@@ -107,14 +109,17 @@ bool Commands::bct(Map *map, std::vector<std::string> cmd, Server server)
         printf("   - THYSTAME : '%d'\n", inv->getItem(Stones::THYSTAME));
     } else
         throw ServerWarning(std::cerr, "Warning: incorrect command bct syntax");
-    return false;
+    return true;
 }
 
 //name of all the teams
 bool Commands::tna(Map *map, std::vector<std::string> cmd, Server server)
 {
-    printf("tna\n");
-    return false;
+    if (cmd.size() != 2)
+        throw ServerWarning(std::cerr, "Warning: incorrect command tna syntax");
+    map->addTeamName(cmd[1].c_str());
+    printf("GUI-COMMAND: Add the team '%s' to the list\n", cmd[1].c_str());
+    return true;
 }
 
 //connection of a new player
@@ -224,7 +229,19 @@ bool Commands::pex(Map *map, std::vector<std::string> cmd, Server server)
 //broadcast
 bool Commands::pbc(Map *map, std::vector<std::string> cmd, Server server)
 {
-    printf("pbc\n");
+    std::vector<Player> *playerList = map->getPlayers();
+
+    if (cmd.size() != 3)
+        throw ServerWarning(std::cerr, "Warning: incorrect command plv syntax");
+    for (size_t j = 0; j < cmd[1].length(); j++)
+        if (!std::isdigit(cmd[1][j]))
+            throw ServerWarning(std::cerr, "Warning: incorrect command plv syntax");
+    for (size_t i = 0; i < playerList->size(); i++)
+        if (playerList->at(i).getId() == std::atoi(cmd[1].c_str())) {
+            map->addToBroadcastList(cmd[2], playerList->at(i).getId());
+            printf("GUI-COMMAND: Receive player '%d' broadcast:%s\n", playerList->at(i).getId(), cmd[2].c_str());
+            return true;
+        }
     return false;
 }
 
