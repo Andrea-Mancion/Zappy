@@ -158,19 +158,16 @@ int main(int ac, char **av)
     Commands cmd;
     sf::Mouse mouse;
 
-    try
-    {
+    try {
         server = new Server(ac, av);
     }
-    catch (ServerError &e)
-    {
+    catch (ServerError &e) {
         std::cout << e.what() << std::endl;
         return 84;
     }
 
     sf::Texture cloudTexture1;
-    if (cloudTexture1.loadFromFile("assets/cloud.png"))
-    {
+    if (cloudTexture1.loadFromFile("assets/cloud.png")) {
         sf::Sprite cloudSprite1(cloudTexture1);
         float scale = 0.5f;
         cloudSprite1.setScale(scale * zoomLevel, scale * zoomLevel);
@@ -179,8 +176,7 @@ int main(int ac, char **av)
         cloudSprite1.setPosition(cloudX1, cloudY1);
 
         sf::Texture cloudTexture2;
-        if (cloudTexture2.loadFromFile("assets/cloud2.png"))
-        {
+        if (cloudTexture2.loadFromFile("assets/cloud2.png")) {
             sf::Sprite cloudSprite2(cloudTexture2);
             cloudSprite2.setScale(scale * zoomLevel, scale * zoomLevel);
             float cloudX2 = window.getSize().x / 2.0f;
@@ -190,20 +186,15 @@ int main(int ac, char **av)
             sf::Clock clock;
             float cloudSpeed = 100.0f;
 
-            while (window.isOpen())
-            {
+            while (window.isOpen()) {
                 sf::Event event;
                 if (server->isReceivingTransmission())
                     cmd.doCommand(&map, server->getTransmission(), *server);
-                while (window.pollEvent(event))
-                {
-                    if (event.type == sf::Event::Resized)
-                    {
+                while (window.pollEvent(event)) {
+                    if (event.type == sf::Event::Resized) {
                         sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
                         window.setView(sf::View(visibleArea));
-                    }
-                    else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape)
-                    {
+                    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
                         map.setDisplayInventory(false);
                     }
                     else if (event.type == sf::Event::MouseWheelScrolled)
@@ -226,19 +217,8 @@ int main(int ac, char **av)
                         window.close();
                     }
                 }
-                if (mouse.isButtonPressed(sf::Mouse::Left))
-                {
-                    sf::Vector2i pos = mouse.getPosition(window);
-                    printf("MOUSE POS: %d %d\n", pos.x, pos.y);
-                    for (size_t i = 0; i < map.getPlayers()->size(); i++)
-                    {
-                        if (map.getPlayer(i)->getSprite()->getGlobalBounds().contains(pos.x, pos.y))
-                        {
-                            printf("TRIGGER\n");
-                            map.setDisplayInventory(true, map.getPlayer(i)->getId());
-                            break;
-                        }
-                    }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    map.setDisplayInventory(false);
                 }
                 sf::Time elapsed = clock.restart();
                 float deltaTime = elapsed.asSeconds();

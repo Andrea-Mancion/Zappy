@@ -20,11 +20,14 @@ class Map {
         sf::Sprite _sprite;
         sf::RenderWindow *_window;
         bool _isInventoryOpen = false;
-        int _displayInventoryId;
+        int _inventoryId;
         std::vector<std::string> _inventoryNames;
         std::vector<std::pair<sf::Texture *, sf::Sprite *>> _inventorySprites;
         std::vector<std::string> _teamName;
         std::vector<std::pair<int, std::string>> _broadcastList;
+        sf::Texture _papyrus_texture;
+        sf::Sprite _papyrus_sprite;
+        sf::Font _font;
 
     public :
         Map();
@@ -43,8 +46,8 @@ class Map {
         void drawMap(sf::RenderWindow &window, float zoomLevel);
         void drawResources(sf::RenderWindow &window);
         void draw_players(sf::RenderWindow &window);
+        void drawInventory(sf::RenderWindow &window);
         void inventoryDisplay(sf::RenderWindow &window);
-        void setDisplayInventory(bool value, int id);
         void setDisplayInventory(bool value);
         void addTeamName(std::string name);
         std::vector<std::string> getTeamNames();
