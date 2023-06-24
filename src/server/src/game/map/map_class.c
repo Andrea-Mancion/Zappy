@@ -20,6 +20,7 @@ static const game_map_t default_map = {
     .total_mendiane = 0,
     .total_phiras = 0,
     .total_thystame = 0,
+    .last_refill = 0,
     .refill = &map_refill,
     .destroy = &game_map_destroy,
 };
@@ -48,6 +49,7 @@ void game_map_destroy(game_map_t *map)
         for (int j = 0; j < map->width; j++)
             map->tiles[i][j].destroy(&map->tiles[i][j]);
         free(map->tiles[i]);
+        *(map->tiles + i) = NULL;
     }
     free(map->tiles);
 }

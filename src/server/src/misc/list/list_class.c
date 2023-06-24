@@ -31,7 +31,7 @@ int list_init(list_t *list, void (*item_dtor)(void *), int (*item_cmp)(void *,
     return SUCCESS;
 }
 
-// Destroys the list
+// List destructor
 void list_destroy(list_t *list)
 {
     list_node_t *next = NULL;

@@ -11,43 +11,43 @@
 #include "game/event_class.h"
 
 // Sets a new timeout if the given timeout is lower than the current one
-bool server_add_event(game_server_t *server, void *void_params)
+bool game_add_event(game_t *game, void *vparams)
 {
-    event_params_t *params = (event_params_t *)void_params;
+    event_params_t *params = vparams;
     game_event_t *event = malloc(sizeof(game_event_t));
     long long int will_happen_at = params->start_time +
-        (params->duration / server->frequency);
+        (params->duration / game->frequency);
     bool success = false;
 
     if (!event)
         return false;
     *event = (game_event_t){will_happen_at, params->type, params->client};
-    for (int i = 0; i < server->events.size; i++)
-        if (((game_event_t *)server->events.get(&server->events, i))->time
+    for (int i = 0; i < game->events.size; i++)
+        if (((game_event_t *)game->events.get(&game->events, i))->time
             > will_happen_at) {
-            success = server->events.insert(&server->events, event, i);
-            server->set_timeout(server);
+            success = game->events.insert(&game->events, event, i);
+            game->set_timeout(game);
             return success;
         }
-    success = server->events.add(&server->events, event);
-    server->set_timeout(server);
+    success = game->events.add(&game->events, event);
+    game->set_timeout(game);
     return success;
 }
 
-bool server_remove_events(game_server_t *server, game_event_type_t type,
+bool game_remove_events(game_t *game, game_event_type_t type,
     game_client_t *client)
 {
     game_event_t *event;
     bool found = false;
 
-    for (int i = 0; i < server->events.size; i++) {
-        event = server->events.get(&server->events, i);
+    for (int i = 0; i < game->events.size; i++) {
+        event = game->events.get(&game->events, i);
         if (event->type == type && event->client == client) {
-            server->events.remove(&server->events, i);
+            game->events.remove(&game->events, i);
             found = true;
         }
     }
     if (found)
-        server->set_timeout(server);
+        game->set_timeout(game);
     return found;
 }

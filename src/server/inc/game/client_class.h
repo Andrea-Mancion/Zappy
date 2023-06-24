@@ -10,7 +10,7 @@
     #define ZAPPY_GAME_CLIENT_H_
 
     #include "zappy_game.h"
-    #include "game/map_class.h"
+    #include "misc/list_class.h"
 
 // Client command structure
 typedef struct pending_command_s {
@@ -18,6 +18,7 @@ typedef struct pending_command_s {
     long long int received_at;
     int duration;
     char *output;
+    char *broadcast;
     list_t graphic_notifications;
     void (*destroy)(struct pending_command_s *command);
 } pending_command_t;
@@ -41,6 +42,7 @@ typedef struct game_client_s {
     int y;
     int level;
     int inventory[RESOURCE_COUNT];
+    long long int last_fed;
     void (*destroy)(struct game_client_s *client);
 } game_client_t;
 
@@ -51,7 +53,6 @@ extern const game_client_t default_client;
 // Client ctor, dtor and methods
 int client_init(game_client_t *client, int socket);
 void client_destroy(game_client_t *client);
-void client_init_as_ai(game_client_t *client, game_map_t *map);
 
 // Other functions
 int client_cmp(void *a, void *b);

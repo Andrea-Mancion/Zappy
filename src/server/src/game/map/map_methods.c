@@ -34,7 +34,8 @@ void map_refill(game_map_t *map)
 
     for (int i = 0; i < RESOURCE_COUNT; i++) {
         for (int j = *total_resources[i];
-            j < total_tiles * RESOURCE_DENSITIES[i]; j++)
+            j < total_tiles * resource_quantities[i]; j++)
             map_spawn_resource(map, i);
     }
+    map->last_refill = tick();
 }

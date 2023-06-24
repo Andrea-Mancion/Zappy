@@ -39,24 +39,21 @@ static inline long long int tick(void)
 // Error codes
     #define SUCCESS 0
     #define ERR_ALLOC 1
-    #define ERR_ARGS 2
-    #define ERR_SOCKET 3
-    #define ERR_BIND 4
-    #define ERR_COMMAND 5
-    #define ERR_NETWORK 6
-    #define ERR_TEAM 7
-    #define NB_ERR 8
+    #define ERR_SOCKET 2
+    #define ERR_BIND 3
+    #define ERR_COMMAND 4
+    #define ERR_NETWORK 5
+    #define NB_ERR 6
 
 // Error messages
     #define ERROR_TABLE ((const char*[]) { \
         "Success", \
         "Memory allocation failed", \
-        "Bad arguments were given", \
         "Invalid socket", \
         "Couldn't bind given port", \
-        "Invalid command", \
+        "Couldn't recognize command", \
         "Network error occured", \
-        "Invalid team name or team full", \
+        "Invalid command", \
     })
 
 // Error handling functions

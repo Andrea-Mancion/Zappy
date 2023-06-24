@@ -6,8 +6,9 @@
 */
 
 #include "zappy_misc.h"
-#include "game/server_class.h"
+#include "misc/list_class.h"
 #include "game/client_class.h"
+#include "game/server_class.h"
 #include "zappy_game.h"
 
 static const int direction_increment_forward[][2] = {
@@ -73,10 +74,10 @@ static void get_line_content(game_map_t *map, game_client_t *client, char *
 }
 
 // Look command
-int ai_command_look(game_server_t *server, game_client_t *client,
+int ai_command_look(game_t *game, game_client_t *client,
     ATTR_UNUSED char **args, pending_command_t *command)
 {
-    (void)server;
+    (void)game;
     (void)client;
     char buffer[BUFFER_SIZE] = {0};
 
@@ -84,7 +85,7 @@ int ai_command_look(game_server_t *server, game_client_t *client,
     for (int i = 0; i < client->level + 1; i++) {
         if (i != 0)
             strcat(buffer, ", ");
-        get_line_content(&server->map, client, buffer, i);
+        get_line_content(&game->map, client, buffer, i);
     }
     strcat(buffer, "]");
     command->output = strdup(buffer);
@@ -92,7 +93,7 @@ int ai_command_look(game_server_t *server, game_client_t *client,
 }
 
 // Inventory command
-int ai_command_inventory(ATTR_UNUSED game_server_t *server, game_client_t *
+int ai_command_inventory(ATTR_UNUSED game_t *game, game_client_t *
     client, ATTR_UNUSED char **args, pending_command_t *command)
 {
     char buffer[BUFFER_SIZE] = {0};
@@ -107,14 +108,14 @@ int ai_command_inventory(ATTR_UNUSED game_server_t *server, game_client_t *
 }
 
 // Connect_nbr command
-int ai_command_connect_nbr(game_server_t *server, game_client_t *client,
+int ai_command_connect_nbr(game_t *game, game_client_t *client,
     ATTR_UNUSED char **args, pending_command_t *command)
 {
     int count = 0;
-    list_t *team = server->teams.get(&server->teams, client->team_name);
+    list_t *team = game->teams.get(&game->teams, client->team_name);
     char outp[10] = {0};
 
-    count = server->max_team_capacity - team->size;
+    count = game->max_team_capacity - team->size;
     sprintf(outp, "%d", count);
     command->output = strdup(outp);
     return SUCCESS;
