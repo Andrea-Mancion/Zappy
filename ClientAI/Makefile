@@ -9,15 +9,21 @@ D_SRC = ./src/
 
 NAME = zappy_ai
 
+# $(NAME)	:
+# 			cp $(D_SRC)ai.py ./
+# 			mv ai.py zappy_ai
+# 			chmod +x zappy_ai
+
 $(NAME)	:
-			cp $(D_SRC)ai.py ./
-			mv ai.py zappy_ai
-			chmod +x zappy_ai
+# pip3 install -r $(D_SRC)requirements.txt
+			ln -s $(D_SRC)ai2.py $(NAME)
+			chmod +x $(NAME)
+			mv $(NAME) ../
 
 all	:	$(NAME)
 
 clean:
-		rm -rf zappy_ai
+		rm -rf ../zappy_ai
 
 fclean:	clean
 
