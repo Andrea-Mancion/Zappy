@@ -89,7 +89,7 @@ int game_get_direction_from_broadcast(game_t *game, game_client_t *cfrom,
     int y2 = game->map.height - ABS(y1);
     int x = cfrom->x < cto->x ? 1 : cfrom->x > cto->x ? -1 : 0;
     int y = cfrom->y < cto->y ? 1 : cfrom->y > cto->y ? -1 : 0;
-    int orientation = 1;
+    int orientation = 0;
 
     if (ABS(x2) < ABS(x1))
         x *= (-1);
