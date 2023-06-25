@@ -1,40 +1,126 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.cpp
+** gui.cpp
 ** File description:
-** window and map
+** main function
 */
+
+#include <SFML/Graphics.hpp>
 
 #include "../inc/gui.hpp"
 
+void configureSquare(sf::RectangleShape &square, float zoomLevel)
+{
+    square.setSize(sf::Vector2f(400 * zoomLevel, 400 * zoomLevel));
+    square.setFillColor(sf::Color(0, 0, 0, 128));
+}
+
+void updateCloud(sf::Sprite &cloudSprite, float &cloudX, float cloudSpeed, float deltaTime, const sf::Vector2u &windowSize)
+{
+    cloudX -= cloudSpeed * deltaTime;
+
+    if (cloudX < -cloudSprite.getGlobalBounds().width)
+        cloudX = windowSize.x;
+
+    cloudSprite.setPosition(cloudX, cloudSprite.getPosition().y);
+}
+
 int main(int ac, char **av)
 {
-    sf::RenderWindow window(sf::VideoMode(1580, 920), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode::getDesktopMode(), "Zappy GUI");
 
-    //sf::Sprite playerSprite = createSprite("assets/player/dino.png", 0.3f);
+    sf::RectangleShape square;
+    float zoomLevel = 1.0f;
+    configureSquare(square, zoomLevel);
+
+    sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+    sf::Vector2u desktopSize(desktopMode.width, desktopMode.height);
+    sf::Vector2f squarePosition(desktopSize.x - square.getSize().x, desktopSize.y - square.getSize().y);
+    square.setPosition(squarePosition);
+
     Server *server;
-    Map map(15, 15, "assets/grass1.png", 0.5f);
+    Map map(0, 0, "assets/grass.png", &window);
     Commands cmd;
+    sf::Mouse mouse;
 
     try {
         server = new Server(ac, av);
-    } catch (ServerError &e) {
+    }
+    catch (ServerError &e) {
         std::cout << e.what() << std::endl;
         return 84;
     }
-    while (window.isOpen()) {
-        sf::Event event;
-        if (server->isReceivingTransmission())
-            cmd.doCommand(&map, server->getTransmission(), *server);
-        while (window.pollEvent(event)) {
-            if (event.type == sf::Event::Resized) {
-                sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-                window.setView(sf::View(visibleArea));
+
+    sf::Texture cloudTexture1;
+    if (cloudTexture1.loadFromFile("assets/cloud.png")) {
+        sf::Sprite cloudSprite1(cloudTexture1);
+        float scale = 0.5f;
+        cloudSprite1.setScale(scale * zoomLevel, scale * zoomLevel);
+        float cloudX1 = window.getSize().x;
+        float cloudY1 = 100.0f;
+        cloudSprite1.setPosition(cloudX1, cloudY1);
+
+        sf::Texture cloudTexture2;
+        if (cloudTexture2.loadFromFile("assets/cloud2.png")) {
+            sf::Sprite cloudSprite2(cloudTexture2);
+            cloudSprite2.setScale(scale * zoomLevel, scale * zoomLevel);
+            float cloudX2 = window.getSize().x / 2.0f;
+            float cloudY2 = 200.0f;
+            cloudSprite2.setPosition(cloudX2, cloudY2);
+
+            sf::Clock clock;
+            float cloudSpeed = 100.0f;
+
+            while (window.isOpen()) {
+                sf::Event event;
+                if (server->isReceivingTransmission())
+                    cmd.doCommand(&map, server->getTransmission(), *server);
+                while (window.pollEvent(event)) {
+                    if (event.type == sf::Event::Resized) {
+                        sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+                        window.setView(sf::View(visibleArea));
+                    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
+                        map.setDisplayInventory(false);
+                    } else if (event.type == sf::Event::MouseWheelScrolled) {
+                        if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+                            zoomLevel *= (event.mouseWheelScroll.delta > 0) ? 1.1f : 0.9f;
+                            if (zoomLevel < 0.2f)
+                                zoomLevel = 0.2f;
+                            if (zoomLevel > 5.0f)
+                                zoomLevel = 5.0f;
+
+                            configureSquare(square, zoomLevel);
+                            cloudSprite1.setScale(scale * zoomLevel, scale * zoomLevel);
+                            cloudSprite2.setScale(scale * zoomLevel, scale * zoomLevel);
+                        }
+                    } else if (event.type == sf::Event::Closed) {
+                        window.close();
+                    }
+                }
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
+                    map.setDisplayInventory(false);
+                }
+                sf::Time elapsed = clock.restart();
+                float deltaTime = elapsed.asSeconds();
+
+                updateCloud(cloudSprite1, cloudX1, cloudSpeed, deltaTime, window.getSize());
+                updateCloud(cloudSprite2, cloudX2, cloudSpeed * 0.8f, deltaTime, window.getSize());
+
+                sf::Color backgroundColor(176, 224, 230);
+                window.clear(backgroundColor);
+
+                window.draw(cloudSprite1);
+                window.draw(cloudSprite2);
+                map.drawMap(window, zoomLevel);
+                map.drawResources(window);
+                map.draw_players(window);
+                map.inventoryDisplay(window);
+                map.drawLeaderboard(window);
+                window.draw(square);
+                map.drawBroadcast(window);
+                window.display();
             }
-            if (event.type == sf::Event::Closed)
-                window.close();
         }
-        map.draw_map(window);
     }
     return 0;
 }

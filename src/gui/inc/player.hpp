@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** player.hpp
 ** File description:
-** map
+** player
 */
 
 #include "libs.hpp"
@@ -24,10 +24,13 @@ class Player {
     std::string _team;
     size_t _id;
     sf::Sprite _sprite;
+    sf::Texture _texture;
+    sf::Clock _clock;
+    bool _isIncantating = false;
 
     public:
     Player();
-    Player(size_t x, size_t y, size_t id, sf::Sprite sprite);
+    Player(size_t x, size_t y, size_t id, std::string path);
 
     ~Player();
 
@@ -47,10 +50,18 @@ class Player {
 
     Inventory getInventory() const;
     void setInventory(Inventory inv);
+    void setInventory(Stones stone, int quantity);
 
     size_t getId() const;
     void setId(size_t id);
 
-    sf::Sprite getSprite() const;
-    void setSprite(sf::Sprite sprite);
+    sf::Sprite *getSprite() const;
+    void setSprite(std::string path);
+
+    bool getIncantationStatus() const;
+    void setIncantationStatus(bool value);
+
+    void draw(sf::RenderWindow &window);
+
+    void updateSpriteFrame();
 };

@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** server.hpp
 ** File description:
-** map
+** server
 */
 
 #include "../inc/gui.hpp"
@@ -92,6 +92,7 @@ bool Server::isReceivingTransmission()
     timeval time;
 
     time.tv_usec = 1;
+    time.tv_sec = 0;
     FD_ZERO(&this->_rfds);
     FD_SET(this->_sd, &this->_rfds);
     if (this->_activity == 1)
@@ -159,5 +160,5 @@ void Server::sendMessage(std::string msg)
 {
     printf("GUI: Message sent : '%s'\n", msg.c_str());
     msg += "\n";
-    dprintf(this->_sd, msg.c_str());
+    dprintf(this->_sd, "%s", msg.c_str());
 }

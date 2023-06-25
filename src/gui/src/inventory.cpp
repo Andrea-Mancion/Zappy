@@ -12,8 +12,7 @@ std::vector<std::string> split(std::string str, char delim)
     std::vector<std::string> tokens;
     size_t pos = 0;
 
-    while ((pos = str.find(delim)) != std::string::npos)
-    {
+    while ((pos = str.find(delim)) != std::string::npos) {
         tokens.push_back(str.substr(0, pos));
         str.erase(0, pos + 1);
     }
@@ -22,45 +21,46 @@ std::vector<std::string> split(std::string str, char delim)
 
 Inventory::Inventory()
 {
-    _food = 0;
-    _linemate = 0;
-}
-
-Inventory::~Inventory()
-{
+    this->_food = 0;
+    this->_linemate = 0;
+    this->_deraumere = 0;
+    this->_mendiane = 0;
+    this->_phiras = 0;
+    this->_sibur = 0;
+    this->_thystame = 0;
 }
 
 std::vector<std::pair<Stones, unsigned int>> Inventory::getItems() const
 {
     std::vector<std::pair<Stones, unsigned int>> items;
 
-    items.push_back(std::make_pair(FOOD, _food));
-    items.push_back(std::make_pair(LINEMATE, _linemate));
-    items.push_back(std::make_pair(DERAUMERE, _deraumere));
-    items.push_back(std::make_pair(SIBUR, _sibur));
-    items.push_back(std::make_pair(MENDIANE, _mendiane));
-    items.push_back(std::make_pair(PHIRAS, _phiras));
-    items.push_back(std::make_pair(THYSTAME, _thystame));
+    items.push_back(std::make_pair(Stones::FOOD, this->_food));
+    items.push_back(std::make_pair(Stones::LINEMATE, this->_linemate));
+    items.push_back(std::make_pair(Stones::DERAUMERE, this->_deraumere));
+    items.push_back(std::make_pair(Stones::SIBUR, this->_sibur));
+    items.push_back(std::make_pair(Stones::MENDIANE, this->_mendiane));
+    items.push_back(std::make_pair(Stones::PHIRAS, this->_phiras));
+    items.push_back(std::make_pair(Stones::THYSTAME, this->_thystame));
     return items;
 }
 
 unsigned int Inventory::getItem(Stones stone) const
 {
     switch (stone) {
-        case FOOD:
-            return _food;
-        case LINEMATE:
-            return _linemate;
-        case DERAUMERE:
-            return _deraumere;
-        case SIBUR:
-            return _sibur;
-        case MENDIANE:
-            return _mendiane;
-        case PHIRAS:
-            return _phiras;
-        case THYSTAME:
-            return _thystame;
+        case Stones::FOOD:
+            return this->_food;
+        case Stones::LINEMATE:
+            return this->_linemate;
+        case Stones::DERAUMERE:
+            return this->_deraumere;
+        case Stones::SIBUR:
+            return this->_sibur;
+        case Stones::MENDIANE:
+            return this->_mendiane;
+        case Stones::PHIRAS:
+            return this->_phiras;
+        case Stones::THYSTAME:
+            return this->_thystame;
     }
     return 0;
 }
@@ -81,26 +81,26 @@ void Inventory::setItems(std::string str)
 void Inventory::setItem(Stones stone, unsigned int quantity)
 {
     switch (stone) {
-        case FOOD:
-            _food = quantity;
+        case Stones::FOOD:
+            this->_food = quantity;
             break;
-        case LINEMATE:
-            _linemate = quantity;
+        case Stones::LINEMATE:
+            this->_linemate = quantity;
             break;
-        case DERAUMERE:
-            _deraumere = quantity;
+        case Stones::DERAUMERE:
+            this->_deraumere = quantity;
             break;
-        case SIBUR:
-            _sibur = quantity;
+        case Stones::SIBUR:
+            this->_sibur = quantity;
             break;
-        case MENDIANE:
-            _mendiane = quantity;
+        case Stones::MENDIANE:
+            this->_mendiane = quantity;
             break;
-        case PHIRAS:
-            _phiras = quantity;
+        case Stones::PHIRAS:
+            this->_phiras = quantity;
             break;
-        case THYSTAME:
-            _thystame = quantity;
+        case Stones::THYSTAME:
+            this->_thystame = quantity;
             break;
     }
 }

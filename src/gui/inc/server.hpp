@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** server.hpp
 ** File description:
-** map
+** server
 */
 
 #pragma once

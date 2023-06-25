@@ -1,8 +1,8 @@
 /*
 ** EPITECH PROJECT, 2023
-** map.hpp
+** commands.hpp
 ** File description:
-** map
+** commands
 */
 
 #include "libs.hpp"
@@ -41,4 +41,5 @@ class Commands {
         Commands();
         ~Commands() = default;
         bool doCommand(Map *map, std::vector<std::vector<std::string>> cmd, Server server);
+        void updateLeaderBoard(Map *map, Server server);
 };
