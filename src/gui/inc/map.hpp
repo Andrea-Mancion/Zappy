@@ -56,6 +56,7 @@ class Map {
         std::vector<std::pair<int, std::string>> getBroadCastList();
         std::vector<std::string> getLeaderboard();
         void setLeaderboard(std::vector<std::string> leaderboard);
+        void drawBroadcast(sf::RenderWindow &window);
         void drawLeaderboard(sf::RenderWindow &window);
 };
 

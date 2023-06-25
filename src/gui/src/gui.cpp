@@ -117,6 +117,7 @@ int main(int ac, char **av)
                 map.inventoryDisplay(window);
                 map.drawLeaderboard(window);
                 window.draw(square);
+                map.drawBroadcast(window);
                 window.display();
             }
         }

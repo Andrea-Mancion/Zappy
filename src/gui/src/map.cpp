@@ -177,7 +177,15 @@ void Map::draw_players(sf::RenderWindow & window)
     std::pair<size_t, size_t> player = std::pair<size_t, size_t>(0, 0);
     float isoX = 0.0f;
     float isoY = 0.0f;
+    sf::Text text;
+    sf::Font font;
 
+    font.loadFromFile("assets/YsabeauSC.ttf");
+    text.setFont(font);
+    text.setFillColor(sf::Color::White);
+    text.setOutlineThickness(0.8);
+    text.setOutlineColor(sf::Color::Black);
+    text.setCharacterSize(15);
     for (size_t i = 0; i < this->_players.size(); i++) {
         player = this->_players[i].getPos();
         if ((int)((int)player.first - (int)player.second) < 0)
@@ -187,7 +195,10 @@ void Map::draw_players(sf::RenderWindow & window)
         isoY = ((player.first + player.second) * 0.4f * (bounds.height / 2) + size.y / 3) + 5;
         this->_players[i].getSprite()->setPosition((int)isoX, (int)isoY);
         this->_players[i].updateSpriteFrame();
+        text.setString(this->_players[i].getTeam().c_str());
+        text.setPosition((int)isoX, (int)isoY - 15);
         this->_players[i].draw(window);
+        window.draw(text);
     }
 }
 
@@ -209,15 +220,16 @@ void Map::drawInventory(sf::RenderWindow &window)
     amount.setFillColor(sf::Color::Black);
     this->_papyrus_sprite.setPosition(view.left, view.top);
     window.draw(this->_papyrus_sprite);
+    amount.setString((std::string)("Level : " + std::to_string(this->_players[this->_inventoryId].getLevel())).c_str());
+    amount.setPosition(view.left + 60, view.top + 35);
+    window.draw(amount);
     for (size_t i = 0; i < this->_inventoryNames.size(); i++) {
         unsigned int itemAmount = playerInventory.getItem((Stones)i);
-        if (itemAmount > 0) {
-            this->_inventorySprites[i].second->setPosition(view.left + 50, view.top + 100 + i * 50);
-            window.draw(*this->_inventorySprites[i].second);
-            amount.setString(" : " + std::to_string(itemAmount));
-            amount.setPosition(view.left + 75, view.top + 100 + i * 50);
-            window.draw(amount);
-        }
+        this->_inventorySprites[i].second->setPosition(view.left + 50, view.top + 110 + i * 50);
+        window.draw(*this->_inventorySprites[i].second);
+        amount.setString(" : " + std::to_string(itemAmount));
+        amount.setPosition(view.left + 75, view.top + 100 + i * 50);
+        window.draw(amount);
     }
 }
 
@@ -302,6 +314,35 @@ void Map::drawLeaderboard(sf::RenderWindow &window)
         text.setString(str.c_str());
         text.setCharacterSize(24);
         text.setPosition(25, desktopSize.y - 125 + 25 * i);
+        window.draw(text);
+    }
+}
+
+void Map::drawBroadcast(sf::RenderWindow &window)
+{
+    sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+    sf::Vector2u desktopSize(desktopMode.width, desktopMode.height);
+    sf::Text text;
+    sf::Font font;
+    std::vector<std::pair<int, std::string>> broadcast = this->getBroadCastList();
+    std::vector<Player> *playerList = this->getPlayers();
+
+    font.loadFromFile("assets/YsabeauSC.ttf");
+    text.setFont(font);
+    text.setString("Messages: ");
+    text.setFillColor(sf::Color::White);
+    text.setCharacterSize(26);
+    text.setPosition(desktopSize.x - 375, desktopSize.y - 390);
+    text.setStyle(sf::Text::Underlined);
+    window.draw(text);
+    for (size_t i = 0; i < broadcast.size(); i++) {
+        sf::Text text;
+        std::string str = "Player " + std::to_string(playerList->at(broadcast.at(i).first).getId()) + ": " + broadcast.at(i).second;
+        text.setFont(this->_font);
+        text.setFillColor(sf::Color::White);
+        text.setString(str.c_str());
+        text.setCharacterSize(12);
+        text.setPosition(desktopSize.x - 375, desktopSize.y - 320 + 10 * i);
         window.draw(text);
     }
 }
