@@ -66,8 +66,6 @@ int ai_command_right(ATTR_UNUSED game_t *game, game_client_t *client,
     client->direction = (client->direction + 1) % DIRECTION_COUNT;
     graphic_notification_pair_init(pair, client);
     command->output = strdup("ok");
-    if (!command->output)
-        return ERR_ALLOC;
     command->graphic_notifications.add(&command->graphic_notifications, pair);
     return SUCCESS;
 }
@@ -85,8 +83,6 @@ int ai_command_left(ATTR_UNUSED game_t *game, game_client_t *client,
         DIRECTION_COUNT;
     graphic_notification_pair_init(pair, client);
     command->output = strdup("ok");
-    if (!command->output)
-        return ERR_ALLOC;
     command->graphic_notifications.add(&command->graphic_notifications, pair);
     return SUCCESS;
 }

@@ -5,7 +5,6 @@
 ** Server side - client class
 */
 
-#include <unistd.h>
 #include "zappy_misc.h"
 #include "zappy_game.h"
 #include "game/client_class.h"

@@ -28,10 +28,10 @@ void game_run(game_t *game)
         }
         if (game->events.size > 0 && !handle_error(server->select(server,
             &server->timeout), error_network))
-            break;
+            continue;
         if (game->events.size == 0 && !handle_error(server->select(server,
             NULL), error_network))
-            break;
+            continue;
     } while (true);
 }
 
@@ -49,6 +49,6 @@ void game_run_no_timeout(game_t *game)
             events_table[event->type](game, event->client);
         }
         if (!handle_error(server->select(server, NULL), error_network))
-            break;
+            continue;
     } while (true);
 }

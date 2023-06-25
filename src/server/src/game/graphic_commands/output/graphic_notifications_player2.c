@@ -34,3 +34,10 @@ void graphic_notification_pdr(ATTR_UNUSED game_t *game, game_client_t *client,
 {
     dprintf(client->socket, "pdr %d %d\n", params->id, params->resource);
 }
+
+// pbc graphic notification
+void graphic_notification_pbc(ATTR_UNUSED game_t *game, game_client_t *client,
+    graphic_notification_params_t *params)
+{
+    dprintf(client->socket, "pbc %d %s\n", params->id, params->message);
+}

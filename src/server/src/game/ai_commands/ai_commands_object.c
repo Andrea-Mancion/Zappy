@@ -92,6 +92,7 @@ int ai_command_take(game_t *game, game_client_t *client,
     }
     graphic_notification_pair_init(pair, client, "pgt", enum_resource);
     *address -= 1;
+    *game->map.get_resource_address(&game->map, enum_resource) -= 1;
     client->inventory[enum_resource] += 1;
     command->output = strdup("ok");
     command->graphic_notifications.add(&command->graphic_notifications, pair);
@@ -116,6 +117,7 @@ int ai_command_set(game_t *game, game_client_t *client,
     }
     graphic_notification_pair_init(pair, client, "pdr", enum_resource);
     *get_resource_address(game, client, enum_resource) += 1;
+    *game->map.get_resource_address(&game->map, enum_resource) += 1;
     client->inventory[enum_resource] -= 1;
     command->output = strdup("ok");
     command->graphic_notifications.add(&command->graphic_notifications, pair);

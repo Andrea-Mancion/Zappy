@@ -79,6 +79,8 @@ struct game_s {
     game_client_t *(*get_player)(game_t *game, int id);
     void (*notify_all_graphic)(game_t *game, char *command,
         graphic_notification_params_t *params);
+    int (*get_direction_from_broadcast)(game_t *game,
+        game_client_t *sender, game_client_t *receiver);
     // Dtor
     void (*destroy)(game_t *server);
 };
@@ -108,5 +110,7 @@ long long int game_get_timeout(game_t *game);
 game_client_t *game_get_player(game_t *game, int id);
 void game_notify_all_graphic(game_t *game, char *command,
     graphic_notification_params_t *params);
+int game_get_direction_from_broadcast(game_t *game, game_client_t *cfrom,
+    game_client_t *cto);
 
 #endif

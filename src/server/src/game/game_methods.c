@@ -10,6 +10,17 @@
 #include "game/event_class.h"
 #include "game/notification_class.h"
 
+static const int directions[][3] = {
+    {0, -1, 1},
+    {-1, -1, 2},
+    {-1, 0, 3},
+    {-1, 1, 4},
+    {0, 1, 5},
+    {1, 1, 6},
+    {1, 0, 7},
+    {1, -1, 8}
+};
+
 // Get client from player id
 game_client_t *game_get_player(game_t *game, int id)
 {
@@ -67,4 +78,25 @@ void game_notify_all_graphic(game_t *game, char *command,
         if (client->team_name && strcmp(client->team_name, "GRAPHIC") == 0)
             graphic_notification->function(game, client, params);
     }
+}
+
+int game_get_direction_from_broadcast(game_t *game, game_client_t *cfrom,
+    game_client_t *cto)
+{
+    int x1 = cto->x - cfrom->x;
+    int x2 = game->map.width - ABS(x1);
+    int y1 = cto->y - cfrom->y;
+    int y2 = game->map.height - ABS(y1);
+    int x = cfrom->x < cto->x ? 1 : cfrom->x > cto->x ? -1 : 0;
+    int y = cfrom->y < cto->y ? 1 : cfrom->y > cto->y ? -1 : 0;
+    int orientation = 1;
+
+    if (ABS(x2) < ABS(x1))
+        x *= (-1);
+    if (ABS(y2) < ABS(y1))
+        y *= (-1);
+    for (int i = 0; i < 8; i++)
+        if (directions[i][0] == x && directions[i][1] == y)
+            orientation = directions[i][2];
+    return orientation - (int)(cfrom->direction * 2);
 }

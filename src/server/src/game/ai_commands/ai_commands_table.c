@@ -18,8 +18,8 @@ const game_ai_command_t ai_commands_table[] = {
     {"Connect_nbr", &ai_command_connect_nbr, 0},
     {"Look", &ai_command_look, 7},
     {"Inventory", &ai_command_inventory, 1},
-    /*
     {"Broadcast", &ai_command_broadcast, 7},
+    /*
     {"Fork", &ai_command_fork, 42},
     {"Eject", &ai_command_eject, 7},
     {"Incantation", &ai_command_incantation, 300},

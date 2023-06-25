@@ -22,6 +22,7 @@ static const game_map_t default_map = {
     .total_thystame = 0,
     .last_refill = 0,
     .refill = &map_refill,
+    .get_resource_address = &map_get_resource_address,
     .destroy = &game_map_destroy,
 };
 

@@ -25,17 +25,34 @@ static void map_spawn_resource(game_map_t *map, game_resource_t resource)
 }
 
 // Function that refills the map with the correct amount of resources
-void map_refill(game_map_t *map)
+bool map_refill(game_map_t *map)
 {
     int total_tiles = map->width * map->height;
     int *total_resources[] = {&map->total_food, &map->total_linemate,
     &map->total_deraumere, &map->total_sibur, &map->total_mendiane,
     &map->total_phiras, &map->total_thystame};
+    int result = 0;
 
     for (int i = 0; i < RESOURCE_COUNT; i++) {
         for (int j = *total_resources[i];
-            j < total_tiles * resource_quantities[i]; j++)
+            j < total_tiles * resource_quantities[i]; j++) {
             map_spawn_resource(map, i);
+            result++;
+        }
     }
     map->last_refill = tick();
+    return result > 0;
+}
+
+int *map_get_resource_address(game_map_t *map, game_resource_t resource)
+{
+    int *addresses[] = {[FOOD] = &map->total_food,
+        [LINEMATE] = &map->total_linemate,
+        [DERAUMERE] = &map->total_deraumere,
+        [SIBUR] = &map->total_sibur,
+        [MENDIANE] = &map->total_mendiane,
+        [PHIRAS] = &map->total_phiras,
+        [THYSTAME] = &map->total_thystame};
+
+    return addresses[resource];
 }

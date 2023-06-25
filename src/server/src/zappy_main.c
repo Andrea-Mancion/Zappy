@@ -34,11 +34,11 @@ int main(const int argc, const char *argv[])
     if (!handle_error(params_init(&params, argc - 1, argv + 1), error_params))
         return PROGRAM_EXIT_FAILURE;
     if (params.mode == HELP) {
-        fprintf(stdout, "%s\n", program_usage);
+        dprintf(STDOUT_FILENO, "%s\n", program_usage);
         return PROGRAM_EXIT_SUCCESS;
     }
     if (!params.is_valid(&params)) {
-        fprintf(stderr, "%s\n", invalid_parameters);
+        dprintf(STDERR_FILENO, "%s\n", invalid_parameters);
         return PROGRAM_EXIT_FAILURE;
     }
     if (!handle_error(game_init(&game, &params), error_game))

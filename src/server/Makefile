@@ -17,6 +17,7 @@ SRC	=	\
 	$(SRC_DIR)game/ai_commands/ai_commands_movement.c	\
 	$(SRC_DIR)game/ai_commands/ai_commands_object.c	\
 	$(SRC_DIR)game/ai_commands/ai_commands_check.c	\
+	$(SRC_DIR)game/ai_commands/ai_commands_broadcast.c	\
 	$(SRC_DIR)game/graphic_commands/input/graphic_commands_table.c	\
 	$(SRC_DIR)game/graphic_commands/input/graphic_commands_player.c	\
 	$(SRC_DIR)game/graphic_commands/input/graphic_commands_map.c	\

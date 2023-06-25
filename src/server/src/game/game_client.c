@@ -5,7 +5,6 @@
 ** Server side - game class
 */
 
-#include <unistd.h>
 #include "zappy_misc.h"
 #include "game/command_class.h"
 #include "game/notification_class.h"
@@ -103,7 +102,7 @@ void game_remove_client(game_t *game, game_client_t *client)
     graphic_notification_params_t params = {.id = client->id};
     int index;
 
-    if (strcmp(client->team_name, "GRAPHIC") == 0) {
+    if (client->team_name && strcmp(client->team_name, "GRAPHIC") == 0) {
         free(client->team_name);
         client->team_name = NULL;
         return;

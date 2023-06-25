@@ -28,6 +28,7 @@ const game_t default_game = {
     .get_timeout = &game_get_timeout,
     .get_player = &game_get_player,
     .notify_all_graphic = &game_notify_all_graphic,
+    .get_direction_from_broadcast = &game_get_direction_from_broadcast
 };
 
 // Initialize the teams of the game

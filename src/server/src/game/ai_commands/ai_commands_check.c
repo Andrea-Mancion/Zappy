@@ -54,7 +54,6 @@ static void get_line_content(game_map_t *map, game_client_t *client, char *
 {
     int x = client->x, y = client->y;
     int forward_increment[2], left_increment[2];
-
     forward_increment[0] = direction_increment_forward[client->direction][0];
     forward_increment[1] = direction_increment_forward[client->direction][1];
     left_increment[0] = direction_increment_left[client->direction][0];
@@ -70,6 +69,8 @@ static void get_line_content(game_map_t *map, game_client_t *client, char *
         if (i != 0)
             strcat(buffer, ", ");
         get_tile_content(&map->tiles[pos[1]][pos[0]], buffer);
+        if (strncmp(buffer + strlen(buffer) - 2, ", ", 2) == 0)
+            buffer[strlen(buffer) - 1] = '\0';
     }
 }
 
@@ -81,13 +82,13 @@ int ai_command_look(game_t *game, game_client_t *client,
     (void)client;
     char buffer[BUFFER_SIZE] = {0};
 
-    buffer[0] = '[';
+    strcpy(buffer, "[ ");
     for (int i = 0; i < client->level + 1; i++) {
         if (i != 0)
             strcat(buffer, ", ");
         get_line_content(&game->map, client, buffer, i);
     }
-    strcat(buffer, "]");
+    strcat(buffer, " ]");
     command->output = strdup(buffer);
     return SUCCESS;
 }

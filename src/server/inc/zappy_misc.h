@@ -17,6 +17,7 @@
     #include <stdio.h>
     #include <errno.h>
     #include <time.h>
+    #include <unistd.h>
 
 // Tick function - returns current time in microseconds
     #ifndef CLOCK_REALTIME
@@ -45,6 +46,9 @@ static inline long long int tick(void)
     #define ERR_NETWORK 5
     #define NB_ERR 6
 
+// Abs function
+    #define ABS(x) ((x) < 0 ? -(x) : (x))
+
 // Error messages
     #define ERROR_TABLE ((const char*[]) { \
         "Success", \
@@ -65,8 +69,8 @@ static inline long long int tick(void)
 static inline bool handle_error(int status, const char *message) {
     if (status == SUCCESS)
         return true;
-    fprintf(stderr, "\033[1;31m%s\033[0m: %s - %s\n", message, ERROR(status),
-        GET_ERRNO());
+    dprintf(STDERR_FILENO, "\033[1;31m%s\033[0m: %s - %s\n", message,
+        ERROR(status), GET_ERRNO());
     return false;
 }
 

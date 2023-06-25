@@ -65,22 +65,39 @@ void event_start_command(game_t *game, game_client_t *client)
     }
 }
 
+// Broadcasts a message to every player
+void broadcast_to_players(game_t *game, game_client_t *client, char *message)
+{
+    game_client_t *player;
+
+    for (int i = 0; i < game->server.clients.size; i++) {
+        player = game->server.clients.get(&game->server.clients, i);
+        if (strcmp(player->team_name, "GRAPHIC") == 0 || player == client)
+            continue;
+        dprintf(player->socket, "message %d, %s\n",
+            game->get_direction_from_broadcast(game, client, player), message);
+    }
+}
+
 // Sends the command's output to the client and removes it from the list
 void event_end_command(game_t *game, game_client_t *client)
 {
     pending_command_t *cmd = client->commands.get(&client->commands, 0);
     graphic_notification_pair_t *pair;
-
     if (!cmd || tick() - cmd->received_at < ((cmd->duration * 1e6) / game->
         frequency))
         return;
     dprintf(client->socket, "%s\n", cmd->output);
-    if (strcmp(cmd->output, ko_message) != 0) {
+    if (cmd->output && strcmp(cmd->output, ko_message) != 0) {
         for (int i = 0; i < cmd->graphic_notifications.size; i++) {
             pair = cmd->graphic_notifications.get(&cmd->graphic_notifications,
                 i);
             game->notify_all_graphic(game, pair->command, &pair->params);
+            free(pair->params.message);
+            free(pair->params.team_name);
         }
+        if (cmd->broadcast)
+            broadcast_to_players(game, client, cmd->broadcast);
     }
     client->commands.remove(&client->commands, 0);
     if (client->commands.size > 0)
