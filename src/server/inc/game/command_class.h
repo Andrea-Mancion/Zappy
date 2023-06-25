@@ -16,15 +16,15 @@
 // Pair structure of the graphic command table
 typedef struct game_ai_command_s {
     const char *command;
-    int (*function)(game_server_t *server, game_client_t *client, char **args,
-        char **output);
+    int (*function)(game_t *game, game_client_t *client, char **args,
+        pending_command_t *command);
     int duration;
 } game_ai_command_t;
 
 // Pair structure of the ai command table
 typedef struct game_graphic_command_s {
     const char *command;
-    int (*function)(game_server_t *server, game_client_t *client, char **args);
+    int (*function)(game_t *game, game_client_t *client, char **args);
 } game_graphic_command_t;
 
 // Const variables
@@ -32,49 +32,49 @@ extern const game_graphic_command_t graphic_commands_table[];
 extern const game_ai_command_t ai_commands_table[];
 
 // AI command functions
-int ai_command_forward(game_server_t *server, game_client_t *client,
-    char **args, char **output);
-int ai_command_right(game_server_t *server, game_client_t *client, char **args,
-    char **output);
-int ai_command_left(game_server_t *server, game_client_t *client, char **args,
-    char **output);
-int ai_command_look(game_server_t *server, game_client_t *client, char **args,
-    char **output);
-int ai_command_inventory(game_server_t *server, game_client_t *client,
-    char **args, char **output);
-int ai_command_broadcast(game_server_t *server, game_client_t *client,
-    char **args, char **output);
-int ai_command_connect_nbr(game_server_t *server, game_client_t *client,
-    char **args, char **output);
-int ai_command_fork(game_server_t *server, game_client_t *client, char **args,
-    char **output);
-int ai_command_eject(game_server_t *server, game_client_t *client, char **args,
-    char **output);
-int ai_command_take(game_server_t *server, game_client_t *client, char **args,
-    char **output);
-int ai_command_set(game_server_t *server, game_client_t *client, char **args,
-    char **output);
-int ai_command_incantation(game_server_t *server, game_client_t *client,
-    char **args, char **output);
+int ai_command_forward(game_t *game, game_client_t *client,
+    char **args, pending_command_t *command);
+int ai_command_right(game_t *game, game_client_t *client, char **args,
+    pending_command_t *command);
+int ai_command_left(game_t *game, game_client_t *client, char **args,
+    pending_command_t *command);
+int ai_command_look(game_t *game, game_client_t *client, char **args,
+    pending_command_t *command);
+int ai_command_inventory(game_t *game, game_client_t *client,
+    char **args, pending_command_t *command);
+int ai_command_broadcast(game_t *game, game_client_t *client,
+    char **args, pending_command_t *command);
+int ai_command_connect_nbr(game_t *game, game_client_t *client,
+    char **args, pending_command_t *command);
+int ai_command_fork(game_t *game, game_client_t *client, char **args,
+    pending_command_t *command);
+int ai_command_eject(game_t *game, game_client_t *client, char **args,
+    pending_command_t *command);
+int ai_command_take(game_t *game, game_client_t *client, char **args,
+    pending_command_t *command);
+int ai_command_set(game_t *game, game_client_t *client, char **args,
+    pending_command_t *command);
+int ai_command_incantation(game_t *game, game_client_t *client,
+    char **args, pending_command_t *command);
 
 // Graphic command functions
-int graphic_command_msz(game_server_t *server, game_client_t *client,
+int graphic_command_msz(game_t *game, game_client_t *client,
     char **args);
-int graphic_command_bct(game_server_t *server, game_client_t *client,
+int graphic_command_bct(game_t *game, game_client_t *client,
     char **args);
-int graphic_command_mct(game_server_t *server, game_client_t *client,
+int graphic_command_mct(game_t *game, game_client_t *client,
     char **args);
-int graphic_command_tna(game_server_t *server, game_client_t *client,
+int graphic_command_tna(game_t *game, game_client_t *client,
     char **args);
-int graphic_command_ppo(game_server_t *server, game_client_t *client,
+int graphic_command_ppo(game_t *game, game_client_t *client,
     char **args);
-int graphic_command_plv(game_server_t *server, game_client_t *client,
+int graphic_command_plv(game_t *game, game_client_t *client,
     char **args);
-int graphic_command_pin(game_server_t *server, game_client_t *client,
+int graphic_command_pin(game_t *game, game_client_t *client,
     char **args);
-int graphic_command_sgt(game_server_t *server, game_client_t *client,
+int graphic_command_sgt(game_t *game, game_client_t *client,
     char **args);
-int graphic_command_sst(game_server_t *server, game_client_t *client,
+int graphic_command_sst(game_t *game, game_client_t *client,
     char **args);
 
 #endif

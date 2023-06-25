@@ -6,8 +6,9 @@
 */
 
 #include "zappy_misc.h"
-#include "game/server_class.h"
+#include "misc/list_class.h"
 #include "game/client_class.h"
+#include "game/server_class.h"
 #include "zappy_game.h"
 
 static const int direction_increment_forward[][2] = {
@@ -53,7 +54,6 @@ static void get_line_content(game_map_t *map, game_client_t *client, char *
 {
     int x = client->x, y = client->y;
     int forward_increment[2], left_increment[2];
-
     forward_increment[0] = direction_increment_forward[client->direction][0];
     forward_increment[1] = direction_increment_forward[client->direction][1];
     left_increment[0] = direction_increment_left[client->direction][0];
@@ -69,31 +69,33 @@ static void get_line_content(game_map_t *map, game_client_t *client, char *
         if (i != 0)
             strcat(buffer, ", ");
         get_tile_content(&map->tiles[pos[1]][pos[0]], buffer);
+        if (strncmp(buffer + strlen(buffer) - 2, ", ", 2) == 0)
+            buffer[strlen(buffer) - 1] = '\0';
     }
 }
 
 // Look command
-int ai_command_look(game_server_t *server, game_client_t *client,
-    ATTR_UNUSED char **args, char **output)
+int ai_command_look(game_t *game, game_client_t *client,
+    ATTR_UNUSED char **args, pending_command_t *command)
 {
-    (void)server;
+    (void)game;
     (void)client;
     char buffer[BUFFER_SIZE] = {0};
 
-    buffer[0] = '[';
+    strcpy(buffer, "[ ");
     for (int i = 0; i < client->level + 1; i++) {
         if (i != 0)
             strcat(buffer, ", ");
-        get_line_content(&server->map, client, buffer, i);
+        get_line_content(&game->map, client, buffer, i);
     }
-    strcat(buffer, "]");
-    *output = strdup(buffer);
+    strcat(buffer, " ]");
+    command->output = strdup(buffer);
     return SUCCESS;
 }
 
 // Inventory command
-int ai_command_inventory(ATTR_UNUSED game_server_t *server, game_client_t *
-    client, ATTR_UNUSED char **args, char **output)
+int ai_command_inventory(ATTR_UNUSED game_t *game, game_client_t *
+    client, ATTR_UNUSED char **args, pending_command_t *command)
 {
     char buffer[BUFFER_SIZE] = {0};
 
@@ -102,6 +104,20 @@ int ai_command_inventory(ATTR_UNUSED game_server_t *server, game_client_t *
         client->inventory[LINEMATE], client->inventory[DERAUMERE],
         client->inventory[SIBUR], client->inventory[MENDIANE],
         client->inventory[PHIRAS], client->inventory[THYSTAME]);
-    *output = strdup(buffer);
+    command->output = strdup(buffer);
+    return SUCCESS;
+}
+
+// Connect_nbr command
+int ai_command_connect_nbr(game_t *game, game_client_t *client,
+    ATTR_UNUSED char **args, pending_command_t *command)
+{
+    int count = 0;
+    list_t *team = game->teams.get(&game->teams, client->team_name);
+    char outp[10] = {0};
+
+    count = game->max_team_capacity - team->size;
+    sprintf(outp, "%d", count);
+    command->output = strdup(outp);
     return SUCCESS;
 }

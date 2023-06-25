@@ -13,28 +13,36 @@ SRC_DIR	=	./src/
 
 SRC	=	\
 	$(SRC_DIR)zappy_main.c	\
-	$(SRC_DIR)game/server/ai_commands/ai_commands_table.c	\
-	$(SRC_DIR)game/server/ai_commands/ai_commands_movement.c	\
-	$(SRC_DIR)game/server/ai_commands/ai_commands_object.c	\
-	$(SRC_DIR)game/server/ai_commands/ai_commands_check.c	\
-	$(SRC_DIR)game/server/graphic_commands/graphic_commands_table.c	\
-	$(SRC_DIR)game/server/graphic_commands/graphic_commands_player.c	\
-	$(SRC_DIR)game/server/graphic_commands/graphic_commands_map.c	\
-	$(SRC_DIR)game/server/events/events_table.c	\
-	$(SRC_DIR)game/server/events/events_command.c	\
-	$(SRC_DIR)game/server/events/events_automatic.c	\
+	$(SRC_DIR)game/ai_commands/ai_commands_table.c	\
+	$(SRC_DIR)game/ai_commands/ai_commands_movement.c	\
+	$(SRC_DIR)game/ai_commands/ai_commands_object.c	\
+	$(SRC_DIR)game/ai_commands/ai_commands_check.c	\
+	$(SRC_DIR)game/ai_commands/ai_commands_broadcast.c	\
+	$(SRC_DIR)game/graphic_commands/input/graphic_commands_table.c	\
+	$(SRC_DIR)game/graphic_commands/input/graphic_commands_player.c	\
+	$(SRC_DIR)game/graphic_commands/input/graphic_commands_map.c	\
+	$(SRC_DIR)game/graphic_commands/output/graphic_notifications_map.c	\
+	$(SRC_DIR)game/graphic_commands/output/graphic_notifications_player.c	\
+	$(SRC_DIR)game/graphic_commands/output/graphic_notifications_player2.c	\
+	$(SRC_DIR)game/graphic_commands/output/graphic_notifications_error.c	\
+	$(SRC_DIR)game/graphic_commands/output/graphic_notifications_table.c	\
+	$(SRC_DIR)game/events/events_table.c	\
+	$(SRC_DIR)game/events/events_command.c	\
+	$(SRC_DIR)game/events/events_automatic.c	\
 	$(SRC_DIR)game/server/server_class.c	\
 	$(SRC_DIR)game/server/server_methods.c	\
 	$(SRC_DIR)game/server/server_select.c	\
 	$(SRC_DIR)game/server/server_client.c	\
-	$(SRC_DIR)game/server/server_client_init.c	\
-	$(SRC_DIR)game/server/server_event.c	\
-	$(SRC_DIR)game/server/server_run.c	\
 	$(SRC_DIR)game/client/client_class.c	\
 	$(SRC_DIR)game/client/client_methods.c	\
 	$(SRC_DIR)game/map/map_class.c	\
 	$(SRC_DIR)game/map/map_methods.c	\
 	$(SRC_DIR)game/tile/tile_class.c	\
+	$(SRC_DIR)game/game_class.c	\
+	$(SRC_DIR)game/game_methods.c	\
+	$(SRC_DIR)game/game_client.c	\
+	$(SRC_DIR)game/game_run.c	\
+	$(SRC_DIR)game/game_event.c	\
 	$(SRC_DIR)program/params/params_class.c	\
 	$(SRC_DIR)program/params/params_methods.c	\
 	$(SRC_DIR)misc/list/list_class.c	\

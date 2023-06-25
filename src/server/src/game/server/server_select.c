@@ -32,22 +32,23 @@ static int readfds_init(fd_set *readfds, game_server_t *server)
 }
 
 // Manages clients arrival, departure and input
-int server_select(game_server_t *server)
+int server_select(game_server_t *server, timeval_t *timeout)
 {
     fd_set rfds;
+    game_client_t *cl;
     int max_rfd = readfds_init(&rfds, server);
-    game_client_t *cli;
-    int max_cli = MAX_CLIENTS;
+    int max_cl = MAX_CLIENTS;
 
-    if (select(max_rfd + 1, &rfds, NULL, NULL, &server->timeout) < 0)
+    if (select(max_rfd + 1, &rfds, NULL, NULL, timeout) < 0)
         return ERR_NETWORK;
-    if (FD_ISSET(server->socket, &rfds) && server->clients.size < max_cli)
+    if (FD_ISSET(server->socket, &rfds) && server->clients.size < max_cl)
         handle_error(server->accept_client(server), error_client);
     for (int i = 0; i < server->clients.size;) {
-        cli = server->clients.get(&server->clients, i);
-        if (FD_ISSET(cli->socket, &rfds) && !server->read_client(server, cli))
-            server->disconnect_client(server, cli);
-        else
+        cl = server->clients.get(&server->clients, i);
+        if (FD_ISSET(cl->socket, &rfds) && !server->read_client(server, cl)) {
+            server->game->remove_client(server->game, cl);
+            server->disconnect_client(server, cl);
+        } else
             i++;
     }
     return SUCCESS;

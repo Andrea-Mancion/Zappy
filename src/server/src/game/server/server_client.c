@@ -5,9 +5,9 @@
 ** Server side - server class
 */
 
-#include <unistd.h>
 #include "zappy_misc.h"
 #include "game/command_class.h"
+#include "game/notification_class.h"
 #include "game/event_class.h"
 
 static const char *welcome_message = "WELCOME";
@@ -18,6 +18,7 @@ static const char *err_cm = "Couldn't execute graphic command";
 static int execute_graphic_command(game_server_t *server,
     game_client_t *client, char *command)
 {
+    graphic_notification_params_t params = default_graphic_notification_params;
     char *args[strlen(command) + 1];
     int j = 0;
 
@@ -26,9 +27,9 @@ static int execute_graphic_command(game_server_t *server,
     args[j] = NULL;
     for (int i = 0; graphic_commands_table[i].command; i++)
         if (strcmp(graphic_commands_table[i].command, args[0]) == 0)
-            return graphic_commands_table[i].function(server, client,
+            return graphic_commands_table[i].function(server->game, client,
                 args + 1);
-    dprintf(client->socket, "suc\n");
+    graphic_notification_suc(server->game, client, &params);
     return ERR_COMMAND;
 }
 
@@ -40,13 +41,12 @@ static int handle_command(game_server_t *server, game_client_t *client,
     int status;
 
     if (!client->team_name)
-        return server->init_client(server, client, command);
+        return server->game->add_client(server->game, client, command);
     if (strcmp(client->team_name, "GRAPHIC") == 0) {
         handle_error(execute_graphic_command(server, client, command), err_cm);
         return SUCCESS;
     }
-    cmd = malloc(sizeof(pending_command_t));
-    if (!cmd)
+    if (!(cmd = malloc(sizeof(pending_command_t))))
         return ERR_ALLOC;
     if ((status = pending_command_init(cmd, command)) != SUCCESS) {
         pending_command_destroy(cmd);
@@ -71,12 +71,12 @@ bool server_read_client(game_server_t *server, game_client_t *client)
     strncat(client->buffer, buffer, BUFFER_SIZE - buflen - 1);
     if (buffer[readlen - 1] != '\n')
         return true;
-    for (char *cmd = strtok(client->buffer, "\r\n"); cmd && client->
-        commands.size <= MAX_PENDING_COMMANDS; cmd = strtok(NULL, "\r\n"))
+    for (char *cmd = strtok(client->buffer, "\n"); cmd && client->
+        commands.size <= MAX_PENDING_COMMANDS; cmd = strtok(NULL, "\n"))
         handle_error(handle_command(server, client, cmd), error_command);
     client->buffer[0] = '\0';
     if (client->commands.size >= 1)
-        event_start_command(server, client);
+        event_start_command(server->game, client);
     return true;
 }
 
@@ -87,12 +87,13 @@ int server_accept_client(game_server_t *server)
     int socket;
     int status;
 
+    if (!client)
+        return ERR_ALLOC;
     if ((socket = accept(server->socket, NULL, NULL)) < 0) {
         free(client);
         return ERR_SOCKET;
-    }
-    if ((status = client_init(client, socket)) != SUCCESS) {
-        client->destroy(client);
+    } else if ((status = client_init(client, socket)) != SUCCESS) {
+        client_destroy(client);
         free(client);
         return status;
     }
@@ -104,22 +105,11 @@ int server_accept_client(game_server_t *server)
 void server_disconnect_client(game_server_t *server,
     game_client_t *client)
 {
-    game_client_t *target;
-    list_t *team = server->teams.get(&server->teams, client->team_name);
     int index;
-    if (team)
-        if ((index = team->index(team, &client->id)) < team->size)
-            team->remove(team, index);
-    team = &server->map.tiles[client->y][client->x].players;
-    if ((index = team->index(team, &client->id)) < team->size)
-        team->remove(team, index);
-    server->remove_events(server, PLAYER_COMMAND, client);
-    server->remove_events(server, PLAYER_REMOVE_HEALTH, client);
-    for (int i = 0; i < server->clients.size; i++) {
-        target = server->clients.get(&server->clients, i);
-        if (target->team_name && strcmp(target->team_name, "GRAPHIC") == 0)
-            dprintf(((game_client_t *)server->clients.get(&server->clients,
-                i))->socket, "pdi %d\n", client->id);
+
+    if (client->team_name) {
+        printf("Tried to disconnect client before removing it\n");
+        server->game->remove_client(server->game, client);
     }
     if ((index = server->clients.index(&server->clients, client))
         < server->clients.size)

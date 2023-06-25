@@ -20,7 +20,7 @@ const map_t default_game_map = {
     .key_cmp = NULL,
 };
 
-// map constructor
+// Map constructor
 int map_init(map_t *map, void (*key_dtor)(void *), void (*val_dtor)(void *),
     int (*key_cmp)(void *, void *))
 {
@@ -31,7 +31,7 @@ int map_init(map_t *map, void (*key_dtor)(void *), void (*val_dtor)(void *),
     return SUCCESS;
 }
 
-// Destroys the map
+// Map destructor
 void map_destroy(map_t *map)
 {
     map_node_t *next = NULL;

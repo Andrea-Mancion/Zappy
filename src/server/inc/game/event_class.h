@@ -28,12 +28,13 @@ typedef struct game_event_s {
     game_client_t *client;
 } game_event_t;
 
-// Global variables
+// Table of events
+extern void (*events_table[])(game_t *, game_client_t *);
 
 // Functions
-void event_start_command(game_server_t *server, game_client_t *client);
-void event_end_command(game_server_t *server, game_client_t *client);
-void event_remove_player_health(game_server_t *server, game_client_t *client);
-void event_refill(game_server_t *server);
+void event_start_command(game_t *game, game_client_t *client);
+void event_end_command(game_t *game, game_client_t *client);
+void event_remove_player_health(game_t *game, game_client_t *client);
+void event_refill(game_t *game, game_client_t *client);
 
 #endif
