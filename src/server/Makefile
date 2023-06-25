@@ -67,6 +67,7 @@ CC	=	gcc
 
 $(NAME): $(OBJ)
 	$(CC) -o $(NAME) $(OBJ) $(CFLAGS)
+	mv -f $(NAME) ../../
 
 all: $(NAME)
 
@@ -74,7 +75,7 @@ clean:
 	rm -f $(OBJ)
 
 fclean: clean
-	rm -f $(NAME)
+	rm -f ../../$(NAME)
 
 re: fclean all
 
