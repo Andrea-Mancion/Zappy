@@ -36,7 +36,7 @@ class Inventory {
 
     public:
     Inventory();
-    ~Inventory();
+    ~Inventory() = default;
     std::vector<std::pair<Stones, unsigned int>> getItems() const;
     unsigned int getItem(Stones stone) const;
     void setItems(std::string str);

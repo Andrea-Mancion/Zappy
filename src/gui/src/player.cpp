@@ -103,6 +103,11 @@ void Player::setInventory(Inventory inv)
     _inv = inv;
 }
 
+void Player::setInventory(Stones stone, int quantity)
+{
+    _inv.setItem(stone, quantity);
+}
+
 size_t Player::getId() const
 {
     return _id;
@@ -132,6 +137,16 @@ sf::Sprite *Player::getSprite() const
 void Player::draw(sf::RenderWindow &window)
 {
     window.draw(_sprite);
+}
+
+bool Player::getIncantationStatus() const
+{
+    return this->_isIncantating;
+}
+
+void Player::setIncantationStatus(bool value)
+{
+    this->_isIncantating = value;
 }
 
 void Player::updateSpriteFrame()
