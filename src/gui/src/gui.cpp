@@ -42,6 +42,7 @@ int main(int ac, char **av)
     Map map(0, 0, "assets/grass.png", &window);
     Commands cmd;
     sf::Mouse mouse;
+    bool pressed = false;
 
     try {
         server = new Server(ac, av);
@@ -73,6 +74,7 @@ int main(int ac, char **av)
 
             while (window.isOpen()) {
                 sf::Event event;
+                sf::View view = window.getView();
                 if (server->isReceivingTransmission())
                     cmd.doCommand(&map, server->getTransmission(), *server);
                 while (window.pollEvent(event)) {
@@ -81,18 +83,22 @@ int main(int ac, char **av)
                         window.setView(sf::View(visibleArea));
                     } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
                         map.setDisplayInventory(false);
-                    } else if (event.type == sf::Event::MouseWheelScrolled) {
-                        if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
-                            zoomLevel *= (event.mouseWheelScroll.delta > 0) ? 1.1f : 0.9f;
-                            if (zoomLevel < 0.2f)
-                                zoomLevel = 0.2f;
-                            if (zoomLevel > 5.0f)
-                                zoomLevel = 5.0f;
-
-                            configureSquare(square, zoomLevel);
-                            cloudSprite1.setScale(scale * zoomLevel, scale * zoomLevel);
-                            cloudSprite2.setScale(scale * zoomLevel, scale * zoomLevel);
-                        }
+                    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Down && !pressed) {
+                        pressed = true;
+                        if (map.getZoom() > (float)5.0)
+                            map.setZoom(5);
+                        view.zoom(1.1);
+                        window.setView(view);
+                        map.setZoom(view.getSize().x / float(1920));
+                    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Up && !pressed) {
+                        pressed = true;
+                        if (map.getZoom() < (float)0.5)
+                            map.setZoom(0.5);
+                        view.zoom(0.9);
+                        window.setView(view);
+                        map.setZoom(view.getSize().x / float(1920));
+                    } else if (event.type == sf::Event::KeyReleased && pressed) {
+                        pressed = false;
                     } else if (event.type == sf::Event::Closed) {
                         window.close();
                     }
@@ -100,6 +106,8 @@ int main(int ac, char **av)
                 if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
                     map.setDisplayInventory(false);
                 }
+                square.setPosition(window.mapPixelToCoords(sf::Vector2i(squarePosition)));
+                square.setScale(400 * map.getZoom(), 400 * map.getZoom());
                 sf::Time elapsed = clock.restart();
                 float deltaTime = elapsed.asSeconds();
 

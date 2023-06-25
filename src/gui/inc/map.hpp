@@ -29,6 +29,7 @@ class Map {
         sf::Texture _papyrus_texture;
         sf::Sprite _papyrus_sprite;
         sf::Font _font;
+        float _zoom = 1;
 
     public :
         Map();
@@ -58,6 +59,8 @@ class Map {
         void setLeaderboard(std::vector<std::string> leaderboard);
         void drawBroadcast(sf::RenderWindow &window);
         void drawLeaderboard(sf::RenderWindow &window);
+        void setZoom(float value);
+        float getZoom() const;
 };
 
 // sf::Sprite createSprite(const std::string &filename, float scale);
