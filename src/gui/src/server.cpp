@@ -72,7 +72,7 @@ bool Server::areArgumentsCorrect(int ac, char **av)
         return true;
     } else {
         ip = (std::string)av[pos];
-        if (std::count(ip.begin(), ip.end(), '.') != 4)
+        if (std::count(ip.begin(), ip.end(), '.') != 3)
             return false;
         while (ip.find_last_of('.') != std::string::npos) {
             str = str.substr(0, ip.find_last_of('.'));
