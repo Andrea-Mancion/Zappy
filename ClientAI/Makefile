@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-D_SRC = ./src/
+D_SRC = ./ClientAI/src/
 
 NAME = zappy_ai
 
@@ -16,9 +16,8 @@ NAME = zappy_ai
 
 $(NAME)	:
 # pip3 install -r $(D_SRC)requirements.txt
-			ln -s $(D_SRC)ai2.py $(NAME)
-			chmod +x $(NAME)
-			mv $(NAME) ../
+			ln -s $(D_SRC)ai2.py ../$(NAME)
+			chmod +x ../$(NAME)
 
 all	:	$(NAME)
 

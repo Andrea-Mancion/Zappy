@@ -188,7 +188,7 @@ void Map::draw_players(sf::RenderWindow & window)
         this->_players[i].getSprite()->setPosition((int)isoX, (int)isoY);
         this->_players[i].updateSpriteFrame();
         text.setString(this->_players[i].getTeam().c_str());
-        text.setPosition((int)isoX, (int)isoY - 15);
+        text.setPosition((int)isoX, (int)isoY);
         this->_players[i].draw(window);
         window.draw(text);
     }
