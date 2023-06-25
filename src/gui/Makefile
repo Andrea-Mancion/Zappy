@@ -28,6 +28,7 @@ all:	$(NAME)
 $(NAME):	$(OBJ)
 		g++ -o $(NAME) $(OBJ) $(CFLAGS)
 		rm -f $(OBJ)
+		mv -f $(NAME) ../../
 
 clean:
 		rm -f $(OBJ)
