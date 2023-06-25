@@ -68,4 +68,5 @@ void params_destroy(program_params_t *params)
     for (int i = 0; params->team_names[i]; i++)
         free(params->team_names[i]);
     free(params->team_names);
+    *params = default_params;
 }

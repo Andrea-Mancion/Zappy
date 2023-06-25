@@ -10,7 +10,7 @@
 #include "zappy_game.h"
 
 // Table containing all of the events and their respective functions
-void (*events_table[])(game_server_t *, game_client_t *) = {
+void (*events_table[])(game_t *, game_client_t *) = {
     [MAP_REFILL] = &event_refill,
     [PLAYER_REMOVE_HEALTH] = &event_remove_player_health,
     [PLAYER_COMMAND] = &event_end_command,

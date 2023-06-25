@@ -6,6 +6,7 @@
 */
 
 #include "zappy_misc.h"
+#include "game/notification_class.h"
 #include "game/command_class.h"
 
 // Default graphic notification params
@@ -33,13 +34,14 @@ const graphic_notification_t graphic_notifications_table[] = {
     {"plv", &graphic_notification_plv},
     {"pin", &graphic_notification_pin},
     {"pdi", &graphic_notification_pdi},
+    {"pnw", &graphic_notification_pnw},
+    {"pdr", &graphic_notification_pdr},
+    {"pgt", &graphic_notification_pgt},
+    {"pbc", &graphic_notification_pbc},
     //{"pex", &graphic_notification_pex},
-    //{"pbc", &graphic_notification_pbc},
     //{"pic", &graphic_notification_pic},
     //{"pie", &graphic_notification_pie},
     //{"pfk", &graphic_notification_pfk},
-    //{"pdr", &graphic_notification_pdr},
-    //{"pgt", &graphic_notification_pgt},
     //{"enw", &graphic_notification_enw},
     //{"eht", &graphic_notification_eht},
     //{"ebo", &graphic_notification_ebo},

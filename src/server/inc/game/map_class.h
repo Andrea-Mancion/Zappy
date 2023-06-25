@@ -12,17 +12,6 @@
     #include "zappy_game.h"
     #include "game/tile_class.h"
 
-// Resource densities array
-    #define RESOURCE_DENSITIES (double[RESOURCE_COUNT]) { \
-        FOOD_DENSITY, \
-        LINEMATE_DENSITY, \
-        DERAUMERE_DENSITY, \
-        SIBUR_DENSITY, \
-        MENDIANE_DENSITY, \
-        PHIRAS_DENSITY, \
-        THYSTAME_DENSITY \
-    }
-
 // Map class
 typedef struct game_map_s {
     int width;
@@ -35,7 +24,10 @@ typedef struct game_map_s {
     int total_mendiane;
     int total_phiras;
     int total_thystame;
-    void (*refill)(struct game_map_s *map);
+    long long int last_refill;
+    bool (*refill)(struct game_map_s *map);
+    int *(*get_resource_address)(struct game_map_s *map,
+        game_resource_t resource);
     void (*destroy)(struct game_map_s *map);
 } game_map_t;
 
@@ -45,6 +37,7 @@ extern const game_map_t default_game_map;
 // Map ctor, dtor and methods
 int game_map_init(game_map_t *map, int width, int height);
 void game_map_destroy(game_map_t *map);
-void map_refill(game_map_t *map);
+bool map_refill(game_map_t *map);
+int *map_get_resource_address(game_map_t *map, game_resource_t resource);
 
 #endif

@@ -16,15 +16,7 @@
     #define PROGRAM_EXIT_FAILURE 84
 
 // Program usage
-    #define USAGE \
-        "USAGE: ./zappy_server -p port -x width -y height -n name1 name2 ..." \
-        " -c clientsNb -f freq\n" \
-        "\tport\t\tis the port number\n" \
-        "\twidth\t\tis the width of the world\n" \
-        "\theight\t\tis the height of the world\n" \
-        "\tnameX\t\tis the name of the team X (name \"GRAPHIC\" is reserved)" \
-        "\n\tclientsNb\tis the number of authorized clients per team\n" \
-        "\tfreq\t\tis the reciprocal of time unit for execution of actions\n"
+extern const char *program_usage;
 
 // Enum for the different modes for the program to run in
 typedef enum program_mode_e {
