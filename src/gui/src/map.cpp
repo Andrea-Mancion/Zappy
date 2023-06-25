@@ -30,7 +30,6 @@ Map::Map(unsigned int width, unsigned int height, std::string path, sf::RenderWi
     sf::Vector2u size = _window->getSize();
     _sprite.setTexture(_texture);
     _sprite.setScale(sf::Vector2f(0.5f, 0.5f));
-    // _sprite.setScale(sf::Vector2f(size.x / _texture.getSize().x, size.y / _texture.getSize().y));
 
     _inventoryNames = std::vector<std::string>{"food", "linemate", "deraumere", "sibur", "mendiane", "phiras", "thystame"};
     _inventorySprites = std::vector<std::pair<sf::Texture *, sf::Sprite *>>();
@@ -39,7 +38,7 @@ Map::Map(unsigned int width, unsigned int height, std::string path, sf::RenderWi
         sf::Sprite *sprite = new sf::Sprite();
         texture->loadFromFile("assets/" + _inventoryNames[i] + ".png");
         sprite->setTexture(*texture);
-        sprite->setScale(sf::Vector2f(0.08f, 0.08f));
+        sprite->setScale(sf::Vector2f(0.10f, 0.10f));
         _inventorySprites.push_back(std::pair<sf::Texture *, sf::Sprite *>(texture, sprite));
     _papyrus_texture = sf::Texture();
     _papyrus_sprite = sf::Sprite();
