@@ -25,6 +25,7 @@ class Map {
         std::vector<std::pair<sf::Texture *, sf::Sprite *>> _inventorySprites;
         std::vector<std::string> _teamName;
         std::vector<std::pair<int, std::string>> _broadcastList;
+        std::vector<std::string> _leaderboard;
         sf::Texture _papyrus_texture;
         sf::Sprite _papyrus_sprite;
         sf::Font _font;
@@ -53,6 +54,9 @@ class Map {
         std::vector<std::string> getTeamNames();
         void addToBroadcastList(std::string elem, int id);
         std::vector<std::pair<int, std::string>> getBroadCastList();
+        std::vector<std::string> getLeaderboard();
+        void setLeaderboard(std::vector<std::string> leaderboard);
+        void drawLeaderboard(sf::RenderWindow &window);
 };
 
 // sf::Sprite createSprite(const std::string &filename, float scale);

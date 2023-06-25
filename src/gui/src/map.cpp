@@ -155,8 +155,8 @@ void Map::drawResources(sf::RenderWindow& window)
             if ((int)((int)i - (int)j) < 0)
                 isoX = -(i + 1 - j) * 0.5f * -(bounds.width / 2) + size.x / 2;
             else
-                isoX = (i + 1- j) * 0.5f * (bounds.width / 2) + size.x / 2;
-            isoY = (i + j) * 0.4f * (bounds.height / 2) + size.y / 3;
+                isoX = (i + 1 - j) * 0.5f * (bounds.width / 2) + size.x / 2;
+            isoY = (i + 1 + j) * 0.4f * (bounds.height / 2) + size.y / 3;
             tile = &this->_tiles[i][j];
             for (size_t item = 0; item <= this->_inventoryNames.size(); item++)
             {
@@ -181,10 +181,10 @@ void Map::draw_players(sf::RenderWindow & window)
     for (size_t i = 0; i < this->_players.size(); i++) {
         player = this->_players[i].getPos();
         if ((int)((int)player.first - (int)player.second) < 0)
-            isoX = -(player.first - player.second) * 0.5f * -(bounds.width / 2) + size.x / 2;
+            isoX = -(player.first - player.second) * 0.5f * - (bounds.width / 2) + size.x / 2;
         else
             isoX = (player.first - player.second) * 0.4f * (bounds.width / 2) + size.x / 2;
-        isoY = (player.first + player.second) * 0.4f * (bounds.height / 2) + size.y / 3;
+        isoY = ((player.first + player.second) * 0.4f * (bounds.height / 2) + size.y / 3) + 5;
         this->_players[i].getSprite()->setPosition((int)isoX, (int)isoY);
         this->_players[i].updateSpriteFrame();
         this->_players[i].draw(window);
@@ -266,5 +266,42 @@ void Map::addToBroadcastList(std::string elem, int id)
     } else if (this->_broadcastList.size() >= 5) {
         this->_broadcastList.erase(this->_broadcastList.begin());
         this->_broadcastList.push_back(std::make_pair(id, elem));
+    }
+}
+
+std::vector<std::string> Map::getLeaderboard()
+{
+    return this->_leaderboard;
+}
+
+void Map::setLeaderboard(std::vector<std::string> leaderboard)
+{
+    this->_leaderboard = leaderboard;
+}
+
+void Map::drawLeaderboard(sf::RenderWindow &window)
+{
+    sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+    sf::Vector2u desktopSize(desktopMode.width, desktopMode.height);
+    sf::Text text;
+    sf::Font font;
+
+    font.loadFromFile("assets/YsabeauSC.ttf");
+    text.setFont(font);
+    text.setString("Leaderboard:");
+    text.setFillColor(sf::Color::Black);
+    text.setCharacterSize(26);
+    text.setPosition(25, desktopSize.y - this->getLeaderboard().size() * 25 - 105);
+    text.setStyle(sf::Text::Underlined);
+    window.draw(text);
+    for (size_t i = 0; i < this->getLeaderboard().size(); i++) {
+        sf::Text text;
+        std::string str = "  " + std::to_string(i + 1) + ": " + this->getLeaderboard().at(i);
+        text.setFont(this->_font);
+        text.setFillColor(sf::Color::Black);
+        text.setString(str.c_str());
+        text.setCharacterSize(24);
+        text.setPosition(25, desktopSize.y - 125 + 25 * i);
+        window.draw(text);
     }
 }

@@ -196,8 +196,9 @@ int main(int ac, char **av)
                         window.setView(sf::View(visibleArea));
                     } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Escape) {
                         map.setDisplayInventory(false);
-                    }
-                    else if (event.type == sf::Event::MouseWheelScrolled)
+                    } else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Tab) {
+
+                    }else if (event.type == sf::Event::MouseWheelScrolled)
                     {
                         if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel)
                         {
@@ -235,6 +236,7 @@ int main(int ac, char **av)
                 map.drawResources(window);
                 map.draw_players(window);
                 map.inventoryDisplay(window);
+                map.drawLeaderboard(window);
                 window.draw(square);
                 window.display();
             }

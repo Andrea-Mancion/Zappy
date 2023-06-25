@@ -26,6 +26,7 @@ class Player {
     sf::Sprite _sprite;
     sf::Texture _texture;
     sf::Clock _clock;
+    bool _isIncantating = false;
 
     public:
     Player();
@@ -49,12 +50,16 @@ class Player {
 
     Inventory getInventory() const;
     void setInventory(Inventory inv);
+    void setInventory(Stones stone, int quantity);
 
     size_t getId() const;
     void setId(size_t id);
 
     sf::Sprite *getSprite() const;
     void setSprite(std::string path);
+
+    bool getIncantationStatus() const;
+    void setIncantationStatus(bool value);
 
     void draw(sf::RenderWindow &window);
 

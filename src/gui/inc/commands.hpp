@@ -41,4 +41,5 @@ class Commands {
         Commands();
         ~Commands() = default;
         bool doCommand(Map *map, std::vector<std::vector<std::string>> cmd, Server server);
+        void updateLeaderBoard(Map *map, Server server);
 };
