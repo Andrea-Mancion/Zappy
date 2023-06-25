@@ -112,21 +112,13 @@ void Map::setTiles(std::vector<std::vector<Inventory>> tiles)
 
 void Map::drawMap(sf::RenderWindow& window, float zoomLevel)
 {
-    sf::Vector2u size = window.getSize();
+    sf::VideoMode desktopMode = sf::VideoMode::getDesktopMode();
+    sf::Vector2u size(desktopMode.width, desktopMode.height);
+    //sf::Vector2u size = window.getSize();
     sf::FloatRect bounds = this->_sprite.getGlobalBounds();
     Inventory *tile = nullptr;
     float isoX = 0.0f;
     float isoY = 0.0f;
-
-    float centerX = (this->_dimension.first - 1) * 0.5f * (bounds.width / 2);
-    float centerY = (this->_dimension.second - 1) * 0.5f * (bounds.height / 2);
-
-    float offsetX = (size.x / 2) - (zoomLevel * centerX);
-    float offsetY = (size.y / 2) - (zoomLevel * centerY);
-
-    sf::View view(sf::FloatRect(offsetX, offsetY, size.x / zoomLevel, size.y / zoomLevel));
-    view.setCenter(size.x / 2, size.y / 2);
-    window.setView(view);
 
     for (size_t i = 0; i < this->_dimension.first; i++) {
         for (size_t j = 0; j < this->_dimension.second; j++) {
@@ -218,17 +210,22 @@ void Map::drawInventory(sf::RenderWindow &window)
 
     amount.setFont(this->_font);
     amount.setFillColor(sf::Color::Black);
-    this->_papyrus_sprite.setPosition(view.left, view.top);
+    this->_papyrus_sprite.setPosition(window.mapPixelToCoords(sf::Vector2i(view.left, view.top)));
+    this->_papyrus_sprite.setScale(sf::Vector2f(1.0f * this->_zoom, 2.3f * this->_zoom));
     window.draw(this->_papyrus_sprite);
     amount.setString((std::string)("Level : " + std::to_string(this->_players[this->_inventoryId].getLevel())).c_str());
-    amount.setPosition(view.left + 60, view.top + 35);
+    amount.setPosition(window.mapPixelToCoords(sf::Vector2i(view.left + 60, view.top + 35)));
+    amount.setCharacterSize((unsigned int)((float)30 * this->_zoom));
     window.draw(amount);
     for (size_t i = 0; i < this->_inventoryNames.size(); i++) {
         unsigned int itemAmount = playerInventory.getItem((Stones)i);
-        this->_inventorySprites[i].second->setPosition(view.left + 50, view.top + 110 + i * 50);
+        this->_inventorySprites[i].second->setPosition(window.mapPixelToCoords(sf::Vector2i(view.left + 50, view.top + 110 + i * 50)));
+        this->_inventorySprites[i].second->setScale(0.10f * this->_zoom, 0.10f * this->_zoom);
         window.draw(*this->_inventorySprites[i].second);
+        this->_inventorySprites[i].second->setScale(sf::Vector2f(0.10f, 0.10f));
+        amount.setCharacterSize((unsigned int)((float)26 * this->_zoom));
         amount.setString(" : " + std::to_string(itemAmount));
-        amount.setPosition(view.left + 75, view.top + 100 + i * 50);
+        amount.setPosition(window.mapPixelToCoords(sf::Vector2i(view.left + 75, view.top + 100 + i * 50)));
         window.draw(amount);
     }
 }
@@ -258,6 +255,16 @@ void Map::inventoryDisplay(sf::RenderWindow & window)
 std::vector<std::string> Map::getTeamNames()
 {
     return this->_teamName;
+}
+
+void Map::setZoom(float value)
+{
+    this->_zoom = value;
+}
+
+float Map::getZoom() const
+{
+    return this->_zoom;
 }
 
 void Map::addTeamName(std::string name)
@@ -302,8 +309,8 @@ void Map::drawLeaderboard(sf::RenderWindow &window)
     text.setFont(font);
     text.setString("Leaderboard:");
     text.setFillColor(sf::Color::Black);
-    text.setCharacterSize(26);
-    text.setPosition(25, desktopSize.y - this->getLeaderboard().size() * 25 - 105);
+    text.setCharacterSize((unsigned int)((float)26 * this->_zoom));
+    text.setPosition(window.mapPixelToCoords(sf::Vector2i(25, desktopSize.y - this->getLeaderboard().size() * 25 - 105)));
     text.setStyle(sf::Text::Underlined);
     window.draw(text);
     for (size_t i = 0; i < this->getLeaderboard().size(); i++) {
@@ -312,8 +319,8 @@ void Map::drawLeaderboard(sf::RenderWindow &window)
         text.setFont(this->_font);
         text.setFillColor(sf::Color::Black);
         text.setString(str.c_str());
-        text.setCharacterSize(24);
-        text.setPosition(25, desktopSize.y - 125 + 25 * i);
+        text.setCharacterSize((unsigned int)((float)24 * this->_zoom));
+        text.setPosition(window.mapPixelToCoords(sf::Vector2i(25, desktopSize.y - 125 + 25 * i)));
         window.draw(text);
     }
 }
@@ -331,8 +338,8 @@ void Map::drawBroadcast(sf::RenderWindow &window)
     text.setFont(font);
     text.setString("Messages: ");
     text.setFillColor(sf::Color::White);
-    text.setCharacterSize(26);
-    text.setPosition(desktopSize.x - 375, desktopSize.y - 390);
+    text.setCharacterSize((unsigned int)((float)26 * this->_zoom));
+    text.setPosition(window.mapPixelToCoords(sf::Vector2i(desktopSize.x - 375, desktopSize.y - 390)));
     text.setStyle(sf::Text::Underlined);
     window.draw(text);
     for (size_t i = 0; i < broadcast.size(); i++) {
@@ -341,8 +348,8 @@ void Map::drawBroadcast(sf::RenderWindow &window)
         text.setFont(this->_font);
         text.setFillColor(sf::Color::White);
         text.setString(str.c_str());
-        text.setCharacterSize(12);
-        text.setPosition(desktopSize.x - 375, desktopSize.y - 320 + 10 * i);
+        text.setCharacterSize((unsigned int)((float)12 * this->_zoom));
+        text.setPosition(window.mapPixelToCoords(sf::Vector2i(desktopSize.x - 375, desktopSize.y - 320 + 10 * i)));
         window.draw(text);
     }
 }
